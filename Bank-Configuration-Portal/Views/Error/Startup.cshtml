@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Startup Error";
+    Layout = null;
+}
+
+<div>
+    <h1>Application Startup Error</h1>
+    <div>
+        <!-- Display the specific error message from the controller -->
+        @ViewBag.ErrorMessage
+    </div>
+    <p>
+        It looks like there was a critical issue preventing the application from starting correctly.
+        This usually indicates a problem with the database connection or core configuration.
+    </p>
+    <a href="javascript:location.reload();">
+        Try Again
+    </a>
+    <p>
+        If the problem persists, please contact your system administrator.
+    </p>
+</div>
