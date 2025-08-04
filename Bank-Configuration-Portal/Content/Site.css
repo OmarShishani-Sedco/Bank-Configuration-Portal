@@ -1,4 +1,32 @@
-﻿/* Set padding to keep content from hitting the edges */
+﻿body {
+    background-image: url('/Content/images/Background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative; /* Needed to contain the z-index stacking */
+    z-index: 1;
+}
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* darkness overlay */
+        pointer-events: none;
+        z-index: 0;
+    }
+
+.body-content {
+    position: relative;
+    z-index: 1; /* Sit above the overlay */
+}
+
+
+/* Set padding to keep content from hitting the edges */
 .body-content {
     margin-top: 15px;
     padding-left: 15px;

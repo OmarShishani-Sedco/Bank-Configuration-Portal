@@ -1,4 +1,6 @@
-﻿using Bank_Configuration_Portal.App_Start;
+﻿using AutoMapper;
+using Bank_Configuration_Portal.App_Start;
+using Bank_Configuration_Portal.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,7 @@ namespace Bank_Configuration_Portal
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -22,7 +25,7 @@ namespace Bank_Configuration_Portal
                 return;
             }
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            DIConfig.RegisterServices();
+            AutofacConfig.ConfigureContainer();
         }
         protected void Application_BeginRequest()
         {

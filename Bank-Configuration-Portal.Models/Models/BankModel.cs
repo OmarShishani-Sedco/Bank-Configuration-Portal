@@ -8,7 +8,7 @@ namespace Bank_Configuration_Portal.Models.Models
 {
     public class BankModel
     {
-        public int BankId { get; set; }
-        public string BankName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -1,38 +1,94 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using System.Threading
+@using System.Globalization
+@using Bank_Configuration_Portal.Resources
+<!DOCTYPE html>
+<html dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
+      lang="@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title</title>
+    @if (Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft)
+    {
+        <link rel="stylesheet" href="~/Content/Site.css" />
+        <link rel="stylesheet" href="~/Content/bootstrap.rtl.min.css" />
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/Content/Site.css" />
+        <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    }    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "Login")">
+                <img src="@Url.Content("~/Content/Images/Application_Icon.png")" alt="@Language.Application_Label" height="30" class="me-2 rounded-5" />
+                @Language.Application_Label
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                 </ul>
+
+                <form action="@Url.Action("ChangeLanguage", "Base")" method="get" class="d-flex me-3">
+                    <select name="lang" onchange="this.form.submit();" class="form-select">
+                        <option value="en" @(Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en") ? "selected" : "")>English</option>
+                        <option value="ar" @(Thread.CurrentThread.CurrentUICulture.Name.StartsWith("ar") ? "selected" : "")>العربية</option>
+                    </select>
+                    <input type="hidden" name="returnUrl" value="@Context.Request.RawUrl" />
+                </form>
+
+                @if (Session["BankId"] != null)
+                {
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-outline-danger btn-sm nav-link px-3" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                @Language.Logout
+                            </button>
+                        </li>
+                    </ul>
+                }
             </div>
         </div>
     </nav>
+
+
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
 
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">@Language.Logout_Confirm_Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @Language.Logout_Confirm_Message
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Language.Cancel_Button</button>
+                    <form action="@Url.Action("Logout", "Login")" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">@Language.Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

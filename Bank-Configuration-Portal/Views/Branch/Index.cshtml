@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Bank_Configuration_Portal.Models.BranchViewModel>
+@using Bank_Configuration_Portal.Resources
+
+@{
+    ViewBag.Title = Language.Branch_Index_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">@Language.Branch_Index_Title</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <p>
+        @Html.ActionLink(Language.Branch_Create_Button, "Create", "Branch", null, new { @class = "btn btn-primary" })
+    </p>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>@Language.Branch_NameEnglish_Label</th>
+                <th>@Language.Branch_NameArabic_Label</th>
+                <th>@Language.IsActive_Label</th>
+                <th style="width: 160px;">@Language.Actions_Label</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">@Language.NoRecordsFound</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var branch in Model)
+                {
+                    <tr>
+                        <td>@branch.NameEnglish</td>
+                        <td>@branch.NameArabic</td>
+                        <td>
+                            @if (branch.IsActive)
+                            {
+                                <span class="badge bg-success">@Language.Active_Label</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@Language.Inactive_Label</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink(Language.Edit_Label, "Edit", new { id = branch.Id }, new { @class = "btn btn-sm btn-warning me-1" })
+
+                            @using (Html.BeginForm("Delete", "Branch", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", branch.Id)
+                                @* TODO: Add a hidden input for RowVersion in base64 format here. For example: *@
+                                @* @Html.Hidden("rowVersionBase64", Convert.ToBase64String(branch.RowVersion)) *@
+                                <button type="submit" class="btn btn-sm btn-danger">@Language.Delete_Label</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

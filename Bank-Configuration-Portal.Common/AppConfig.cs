@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Configuration; // Still used for ConfigurationErrorsException
+using System.Configuration; 
 using System.IO;
 
 public static class AppConfig
@@ -48,7 +48,6 @@ public static class AppConfig
         if (!_initialized)
             throw new InvalidOperationException("AppConfig is not initialized. Call AppConfig.Initialize() first.");
 
-        // Access the 'DbConnection' section directly
         var databaseSection = _configuration!.GetSection("DbConnection");
 
         if (!databaseSection.Exists())
@@ -60,7 +59,6 @@ public static class AppConfig
         var userId = databaseSection["UserId"];
         var password = databaseSection["Password"];
 
-        // Use TryGetValue to safely parse boolean values
         bool trustServerCertificate = false;
         bool integratedSecurity = false;
 
@@ -74,7 +72,6 @@ public static class AppConfig
             throw new ConfigurationErrorsException("The 'IntegratedSecurity' is invalid or empty in the 'Database' section.");
         }
 
-        // Validate critical fields
         if (string.IsNullOrWhiteSpace(server))
             throw new ConfigurationErrorsException("The 'Server' is missing or empty in the 'Database' section.");
 
@@ -88,13 +85,12 @@ public static class AppConfig
                 throw new ConfigurationErrorsException("Database credentials (UserId or Password) are missing or empty in the 'Database' section when IntegratedSecurity is false.");
         }
 
-        // Build the connection string using SqlConnectionStringBuilder
         var builder = new SqlConnectionStringBuilder
         {
             DataSource = server,
             InitialCatalog = database,
             IntegratedSecurity = integratedSecurity,
-            TrustServerCertificate = trustServerCertificate // Set the parsed boolean value
+            TrustServerCertificate = trustServerCertificate 
         };
 
         // Only add User ID and Password if not using Integrated Security

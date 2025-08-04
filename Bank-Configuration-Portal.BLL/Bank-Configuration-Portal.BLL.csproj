@@ -41,7 +41,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankManager.cs" />
+    <Compile Include="BranchManager.cs" />
+    <Compile Include="Interfaces\IBankManager.cs" />
+    <Compile Include="Interfaces\IBranchManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bank-Configuration-Portal.Common\Bank-Configuration-Portal.Common.csproj">
+      <Project>{86244101-6C8E-4683-BC4A-5BBD06199844}</Project>
+      <Name>Bank-Configuration-Portal.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Bank-Configuration-Portal.DAL\Bank-Configuration-Portal.DAL.csproj">
+      <Project>{A2F38C1F-4540-4D44-B1F0-8273F926DEC6}</Project>
+      <Name>Bank-Configuration-Portal.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Bank-Configuration-Portal.Models\Bank-Configuration-Portal.Models.csproj">
+      <Project>{EE0A3ACF-88D2-4A3D-964D-4FD87F0CAFCB}</Project>
+      <Name>Bank-Configuration-Portal.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

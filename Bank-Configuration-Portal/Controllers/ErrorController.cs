@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Bank_Configuration_Portal.Controllers
 {
-    public class ErrorController : Controller
+    public class ErrorController : BaseController
     {
         public ActionResult Startup()
         {

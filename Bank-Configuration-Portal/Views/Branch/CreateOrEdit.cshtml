@@ -1,0 +1,68 @@
+﻿@model Bank_Configuration_Portal.Models.BranchViewModel
+@using Bank_Configuration_Portal.Resources
+
+@{
+    ViewBag.Title = Model.Id == 0 ? Language.Branch_Create_Title : Language.Branch_Edit_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+        <div class="card-header text-center bg-primary text-white">
+            <h3 class="mb-0">
+                @(Model.Id == 0 ? Language.Branch_Create_Title : Language.Branch_Edit_Title)
+            </h3>
+        </div>
+        <div class="card-body p-4">
+            @using (Html.BeginForm("CreateOrEdit", "Branch", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.BankId)
+
+                <div id="validationSummary" class="text-danger mb-3">
+                    @Html.ValidationSummary(true)
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.NameEnglish, new { @class = "form-label" })
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-translate"></i></span>
+                        @Html.TextBoxFor(m => m.NameEnglish, new
+                   {
+                       @class = "form-control",
+                       placeholder = Language.Branch_NameEnglish_Placeholder,
+                       //maxlength = "100"
+                   })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.NameEnglish, "", new { @class = "text-danger"})
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.NameArabic, new { @class = "form-label" })
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-translate"></i></span>
+                        @Html.TextBoxFor(m => m.NameArabic, new
+                   {
+                       @class = "form-control",
+                       placeholder = Language.Branch_NameArabic_Placeholder,
+                       maxlength = "100"
+                   })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.NameArabic, "", new { @class = "text-danger"})
+                </div>
+
+                <div class="mb-3 form-check">
+                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                    @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        @(Model.Id == 0 ? Language.Branch_Create_Button : Language.Branch_Update_Button)
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
