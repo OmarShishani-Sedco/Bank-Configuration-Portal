@@ -29,7 +29,7 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public void Update(BranchModel branch)
+        public void Update(BranchModel branch, bool forceUpdate = false)
         {
             try
             {

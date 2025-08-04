@@ -12,7 +12,7 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
         List<BranchModel> GetAllByBankId(int bankId);
         BranchModel GetById(int id, int bankId);
         void Delete(int id, int bankId, byte[] rowVersion);
-        void Update(BranchModel branch);
+        void Update(BranchModel branch, bool forceUpdate = false);
         void Create(BranchModel branch);
     }
 }

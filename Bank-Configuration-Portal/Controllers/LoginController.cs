@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Bank_Configuration_Portal.Resources;
+using System.Threading.Tasks;
 
 namespace Bank_Configuration_Portal.Controllers
 {
@@ -28,20 +29,20 @@ namespace Bank_Configuration_Portal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(LoginViewModel model)
+        public async Task<ActionResult> Index(LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
             try
             {
-                var bank = _bankManager.GetByName(model.BankName);
+                var bank = await _bankManager.GetByNameAsync(model.BankName);
                 if (bank == null)
                 {
                     ModelState.AddModelError("", Language.Login_Invalid_Bank);
                     return View(model);
                 }
-                if (!_bankManager.IsUserMappedToBank(model.UserName, bank.Id))
+                if (!(await _bankManager.IsUserMappedToBankAsync(model.UserName, bank.Id)))
                 {
                     ModelState.AddModelError("", Language.Login_Unauthorized_User);
                     return View(model);

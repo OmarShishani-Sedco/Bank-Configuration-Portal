@@ -267,4 +267,19 @@
 	<data name="Cancel_Button" xml:space="preserve">
     <value>الغاء</value>
   </data>
+	<data name="Branch_Force_Save" xml:space="preserve">
+    <value>تأكيد التعديل</value>
+  </data>
+	<data name="Reload_Branch" xml:space="preserve">
+    <value>تحديث التغييرات</value>
+  </data>
+	<data name="Branch_Concurrency_ForcePrompt" xml:space="preserve">
+    <value>هل انت متأكد من تعديل البيانات</value>
+  </data>
+	<data name="Branch_Concurrency_ForceFailed" xml:space="preserve">
+    <value>فشل التحديث المتزامن</value>
+  </data>
+	<data name="Branch_NoChangesDetected" xml:space="preserve">
+    <value>لا يوجد تحديثات على الفرع</value>
+  </data>
 </root>

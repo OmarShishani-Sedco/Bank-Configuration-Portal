@@ -4,9 +4,11 @@ using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Models;
 using Bank_Configuration_Portal.Models.Models;
 using Bank_Configuration_Portal.Resources;
+using Bank_Configuration_Portal.UiHelpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Bank_Configuration_Portal.Controllers
@@ -23,20 +25,36 @@ namespace Bank_Configuration_Portal.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int page = 1, int pageSize = 6)
         {
             try
             {
                 int bankId = (int)Session["BankId"];
-                var branches = _branchManager.GetAllByBankId(bankId);
-                var vmList = _mapper.Map<List<BranchViewModel>>(branches); 
-                return View(vmList);
+                var allBranches = _branchManager.GetAllByBankId(bankId);
+
+                int totalBranches = allBranches.Count;
+                var pagedBranches = allBranches
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var vmList = _mapper.Map<List<BranchViewModel>>(pagedBranches);
+
+                var viewModel = new BranchListViewModel
+                {
+                    Branches = vmList,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalCount = totalBranches
+                };
+
+                return View(viewModel);
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex);
                 TempData["Error"] = Language.Generic_Error;
-                return View(new List<BranchViewModel>());
+                return View(new BranchListViewModel());
             }
         }
 
@@ -96,31 +114,48 @@ namespace Bank_Configuration_Portal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(BranchViewModel model)
+        public ActionResult Edit(BranchViewModel model, bool forceUpdate = false)
         {
             if (!ModelState.IsValid)
-                return View("CreateOrEdit",model);
+                return View("CreateOrEdit", model);
 
             try
             {
                 var branchModel = _mapper.Map<BranchModel>(model);
                 branchModel.BankId = (int)Session["BankId"];
-                _branchManager.Update(branchModel);
+                var existingBranch = _branchManager.GetById(model.Id, branchModel.BankId);
+                if (existingBranch != null && !forceUpdate)
+                {
+                    if (UiUtility.AreObjectsEqual(existingBranch, branchModel, "RowVersion", "Id", "BankId"))
+                    {
+                        TempData["Info"] = Language.Branch_NoChangesDetected;
+                        return RedirectToAction("Index");
+                    }
+                }
+                _branchManager.Update(branchModel, forceUpdate);
 
                 TempData["Success"] = Language.Branch_Updated_Successfully;
                 return RedirectToAction("Index");
             }
             catch (DBConcurrencyException)
             {
-                ModelState.AddModelError("", Language.Branch_Concurrency_Error);
+                if (!forceUpdate)
+                {
+                    // Load the latest RowVersion from DB to update model
+                    var latestBranch = _branchManager.GetById(model.Id, (int)Session["BankId"]);
+                    if (latestBranch != null)
+                        model.RowVersion = latestBranch.RowVersion;
+
+                    ModelState.AddModelError("", Language.Branch_Concurrency_Error + " " + Language.Branch_Concurrency_ForcePrompt);
+                    ViewBag.ShowForceUpdate = true;
+                }
+                else
+                {
+                    ModelState.AddModelError("", Language.Branch_Concurrency_ForceFailed);
+                }
                 return View("CreateOrEdit", model);
             }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                ModelState.AddModelError("", Language.Generic_Error);
-                return View("CreateOrEdit", model);
-            }
+
         }
 
 

@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="~/Content/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm glass-bg">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "Login")">
                 <img src="@Url.Content("~/Content/Images/Application_Icon.png")" alt="@Language.Application_Label" height="30" class="me-2 rounded-5" />
@@ -86,10 +86,10 @@
         </div>
     </div>
 
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/Custom")
     @RenderSection("scripts", required: false)
 </body>
 </html>

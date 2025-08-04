@@ -27,5 +27,6 @@ namespace Bank_Configuration_Portal.Models
         [Display(Name = "IsActive", ResourceType = typeof(Language))]
         public bool IsActive { get; set; }
         public byte[] RowVersion { get; set; }
+
     }
 }

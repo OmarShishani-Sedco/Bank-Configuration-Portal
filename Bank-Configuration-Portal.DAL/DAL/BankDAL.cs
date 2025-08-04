@@ -12,20 +12,21 @@ namespace Bank_Configuration_Portal.DAL.DAL
 {
     public class BankDAL : IBankDAL
     {
-        public BankModel GetByName(string name)
+        public async Task<BankModel?> GetByNameAsync(string name)
         {
             try
             {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
+
                     using (var cmd = new SqlCommand("SELECT BankId, BankName FROM Bank WHERE BankName = @Name", conn))
                     {
                         cmd.Parameters.AddWithValue("@Name", name);
 
-                        using (var reader = cmd.ExecuteReader())
+                        using (var reader = await cmd.ExecuteReaderAsync())
                         {
-                            if (reader.Read())
+                            if (await reader.ReadAsync())
                             {
                                 return new BankModel
                                 {
@@ -45,31 +46,34 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 throw;
             }
         }
-        public bool BankUserMappingExists(string username, int bankId)
+
+        public async Task<bool> BankUserMappingExistsAsync(string username, int bankId)
         {
-            using (var conn = DatabaseHelper.GetConnection())
+            try
             {
-                try
+                using (var conn = DatabaseHelper.GetConnection())
                 {
+                    await conn.OpenAsync();
+
                     string query = @"SELECT COUNT(1) FROM BankUserMapping 
-                             WHERE UserName = @UserName AND BankId = @BankId";
+                                 WHERE UserName = @UserName AND BankId = @BankId";
 
                     using (var cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserName", username);
                         cmd.Parameters.AddWithValue("@BankId", bankId);
 
-                        conn.Open();
-                        return (int)cmd.ExecuteScalar() > 0;
+                        object result = await cmd.ExecuteScalarAsync();
+                        return Convert.ToInt32(result) > 0;
                     }
                 }
-                catch (SqlException ex)
-                {
-                    Logger.LogError(ex);
-                    throw;
-                }
+            }
+            catch (SqlException ex)
+            {
+                Logger.LogError(ex);
+                throw;
             }
         }
-
     }
+
 }

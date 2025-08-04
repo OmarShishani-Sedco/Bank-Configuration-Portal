@@ -21,6 +21,8 @@ namespace Bank_Configuration_Portal
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
+            bundles.Add(new ScriptBundle("~/bundles/Custom").Include(
+                        "~/Scripts/Custom.js")); 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

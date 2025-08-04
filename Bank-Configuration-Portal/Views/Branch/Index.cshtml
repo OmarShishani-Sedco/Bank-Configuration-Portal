@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bank_Configuration_Portal.Models.BranchViewModel>
+﻿@model Bank_Configuration_Portal.Models.BranchListViewModel
 @using Bank_Configuration_Portal.Resources
 
 @{
@@ -7,69 +7,147 @@
 }
 
 <div class="container py-4">
-    <h2 class="mb-4">@Language.Branch_Index_Title</h2>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-success fadeout3s">@TempData["Success"]</div>
     }
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">@TempData["Error"]</div>
+        <div class="alert alert-danger fadeout3s">@TempData["Error"]</div>
+    }
+    @if (TempData["info"] != null)
+    {
+        <div class="alert alert-danger fadeout3s">@TempData["info"]</div>
+    }
+    <div class="glass-card   p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
+        <h2 class="mb-0">@Language.Branch_Index_Title</h2>
+        @Html.ActionLink(Language.Branch_Create_Button, "Create", "Branch", null, new { @class = "btn btn-primary" })
+    </div>
+
+
+    @if (!Model.Branches.Any())
+    {
+        <div class="text-muted text-center">@Language.NoRecordsFound</div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var branch in Model.Branches)
+            {
+                <div class="col">
+                    <div class="card glass-card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@branch.NameEnglish</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@branch.NameArabic</h6>
+                            <p class="mt-2">
+                                <strong>@Language.IsActive_Label:</strong>
+                                @if (branch.IsActive)
+                                {
+                                    <span class="badge bg-success">@Language.Active_Label</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@Language.Inactive_Label</span>
+                                }
+                            </p>
+
+                            <div class="d-flex justify-content-between mt-3">
+                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = branch.Id }, new { @class = "btn btn-md btn-warning me-2" })
+
+                                @using (Html.BeginForm("Delete", "Branch", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("id", branch.Id)
+                                    @Html.Hidden("rowVersion", branch.RowVersion)
+                                    <button type="submit" class="btn btn-md btn-danger">@Language.Delete_Label</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center flex-wrap">
+
+                @{
+                    int currentPage = Model.CurrentPage;
+                    int totalPages = Model.TotalPages;
+
+                    // Previous
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link glass-bg border border-primary" href="@Url.Action("Index", new { page = currentPage - 1 })" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+;
+
+                    // Always show page 1
+                    <li class="page-item @(currentPage == 1 ? "active" : "")">
+                        <a class="page-link glass-bg border border-primary" href="@Url.Action("Index", new { page = 1 })">1</a>
+                    </li>
+;
+
+                    // Ellipsis before current block
+                    if (currentPage > 4)
+                    {
+                        <li class="page-item disabled"><span class="page-link glass-bg border border-primary">…</span></li>
+;
+                    }
+
+                    // Show a few pages around current
+                    for (int i = currentPage - 1; i <= currentPage + 1; i++)
+                    {
+                        if (i > 1 && i < totalPages)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link glass-bg border border-primary" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+;
+                        }
+                    }
+
+                    // Ellipsis after current block
+                    if (currentPage < totalPages - 3)
+                    {
+                        <li class="page-item disabled"><span class="page-link glass-bg border border-primary">…</span></li>
+;
+                    }
+
+                    // Last page
+                    if (totalPages > 1)
+                    {
+                        <li class="page-item @(currentPage == totalPages ? "active" : "")">
+                            <a class="page-link glass-bg border border-primary" href="@Url.Action("Index", new { page = totalPages })">@totalPages</a>
+                        </li>
+;
+                    }
+
+                    // Next
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link  glass-bg border border-primary" href="@Url.Action("Index", new { page = currentPage + 1 })" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+;
+                }
+
+                <!-- Go to Page Input -->
+                <li class="page-item ms-3">
+                    <form method="get" action="@Url.Action("Index")" class="d-flex align-items-center">
+                        <input type="number" name="page" min="1" max="@Model.TotalPages" class="form-control form-control-sm me-2 page-link glass-bg" placeholder="Page" style="width: 80px;" />
+                        <button type="submit" class="page-link btn btn-sm btn-primary glass-bg border border-primary">Go</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
     }
 
-    <p>
-        @Html.ActionLink(Language.Branch_Create_Button, "Create", "Branch", null, new { @class = "btn btn-primary" })
-    </p>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>@Language.Branch_NameEnglish_Label</th>
-                <th>@Language.Branch_NameArabic_Label</th>
-                <th>@Language.IsActive_Label</th>
-                <th style="width: 160px;">@Language.Actions_Label</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!Model.Any())
-            {
-                <tr>
-                    <td colspan="4" class="text-center text-muted">@Language.NoRecordsFound</td>
-                </tr>
-            }
-            else
-            {
-                foreach (var branch in Model)
-                {
-                    <tr>
-                        <td>@branch.NameEnglish</td>
-                        <td>@branch.NameArabic</td>
-                        <td>
-                            @if (branch.IsActive)
-                            {
-                                <span class="badge bg-success">@Language.Active_Label</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">@Language.Inactive_Label</span>
-                            }
-                        </td>
-                        <td>
-                            @Html.ActionLink(Language.Edit_Label, "Edit", new { id = branch.Id }, new { @class = "btn btn-sm btn-warning me-1" })
 
-                            @using (Html.BeginForm("Delete", "Branch", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("id", branch.Id)
-                                @* TODO: Add a hidden input for RowVersion in base64 format here. For example: *@
-                                @* @Html.Hidden("rowVersionBase64", Convert.ToBase64String(branch.RowVersion)) *@
-                                <button type="submit" class="btn btn-sm btn-danger">@Language.Delete_Label</button>
-                            }
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
+
 </div>

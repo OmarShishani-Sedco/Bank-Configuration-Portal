@@ -14,7 +14,7 @@
             @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <div id="validationSummary" class="text-danger mb-3">
+                <div id="validationSummary" class="text-danger mb-3 fadeout3s">
                     @Html.ValidationSummary(true)
                 </div>
 
@@ -47,6 +47,4 @@
         </div>
     </div>
 </div>
-@section scripts {
-    <script src="~/Scripts/login.js"></script>
-}
+

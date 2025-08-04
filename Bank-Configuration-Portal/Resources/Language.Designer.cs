@@ -97,6 +97,24 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Concurrent update failed.
+        /// </summary>
+        public static string Branch_Concurrency_ForceFailed {
+            get {
+                return ResourceManager.GetString("Branch_Concurrency_ForceFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to enforce your changes.
+        /// </summary>
+        public static string Branch_Concurrency_ForcePrompt {
+            get {
+                return ResourceManager.GetString("Branch_Concurrency_ForcePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create New Branch.
         /// </summary>
         public static string Branch_Create_Button {
@@ -138,6 +156,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Branch_Edit_Title {
             get {
                 return ResourceManager.GetString("Branch_Edit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force Save.
+        /// </summary>
+        public static string Branch_Force_Save {
+            get {
+                return ResourceManager.GetString("Branch_Force_Save", resourceCulture);
             }
         }
         
@@ -255,6 +282,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Branch_NameEnglish_Required {
             get {
                 return ResourceManager.GetString("Branch_NameEnglish_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No changes detected to branch.
+        /// </summary>
+        public static string Branch_NoChangesDetected {
+            get {
+                return ResourceManager.GetString("Branch_NoChangesDetected", resourceCulture);
             }
         }
         
@@ -516,6 +552,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string NoRecordsFound {
             get {
                 return ResourceManager.GetString("NoRecordsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload changes.
+        /// </summary>
+        public static string Reload_Branch {
+            get {
+                return ResourceManager.GetString("Reload_Branch", resourceCulture);
             }
         }
     }

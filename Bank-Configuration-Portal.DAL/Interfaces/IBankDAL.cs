@@ -9,7 +9,8 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
 {
     public interface IBankDAL
     {
-        BankModel GetByName(string name);
-        bool BankUserMappingExists(string username, int bankId);
+        Task<BankModel?> GetByNameAsync(string name);
+        Task<bool> BankUserMappingExistsAsync(string username, int bankId);
     }
+
 }

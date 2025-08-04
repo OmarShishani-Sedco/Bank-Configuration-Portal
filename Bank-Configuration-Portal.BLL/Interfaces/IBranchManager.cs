@@ -12,7 +12,7 @@ namespace Bank_Configuration_Portal.BLL.Interfaces
         List<BranchModel> GetAllByBankId(int bankId);
         BranchModel GetById(int id, int bankId);
         void Create(BranchModel branch);
-        void Update(BranchModel branch);
+        void Update(BranchModel branch, bool forceUpdate = false);
         void Delete(int id, int bankId, byte[] rowVersion);
     }
 }
