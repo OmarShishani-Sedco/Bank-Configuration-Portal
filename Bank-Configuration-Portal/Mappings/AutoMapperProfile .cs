@@ -9,6 +9,8 @@ namespace Bank_Configuration_Portal.Mappings
         public AutoMapperProfile()
         {
             CreateMap<BranchModel, BranchViewModel>().ReverseMap();
+            CreateMap<ServiceModel, ServiceViewModel>().ReverseMap();
+            CreateMap<CounterModel, CounterViewModel>().ReverseMap();
         }
     }
 }

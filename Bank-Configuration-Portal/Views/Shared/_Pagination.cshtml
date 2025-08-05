@@ -1,0 +1,88 @@
+﻿
+@model Bank_Configuration_Portal.Models.PaginationViewModel
+@using Bank_Configuration_Portal.Resources
+
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center flex-wrap">
+
+            @{
+                int currentPage = Model.CurrentPage;
+                int totalPages = Model.TotalPages;
+
+                // Previous
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = currentPage - 1 })" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                ;
+
+                // Always show page 1
+                <li class="page-item @(currentPage == 1 ? "active" : "")">
+                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = 1 })">1</a>
+                </li>
+                ;
+
+                // Ellipsis before current block
+                if (currentPage > 4)
+                {
+                    <li class="page-item disabled"><span class="page-link glass-bg border border-primary">…</span></li>
+                    ;
+                }
+
+                // Show a few pages around current
+                for (int i = currentPage - 1; i <= currentPage + 1; i++)
+                {
+                    if (i > 1 && i < totalPages)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = i })">@i</a>
+                        </li>
+                        ;
+                    }
+                }
+
+                // Ellipsis after current block
+                if (currentPage < totalPages - 3)
+                {
+                    <li class="page-item disabled"><span class="page-link glass-bg border border-primary">…</span></li>
+                    ;
+                }
+
+                // Last page
+                if (totalPages > 1)
+                {
+                    <li class="page-item @(currentPage == totalPages ? "active" : "")">
+                        <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = totalPages })">@totalPages</a>
+                    </li>
+                    ;
+                }
+
+                // Next
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link  glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = currentPage + 1 })" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                ;
+            }
+
+            <li class="page-item ms-3">
+                <form method="get" action="@Url.Action(Model.ActionName, Model.ControllerName)" class="d-flex align-items-center">
+                    <div class="input-group input-group-md">
+                        <input type="number" name="page" min="1" max="@Model.TotalPages"
+                               class="form-control page-link glass-bg border border-primary"
+                               placeholder="@Language.Page"
+                               style="width: 80px;" />
+                        <button type="submit"
+                                class="btn btn-primary glass-bg border border-primary">
+                            @Language.Go
+                        </button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </nav>
+}

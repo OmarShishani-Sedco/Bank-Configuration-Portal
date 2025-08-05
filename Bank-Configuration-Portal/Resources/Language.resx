@@ -126,10 +126,10 @@
 	<data name="Branch_IsActive" xml:space="preserve">
     <value>Active</value>
   </data>
-	<data name="Branch_NameArabic_Required" xml:space="preserve">
+	<data name="NameArabic_Required" xml:space="preserve">
     <value>Name (Arabic) is required</value>
   </data>
-	<data name="Branch_NameEnglish_Required" xml:space="preserve">
+	<data name="NameEnglish_Required" xml:space="preserve">
     <value>Name (English) is required</value>
   </data>
 	<data name="Home_Title" xml:space="preserve">
@@ -198,16 +198,16 @@
 	<data name="Branch_Create_Button" xml:space="preserve">
     <value>Create New Branch</value>
   </data>
-	<data name="Branch_Update_Button" xml:space="preserve">
+	<data name="Update_Button" xml:space="preserve">
     <value>Update</value>
   </data>
 	<data name="Branch_Index_Title" xml:space="preserve">
     <value>Branches</value>
   </data>
-	<data name="Branch_NameEnglish_Label" xml:space="preserve">
+	<data name="NameEnglish_Label" xml:space="preserve">
     <value>Name (English)</value>
   </data>
-	<data name="Branch_NameArabic_Label" xml:space="preserve">
+	<data name="NameArabic_Label" xml:space="preserve">
     <value>Name (Arabic)</value>
   </data>
 	<data name="IsActive_Label" xml:space="preserve">
@@ -246,16 +246,16 @@
 	<data name="IsActive" xml:space="preserve">
     <value>Is Active</value>
   </data>
-	<data name="Branch_NameEnglish_Invalid" xml:space="preserve">
+	<data name="NameEnglish_Invalid" xml:space="preserve">
     <value>Only English characters allowed</value>
   </data>
-	<data name="Branch_NameArabic_Invalid" xml:space="preserve">
+	<data name="NameArabic_Invalid" xml:space="preserve">
     <value>Only Arabic characters allowed</value>
   </data>
-	<data name="Branch_NameEnglish_MaxLimit" xml:space="preserve">
+	<data name="NameEnglish_MaxLimit" xml:space="preserve">
     <value>The field Name (English) has a max limit of a (100) characters</value>
   </data>
-	<data name="Branch_NameArabic_MaxLimit" xml:space="preserve">
+	<data name="NameArabic_MaxLimit" xml:space="preserve">
     <value>The field Name (Arabic) has a max limit of a (100) characters</value>
   </data>
 	<data name="Logout" xml:space="preserve">
@@ -270,19 +270,118 @@
 	<data name="Cancel_Button" xml:space="preserve">
     <value>Cancel</value>
   </data>
-	<data name="Branch_Force_Save" xml:space="preserve">
+	<data name="Force_Save" xml:space="preserve">
     <value>Force Save</value>
   </data>
-	<data name="Reload_Branch" xml:space="preserve">
+	<data name="Reload_Changes" xml:space="preserve">
     <value>Reload changes</value>
   </data>
-	<data name="Branch_Concurrency_ForcePrompt" xml:space="preserve">
+	<data name="Concurrency_ForcePrompt" xml:space="preserve">
     <value>Are you sure you want to enforce your changes</value>
   </data>
-	<data name="Branch_Concurrency_ForceFailed" xml:space="preserve">
+	<data name="Concurrency_ForceFailed" xml:space="preserve">
     <value>Concurrent update failed</value>
   </data>
 	<data name="Branch_NoChangesDetected" xml:space="preserve">
     <value>No changes detected to branch</value>
+  </data>
+	<data name="Bank_Arab Bank" xml:space="preserve">
+    <value>Arab Bank</value>
+  </data>
+	<data name="Go" xml:space="preserve">
+    <value>Go</value>
+  </data>
+	<data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+	<data name="Service_Created_Successfully" xml:space="preserve">
+    <value>Service Created Successfully</value>
+  </data>
+	<data name="Service_Updated_Successfully" xml:space="preserve">
+    <value>Service Updated Successfully</value>
+  </data>
+	<data name="Service_Deleted_Successfully" xml:space="preserve">
+    <value>Service Deleted Successfully</value>
+  </data>
+	<data name="Service_Concurrency_Error" xml:space="preserve">
+    <value>The service has been modified by another user</value>
+  </data>
+	<data name="Service_Not_Found" xml:space="preserve">
+    <value>Service not found</value>
+  </data>
+	<data name="Service_Tickets_Range" xml:space="preserve">
+    <value>Tickets range should be between (1-100)</value>
+  </data>
+	<data name="Service_Create_Button" xml:space="preserve">
+    <value>Create New Service</value>
+  </data>
+	<data name="Service_Index_Title" xml:space="preserve">
+    <value>Services</value>
+  </data>
+	<data name="MaxTickets_Label" xml:space="preserve">
+    <value>Max Tickets per day</value>
+  </data>
+	<data name="Service_Create_Title" xml:space="preserve">
+    <value>Create Service</value>
+  </data>
+	<data name="Service_Edit_Title" xml:space="preserve">
+    <value>Edit Service</value>
+  </data>
+	<data name="Service_NameEnglish_Placeholder" xml:space="preserve">
+    <value>Enter service name (EN)</value>
+  </data>
+	<data name="Service_NameArabic_Placeholder" xml:space="preserve">
+    <value>Enter service name (AR)</value>
+  </data>
+	<data name="Service_NoChangesDetected" xml:space="preserve">
+    <value>No changes detected to service</value>
+  </data>
+	<data name="Counter_Created_Successfully" xml:space="preserve">
+    <value>Counter Created Successfully</value>
+  </data>
+	<data name="Counter_Updated_Successfully" xml:space="preserve">
+    <value>Counter Updated Successfully</value>
+  </data>
+	<data name="Counter_Deleted_Successfully" xml:space="preserve">
+    <value>Counter Deleted Successfully</value>
+  </data>
+	<data name="Counter_Concurrency_Error" xml:space="preserve">
+    <value>The Counter has been modified by another user</value>
+  </data>
+	<data name="Counter_Not_Found" xml:space="preserve">
+    <value>Counter not found</value>
+  </data>
+	<data name="Counter_Create_Button" xml:space="preserve">
+    <value>Create New Counter</value>
+  </data>
+	<data name="Counter_Index_Title" xml:space="preserve">
+    <value>Counters</value>
+  </data>
+	<data name="Counter_Create_Title" xml:space="preserve">
+    <value>Create Counter</value>
+  </data>
+	<data name="Counter_Edit_Title" xml:space="preserve">
+    <value>Edit Counter</value>
+  </data>
+	<data name="Counter_NameEnglish_Placeholder" xml:space="preserve">
+    <value>Enter Counter name (EN)</value>
+  </data>
+	<data name="Counter_NameArabic_Placeholder" xml:space="preserve">
+    <value>Enter Counter name (AR)</value>
+  </data>
+	<data name="Counter_NoChangesDetected" xml:space="preserve">
+    <value>No changes detected to Counter</value>
+  </data>
+	<data name="Back_To_Branches_Button" xml:space="preserve">
+    <value>Back to branches</value>
+  </data>
+	<data name="View_Counters_Button" xml:space="preserve">
+    <value>View Counters</value>
+  </data>
+	<data name="Counter_Type_Label" xml:space="preserve">
+    <value>Counter Type</value>
+  </data>
+	<data name="Select_Type_Placeholder" xml:space="preserve">
+    <value>Select Type</value>
   </data>
 </root>

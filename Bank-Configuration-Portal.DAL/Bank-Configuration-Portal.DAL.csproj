@@ -14,7 +14,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-	<LangVersion>9.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -169,10 +169,14 @@
   <ItemGroup>
     <Compile Include="DAL\BankDAL.cs" />
     <Compile Include="DAL\BranchDAL.cs" />
+    <Compile Include="DAL\CounterDAL.cs" />
+    <Compile Include="DAL\ServiceDAL.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="DatabaseUtility.cs" />
     <Compile Include="Interfaces\IBankDAL.cs" />
     <Compile Include="Interfaces\IBranchDAL.cs" />
+    <Compile Include="Interfaces\ICounterDAL.cs" />
+    <Compile Include="Interfaces\IServiceDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

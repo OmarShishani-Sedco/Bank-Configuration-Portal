@@ -88,29 +88,29 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back to branches.
+        /// </summary>
+        public static string Back_To_Branches_Button {
+            get {
+                return ResourceManager.GetString("Back_To_Branches_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arab Bank.
+        /// </summary>
+        public static string Bank_Arab_Bank {
+            get {
+                return ResourceManager.GetString("Bank_Arab Bank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The branch has been modified by another user.
         /// </summary>
         public static string Branch_Concurrency_Error {
             get {
                 return ResourceManager.GetString("Branch_Concurrency_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Concurrent update failed.
-        /// </summary>
-        public static string Branch_Concurrency_ForceFailed {
-            get {
-                return ResourceManager.GetString("Branch_Concurrency_ForceFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to enforce your changes.
-        /// </summary>
-        public static string Branch_Concurrency_ForcePrompt {
-            get {
-                return ResourceManager.GetString("Branch_Concurrency_ForcePrompt", resourceCulture);
             }
         }
         
@@ -160,15 +160,6 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Force Save.
-        /// </summary>
-        public static string Branch_Force_Save {
-            get {
-                return ResourceManager.GetString("Branch_Force_Save", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Branches.
         /// </summary>
         public static string Branch_Index_Title {
@@ -196,33 +187,6 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only Arabic characters allowed.
-        /// </summary>
-        public static string Branch_NameArabic_Invalid {
-            get {
-                return ResourceManager.GetString("Branch_NameArabic_Invalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name (Arabic).
-        /// </summary>
-        public static string Branch_NameArabic_Label {
-            get {
-                return ResourceManager.GetString("Branch_NameArabic_Label", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The field Name (Arabic) has a max limit of a (100) characters.
-        /// </summary>
-        public static string Branch_NameArabic_MaxLimit {
-            get {
-                return ResourceManager.GetString("Branch_NameArabic_MaxLimit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Enter branch name (AR).
         /// </summary>
         public static string Branch_NameArabic_Placeholder {
@@ -232,56 +196,11 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name (Arabic) is required.
-        /// </summary>
-        public static string Branch_NameArabic_Required {
-            get {
-                return ResourceManager.GetString("Branch_NameArabic_Required", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Only English characters allowed.
-        /// </summary>
-        public static string Branch_NameEnglish_Invalid {
-            get {
-                return ResourceManager.GetString("Branch_NameEnglish_Invalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name (English).
-        /// </summary>
-        public static string Branch_NameEnglish_Label {
-            get {
-                return ResourceManager.GetString("Branch_NameEnglish_Label", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The field Name (English) has a max limit of a (100) characters.
-        /// </summary>
-        public static string Branch_NameEnglish_MaxLimit {
-            get {
-                return ResourceManager.GetString("Branch_NameEnglish_MaxLimit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Enter branch name (EN).
         /// </summary>
         public static string Branch_NameEnglish_Placeholder {
             get {
                 return ResourceManager.GetString("Branch_NameEnglish_Placeholder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name (English) is required.
-        /// </summary>
-        public static string Branch_NameEnglish_Required {
-            get {
-                return ResourceManager.GetString("Branch_NameEnglish_Required", resourceCulture);
             }
         }
         
@@ -300,15 +219,6 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Branch_Not_Found {
             get {
                 return ResourceManager.GetString("Branch_Not_Found", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Update.
-        /// </summary>
-        public static string Branch_Update_Button {
-            get {
-                return ResourceManager.GetString("Branch_Update_Button", resourceCulture);
             }
         }
         
@@ -340,11 +250,146 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Concurrent update failed.
+        /// </summary>
+        public static string Concurrency_ForceFailed {
+            get {
+                return ResourceManager.GetString("Concurrency_ForceFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to enforce your changes.
+        /// </summary>
+        public static string Concurrency_ForcePrompt {
+            get {
+                return ResourceManager.GetString("Concurrency_ForcePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this branch?.
         /// </summary>
         public static string ConfirmDelete_Message {
             get {
                 return ResourceManager.GetString("ConfirmDelete_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Counter has been modified by another user.
+        /// </summary>
+        public static string Counter_Concurrency_Error {
+            get {
+                return ResourceManager.GetString("Counter_Concurrency_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Counter.
+        /// </summary>
+        public static string Counter_Create_Button {
+            get {
+                return ResourceManager.GetString("Counter_Create_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Counter.
+        /// </summary>
+        public static string Counter_Create_Title {
+            get {
+                return ResourceManager.GetString("Counter_Create_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Created Successfully.
+        /// </summary>
+        public static string Counter_Created_Successfully {
+            get {
+                return ResourceManager.GetString("Counter_Created_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Deleted Successfully.
+        /// </summary>
+        public static string Counter_Deleted_Successfully {
+            get {
+                return ResourceManager.GetString("Counter_Deleted_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Counter.
+        /// </summary>
+        public static string Counter_Edit_Title {
+            get {
+                return ResourceManager.GetString("Counter_Edit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counters.
+        /// </summary>
+        public static string Counter_Index_Title {
+            get {
+                return ResourceManager.GetString("Counter_Index_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Counter name (AR).
+        /// </summary>
+        public static string Counter_NameArabic_Placeholder {
+            get {
+                return ResourceManager.GetString("Counter_NameArabic_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Counter name (EN).
+        /// </summary>
+        public static string Counter_NameEnglish_Placeholder {
+            get {
+                return ResourceManager.GetString("Counter_NameEnglish_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No changes detected to Counter.
+        /// </summary>
+        public static string Counter_NoChangesDetected {
+            get {
+                return ResourceManager.GetString("Counter_NoChangesDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter not found.
+        /// </summary>
+        public static string Counter_Not_Found {
+            get {
+                return ResourceManager.GetString("Counter_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Type.
+        /// </summary>
+        public static string Counter_Type_Label {
+            get {
+                return ResourceManager.GetString("Counter_Type_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Updated Successfully.
+        /// </summary>
+        public static string Counter_Updated_Successfully {
+            get {
+                return ResourceManager.GetString("Counter_Updated_Successfully", resourceCulture);
             }
         }
         
@@ -367,11 +412,29 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Force Save.
+        /// </summary>
+        public static string Force_Save {
+            get {
+                return ResourceManager.GetString("Force_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred. Please try again.
         /// </summary>
         public static string Generic_Error {
             get {
                 return ResourceManager.GetString("Generic_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go.
+        /// </summary>
+        public static string Go {
+            get {
+                return ResourceManager.GetString("Go", resourceCulture);
             }
         }
         
@@ -547,6 +610,87 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Tickets per day.
+        /// </summary>
+        public static string MaxTickets_Label {
+            get {
+                return ResourceManager.GetString("MaxTickets_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only Arabic characters allowed.
+        /// </summary>
+        public static string NameArabic_Invalid {
+            get {
+                return ResourceManager.GetString("NameArabic_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name (Arabic).
+        /// </summary>
+        public static string NameArabic_Label {
+            get {
+                return ResourceManager.GetString("NameArabic_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field Name (Arabic) has a max limit of a (100) characters.
+        /// </summary>
+        public static string NameArabic_MaxLimit {
+            get {
+                return ResourceManager.GetString("NameArabic_MaxLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name (Arabic) is required.
+        /// </summary>
+        public static string NameArabic_Required {
+            get {
+                return ResourceManager.GetString("NameArabic_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only English characters allowed.
+        /// </summary>
+        public static string NameEnglish_Invalid {
+            get {
+                return ResourceManager.GetString("NameEnglish_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name (English).
+        /// </summary>
+        public static string NameEnglish_Label {
+            get {
+                return ResourceManager.GetString("NameEnglish_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field Name (English) has a max limit of a (100) characters.
+        /// </summary>
+        public static string NameEnglish_MaxLimit {
+            get {
+                return ResourceManager.GetString("NameEnglish_MaxLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name (English) is required.
+        /// </summary>
+        public static string NameEnglish_Required {
+            get {
+                return ResourceManager.GetString("NameEnglish_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No records found..
         /// </summary>
         public static string NoRecordsFound {
@@ -556,11 +700,164 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        public static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reload changes.
         /// </summary>
-        public static string Reload_Branch {
+        public static string Reload_Changes {
             get {
-                return ResourceManager.GetString("Reload_Branch", resourceCulture);
+                return ResourceManager.GetString("Reload_Changes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Type.
+        /// </summary>
+        public static string Select_Type_Placeholder {
+            get {
+                return ResourceManager.GetString("Select_Type_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The service has been modified by another user.
+        /// </summary>
+        public static string Service_Concurrency_Error {
+            get {
+                return ResourceManager.GetString("Service_Concurrency_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Service.
+        /// </summary>
+        public static string Service_Create_Button {
+            get {
+                return ResourceManager.GetString("Service_Create_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Service.
+        /// </summary>
+        public static string Service_Create_Title {
+            get {
+                return ResourceManager.GetString("Service_Create_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Created Successfully.
+        /// </summary>
+        public static string Service_Created_Successfully {
+            get {
+                return ResourceManager.GetString("Service_Created_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Deleted Successfully.
+        /// </summary>
+        public static string Service_Deleted_Successfully {
+            get {
+                return ResourceManager.GetString("Service_Deleted_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Service.
+        /// </summary>
+        public static string Service_Edit_Title {
+            get {
+                return ResourceManager.GetString("Service_Edit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Services.
+        /// </summary>
+        public static string Service_Index_Title {
+            get {
+                return ResourceManager.GetString("Service_Index_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter service name (AR).
+        /// </summary>
+        public static string Service_NameArabic_Placeholder {
+            get {
+                return ResourceManager.GetString("Service_NameArabic_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter service name (EN).
+        /// </summary>
+        public static string Service_NameEnglish_Placeholder {
+            get {
+                return ResourceManager.GetString("Service_NameEnglish_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No changes detected to service.
+        /// </summary>
+        public static string Service_NoChangesDetected {
+            get {
+                return ResourceManager.GetString("Service_NoChangesDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service not found.
+        /// </summary>
+        public static string Service_Not_Found {
+            get {
+                return ResourceManager.GetString("Service_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tickets range should be between (1-100).
+        /// </summary>
+        public static string Service_Tickets_Range {
+            get {
+                return ResourceManager.GetString("Service_Tickets_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Updated Successfully.
+        /// </summary>
+        public static string Service_Updated_Successfully {
+            get {
+                return ResourceManager.GetString("Service_Updated_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string Update_Button {
+            get {
+                return ResourceManager.GetString("Update_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Counters.
+        /// </summary>
+        public static string View_Counters_Button {
+            get {
+                return ResourceManager.GetString("View_Counters_Button", resourceCulture);
             }
         }
     }

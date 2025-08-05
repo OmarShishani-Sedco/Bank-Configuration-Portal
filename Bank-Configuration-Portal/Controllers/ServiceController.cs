@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bank_Configuration_Portal.BLL;
 using Bank_Configuration_Portal.BLL.Interfaces;
 using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Models;
@@ -10,18 +11,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Bank_Configuration_Portal.Controllers
 {
-    public class BranchController : BaseController
+    public class ServiceController : BaseController
     {
-        private readonly IBranchManager _branchManager;
+        private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
 
-        public BranchController(IBranchManager branchManager, IMapper mapper)
+        public ServiceController(IServiceManager serviceManager, IMapper mapper)
         {
-            _branchManager = branchManager;
+            _serviceManager = serviceManager;
             _mapper = mapper;
         }
 
@@ -31,22 +33,22 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 int bankId = (int)Session["BankId"];
-                var allBranches = await _branchManager.GetAllByBankIdAsync(bankId);
+                var allServices = await _serviceManager.GetAllByBankIdAsync(bankId);
 
-                int totalBranches = allBranches.Count;
-                var pagedBranches = allBranches
+                int totalServices = allServices.Count;
+                var pagedServices = allServices
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
 
-                var vmList = _mapper.Map<List<BranchViewModel>>(pagedBranches);
+                var vmList = _mapper.Map<List<ServiceViewModel>>(pagedServices);
 
-                var viewModel = new BranchListViewModel
+                var viewModel = new ServiceListViewModel
                 {
-                    Branches = vmList,
+                    Services = vmList,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalCount = totalBranches
+                    TotalCount = totalServices
                 };
 
                 return View(viewModel);
@@ -55,30 +57,30 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 Logger.LogError(ex);
                 TempData["Error"] = Language.Generic_Error;
-                return View(new BranchListViewModel());
+                return View(new ServiceListViewModel());
             }
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            return View("CreateOrEdit", new BranchViewModel());
+            return View("CreateOrEdit", new ServiceViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(BranchViewModel model)
+        public async Task<ActionResult> Create(ServiceViewModel model)
         {
             if (!ModelState.IsValid)
                 return View("CreateOrEdit", model);
 
             try
             {
-                var branchModel = _mapper.Map<BranchModel>(model);
-                branchModel.BankId = (int)Session["BankId"];
-                await _branchManager.CreateAsync(branchModel);
+                var serviceModel = _mapper.Map<ServiceModel>(model);
+                serviceModel.BankId = (int)Session["BankId"];
+                await _serviceManager.CreateAsync(serviceModel);
 
-                TempData["Success"] = Language.Branch_Created_Successfully;
+                TempData["Success"] = Language.Service_Created_Successfully;
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -95,14 +97,14 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 int bankId = (int)Session["BankId"];
-                var branch = await _branchManager.GetByIdAsync(id, bankId);
-                if (branch == null)
+                var service = await _serviceManager.GetByIdAsync(id);
+                if (service == null)
                 {
-                    TempData["Error"] = Language.Branch_Not_Found;
+                    TempData["Error"] = Language.Service_Not_Found;
                     return RedirectToAction("Index");
                 }
 
-                var vm = _mapper.Map<BranchViewModel>(branch);
+                var vm = _mapper.Map<ServiceViewModel>(service);
                 return View("CreateOrEdit", vm);
             }
             catch (Exception ex)
@@ -115,40 +117,40 @@ namespace Bank_Configuration_Portal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(BranchViewModel model, bool forceUpdate = false)
+        public async Task<ActionResult> Edit(ServiceViewModel model, bool forceUpdate = false)
         {
             if (!ModelState.IsValid)
                 return View("CreateOrEdit", model);
 
             try
             {
-                var branchModel = _mapper.Map<BranchModel>(model);
-                branchModel.BankId = (int)Session["BankId"];
-                var existingBranch = await _branchManager.GetByIdAsync(model.Id, branchModel.BankId);
+                var serviceModel = _mapper.Map<ServiceModel>(model);
+                serviceModel.BankId = (int)Session["BankId"];
+                var existingService = await _serviceManager.GetByIdAsync(model.Id);
 
-                if (existingBranch != null && !forceUpdate)
+                if (existingService != null && !forceUpdate)
                 {
-                    if (UiUtility.AreObjectsEqual(existingBranch, branchModel, "RowVersion", "Id", "BankId"))
+                    if (UiUtility.AreObjectsEqual(existingService, serviceModel, "RowVersion", "Id", "BankId"))
                     {
-                        TempData["Info"] = Language.Branch_NoChangesDetected;
+                        TempData["Info"] = Language.Service_NoChangesDetected;
                         return RedirectToAction("Index");
                     }
                 }
 
-                await _branchManager.UpdateAsync(branchModel, forceUpdate);
+                await _serviceManager.UpdateAsync(serviceModel, forceUpdate);
 
-                TempData["Success"] = Language.Branch_Updated_Successfully;
+                TempData["Success"] = Language.Service_Updated_Successfully;
                 return RedirectToAction("Index");
             }
             catch (DBConcurrencyException)
             {
                 if (!forceUpdate)
                 {
-                    var latestBranch = await _branchManager.GetByIdAsync(model.Id, (int)Session["BankId"]);
-                    if (latestBranch != null)
-                        model.RowVersion = latestBranch.RowVersion;
+                    var latestService = await _serviceManager.GetByIdAsync(model.Id);
+                    if (latestService != null)
+                        model.RowVersion = latestService.RowVersion;
 
-                    ModelState.AddModelError("", Language.Branch_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
+                    ModelState.AddModelError("", Language.Service_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
                     ViewBag.ShowForceUpdate = true;
                 }
                 else
@@ -167,8 +169,8 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 int bankId = (int)Session["BankId"];
-                await _branchManager.DeleteAsync(id, bankId, rowVersion);
-                TempData["Success"] = Language.Branch_Deleted_Successfully;
+                await _serviceManager.DeleteAsync(id, rowVersion);
+                TempData["Success"] = Language.Service_Deleted_Successfully;
             }
             catch (Exception ex)
             {
@@ -178,5 +180,9 @@ namespace Bank_Configuration_Portal.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
     }
+
 }

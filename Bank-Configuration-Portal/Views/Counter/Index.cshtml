@@ -1,0 +1,97 @@
+﻿@model Bank_Configuration_Portal.Models.CounterListViewModel
+@using Bank_Configuration_Portal.Resources
+
+@{
+    ViewBag.Title = Language.Counter_Index_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var lang = System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+<div class="container py-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success fadeout3s">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger fadeout3s">@TempData["Error"]</div>
+    }
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info fadeout3s">@TempData["Info"]</div>
+    }
+
+    <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
+        <h2 class="mb-0">
+            @ViewBag.BranchName - @Language.Counter_Index_Title
+        </h2>
+        <div>
+            @Html.ActionLink(Language.Back_To_Branches_Button, "Index", "Branch", null, new { @class = "btn btn-secondary me-2" })
+            @Html.ActionLink(Language.Counter_Create_Button, "Create", "Counter", new { branchId = Model.BranchId }, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+
+    @if (!Model.Counters.Any())
+    {
+        <div class="text-muted text-center">@Language.NoRecordsFound</div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var counter in Model.Counters)
+            {
+                <div class="col">
+                    <div class="card glass-card h-100 shadow-sm">
+                        <div class="card-body">
+                            @if (lang == "ar")
+                            {
+                                <h5 class="card-title">@counter.NameArabic</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@counter.NameEnglish</h6>
+                            }
+                            else
+                            {
+                                <h5 class="card-title">@counter.NameEnglish</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@counter.NameArabic</h6>
+                            }
+                            <p>
+                                <strong>@Language.IsActive_Label:</strong>
+                                @if (counter.IsActive)
+                                {
+                                    <span class="badge bg-success">@Language.Active_Label</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@Language.Inactive_Label</span>
+                                }
+                            </p>
+
+                            <div class="d-flex justify-content-between mt-3">
+                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = counter.Id }, new { @class = "btn btn-md btn-warning me-2" })
+
+                                @using (Html.BeginForm("Delete", "Counter", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("id", counter.Id)
+                                    @Html.Hidden("rowVersion", counter.RowVersion)
+                                    <button type="submit" class="btn btn-md btn-danger">@Language.Delete_Label</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (Model.TotalPages > 1)
+    {
+        @Html.Partial("_Pagination", new Bank_Configuration_Portal.Models.PaginationViewModel
+        {
+            CurrentPage = Model.CurrentPage,
+            TotalPages = Model.TotalPages,
+            ActionName = "Index",
+            ControllerName = "Counter",
+        })
+    }
+</div>

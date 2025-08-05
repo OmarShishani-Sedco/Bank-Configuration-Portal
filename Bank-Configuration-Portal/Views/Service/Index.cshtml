@@ -1,11 +1,10 @@
-﻿@model Bank_Configuration_Portal.Models.BranchListViewModel
+﻿@model Bank_Configuration_Portal.Models.ServiceListViewModel
 @using Bank_Configuration_Portal.Resources
 
 @{
-    ViewBag.Title = Language.Branch_Index_Title;
+    ViewBag.Title = Language.Service_Index_Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var lang = System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
-
 }
 
 <div class="container py-4">
@@ -22,37 +21,42 @@
     {
         <div class="alert alert-info fadeout3s">@TempData["Info"]</div>
     }
-    <div class="glass-card   p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
-        <h2 class="mb-0">@Language.Branch_Index_Title</h2>
-        @Html.ActionLink(Language.Branch_Create_Button, "Create", "Branch", null, new { @class = "btn btn-primary" })
+
+    <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
+        <h2 class="mb-0">@Language.Service_Index_Title</h2>
+        @Html.ActionLink(Language.Service_Create_Button, "Create", "Service", null, new { @class = "btn btn-primary" })
     </div>
 
-
-    @if (!Model.Branches.Any())
+    @if (!Model.Services.Any())
     {
         <div class="text-muted text-center">@Language.NoRecordsFound</div>
     }
     else
     {
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var branch in Model.Branches)
+            @foreach (var service in Model.Services)
             {
                 <div class="col">
                     <div class="card glass-card h-100 shadow-sm">
                         <div class="card-body">
                             @if (lang == "ar")
                             {
-                                <h5 class="card-title">@branch.NameArabic</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">@branch.NameEnglish</h6>
+                                <h5 class="card-title">@service.NameArabic</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@service.NameEnglish</h6>
                             }
                             else
                             {
-                                <h5 class="card-title">@branch.NameEnglish</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">@branch.NameArabic</h6>
+                                <h5 class="card-title">@service.NameEnglish</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@service.NameArabic</h6>
                             }
+
                             <p class="mt-2">
+                                <strong>@Language.MaxTickets_Label:</strong> @service.MaxTicketsPerDay
+                            </p>
+
+                            <p>
                                 <strong>@Language.IsActive_Label:</strong>
-                                @if (branch.IsActive)
+                                @if (service.IsActive)
                                 {
                                     <span class="badge bg-success">@Language.Active_Label</span>
                                 }
@@ -62,16 +66,15 @@
                                 }
                             </p>
 
-                            <div class="d-flex float-start mt-3">
-                                @Html.ActionLink(Language.View_Counters_Button, "Index", "Counter", new { branchId = branch.Id }, new { @class = "btn btn-sm btn-info me-2" })
-                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = branch.Id }, new { @class = "btn btn-sm btn-warning me-2" })
+                            <div class="d-flex justify-content-between mt-3">
+                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = service.Id }, new { @class = "btn btn-md btn-warning me-2" })
 
-                                @using (Html.BeginForm("Delete", "Branch", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
+                                @using (Html.BeginForm("Delete", "Service", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
                                 {
                                     @Html.AntiForgeryToken()
-                                    @Html.Hidden("id", branch.Id)
-                                    @Html.Hidden("rowVersion", branch.RowVersion)
-                                    <button type="submit" class="btn btn-sm btn-danger">@Language.Delete_Label</button>
+                                    @Html.Hidden("id", service.Id)
+                                    @Html.Hidden("rowVersion", service.RowVersion)
+                                    <button type="submit" class="btn btn-md btn-danger">@Language.Delete_Label</button>
                                 }
                             </div>
                         </div>
@@ -80,19 +83,16 @@
             }
         </div>
     }
+
     @if (Model.TotalPages > 1)
     {
         @Html.Partial("_Pagination", new Bank_Configuration_Portal.Models.PaginationViewModel
-    {
-        CurrentPage = Model.CurrentPage,
-        TotalPages = Model.TotalPages,
-        ActionName = "Index",
-        ControllerName = "Branch"
-    })
-
+        {
+            CurrentPage = Model.CurrentPage,
+            TotalPages = Model.TotalPages,
+            ActionName = "Index",
+            ControllerName = "Service"
+        })
     }
-
-
-
 
 </div>

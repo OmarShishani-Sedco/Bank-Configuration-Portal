@@ -126,10 +126,10 @@
   <data name="Branch_IsActive" xml:space="preserve">
     <value>مفعل</value>
   </data>
-  <data name="Branch_NameArabic_Required" xml:space="preserve">
+  <data name="NameArabic_Required" xml:space="preserve">
     <value>الاسم (عربي) مطلوب</value>
   </data>
-  <data name="Branch_NameEnglish_Required" xml:space="preserve">
+  <data name="NameEnglish_Required" xml:space="preserve">
     <value>الاسم (إنجليزي) مطلوب</value>
   </data>
   <data name="Home_Title" xml:space="preserve">
@@ -160,7 +160,7 @@
     <value>تسجيل الدخول</value>
   </data>
   <data name="Login_Unauthorized_User" xml:space="preserve">
-    <value>المستخدم غير موجود أو مصرح له لهذا البنك</value>
+    <value>المستخدم غير موجود أو غير مصرح له الوصول لهذا البنك</value>
   </data>
   <data name="Login_UserName_Label" xml:space="preserve">
     <value>اسم المستخدم</value>
@@ -198,16 +198,16 @@
   <data name="Branch_Create_Button" xml:space="preserve">
     <value>إنشاء فرع جديد</value>
   </data>
-  <data name="Branch_Update_Button" xml:space="preserve">
+  <data name="Update_Button" xml:space="preserve">
     <value>تحديث</value>
   </data>
   <data name="Branch_Index_Title" xml:space="preserve">
     <value>الفروع</value>
   </data>
-  <data name="Branch_NameEnglish_Label" xml:space="preserve">
+  <data name="NameEnglish_Label" xml:space="preserve">
     <value>الاسم (إنجليزي)</value>
   </data>
-  <data name="Branch_NameArabic_Label" xml:space="preserve">
+  <data name="NameArabic_Label" xml:space="preserve">
     <value>الاسم (عربي)</value>
   </data>
   <data name="IsActive_Label" xml:space="preserve">
@@ -243,16 +243,16 @@
 	<data name="IsActive" xml:space="preserve">
     <value>فعال</value>
   </data>
-	<data name="Branch_NameEnglish_Invalid" xml:space="preserve">
+	<data name="NameEnglish_Invalid" xml:space="preserve">
     <value>أدخل الاسم بالانجليزي</value>
   </data>
-	<data name="Branch_NameArabic_Invalid" xml:space="preserve">
+	<data name="NameArabic_Invalid" xml:space="preserve">
     <value>أدخل الاسم بالعربي</value>
   </data>
-	<data name="Branch_NameEnglish_MaxLimit" xml:space="preserve">
+	<data name="NameEnglish_MaxLimit" xml:space="preserve">
     <value>حقل اسم الفرع (انجليزي) له حد اقصى (100) حرف</value>
   </data>
-	<data name="Branch_NameArabic_MaxLimit" xml:space="preserve">
+	<data name="NameArabic_MaxLimit" xml:space="preserve">
     <value>حقل اسم الفرع (عربي) له حد اقصى (100) حرف</value>
   </data>
 	<data name="Logout" xml:space="preserve">
@@ -267,19 +267,112 @@
 	<data name="Cancel_Button" xml:space="preserve">
     <value>الغاء</value>
   </data>
-	<data name="Branch_Force_Save" xml:space="preserve">
+	<data name="Force_Save" xml:space="preserve">
     <value>تأكيد التعديل</value>
   </data>
-	<data name="Reload_Branch" xml:space="preserve">
+	<data name="Reload_Changes" xml:space="preserve">
     <value>تحديث التغييرات</value>
   </data>
-	<data name="Branch_Concurrency_ForcePrompt" xml:space="preserve">
+	<data name="Branch_Concurrency_Error" xml:space="preserve">
+    <value>تم تحديث بيانات الفرع بواسطة مستخدم آخر</value>
+  </data>
+	<data name="Concurrency_ForcePrompt" xml:space="preserve">
     <value>هل انت متأكد من تعديل البيانات</value>
   </data>
-	<data name="Branch_Concurrency_ForceFailed" xml:space="preserve">
+	<data name="Concurrency_ForceFailed" xml:space="preserve">
     <value>فشل التحديث المتزامن</value>
   </data>
 	<data name="Branch_NoChangesDetected" xml:space="preserve">
     <value>لا يوجد تحديثات على الفرع</value>
+  </data>
+	<data name="Bank_Arab Bank" xml:space="preserve">
+    <value>البنك العربي</value>
+  </data>
+	<data name="Go" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+	<data name="Page" xml:space="preserve">
+    <value>صفحة</value>
+  </data>
+	<data name="Service_Created_Successfully" xml:space="preserve">
+    <value>تم إنشاء الخدمة بنجاح</value>
+  </data>
+	<data name="Service_Updated_Successfully" xml:space="preserve">
+    <value>تم تحديث الخدمة بنجاح</value>
+  </data>
+	<data name="Service_Deleted_Successfully" xml:space="preserve">
+    <value>تم حذف الخدمة بنجاح</value>
+  </data>
+	<data name="Service_Concurrency_Error" xml:space="preserve">
+    <value>تم تحديث بيانات الخدمة بواسطة مستخدم آخر</value>
+  </data>
+	<data name="Service_Not_Found" xml:space="preserve">
+    <value>الخدمة غير موجودة</value>
+  </data>
+	<data name="Service_Tickets_Range" xml:space="preserve">
+    <value>يجب ان يتراوح عدد التذاكر بين (1-100)</value>
+  </data>
+	<data name="Service_Create_Button" xml:space="preserve">
+    <value>إنشاء خدمة جديدة</value>
+  </data>
+	<data name="Service_Index_Title" xml:space="preserve">
+    <value>الخدمات</value>
+  </data>
+	<data name="MaxTickets_Label" xml:space="preserve">
+    <value>الحد الأقصى للتذاكر في اليوم الواحد</value>
+  </data>
+	<data name="Service_Create_Title" xml:space="preserve">
+    <value>إنشاء الخدمة</value>
+  </data>
+	<data name="Service_Edit_Title" xml:space="preserve">
+    <value>تعديل الخدمة</value>
+  </data>
+	<data name="Service_NameEnglish_Placeholder" xml:space="preserve">
+    <value>أدخل اسم الخدمة (انجليزي)</value>
+  </data>
+	<data name="Service_NameArabic_Placeholder" xml:space="preserve">
+    <value>أدخل اسم الخدمة (عربي)</value>
+  </data>
+	<data name="Service_NoChangesDetected" xml:space="preserve">
+    <value>لا يوجد تحديثات على الخدمة</value>
+  </data>
+	<data name="Counter_Created_Successfully" xml:space="preserve">
+    <value>تم إنشاء الشباك بنجاح</value>
+  </data>
+	<data name="Counter_Updated_Successfully" xml:space="preserve">
+    <value>تم تحديث الشباك بنجاح</value>
+  </data>
+	<data name="Counter_Deleted_Successfully" xml:space="preserve">
+    <value>تم حذف الشباك بنجاح</value>
+  </data>
+	<data name="Counter_Concurrency_Error" xml:space="preserve">
+    <value>تم تحديث بيانات الشباك بواسطة مستخدم آخر</value>
+  </data>
+	<data name="Counter_Not_Found" xml:space="preserve">
+    <value>الشباك غير موجود</value>
+  </data>
+	<data name="Counter_Create_Button" xml:space="preserve">
+    <value>إنشاء شباك جديد</value>
+  </data>
+	<data name="Counter_Index_Title" xml:space="preserve">
+    <value>الشبابيك</value>
+  </data>
+	<data name="Counter_Create_Title" xml:space="preserve">
+    <value>إنشاء شباك</value>
+  </data>
+	<data name="Counter_Edit_Title" xml:space="preserve">
+    <value>تعديل شباك</value>
+  </data>
+	<data name="Counter_NameEnglish_Placeholder" xml:space="preserve">
+    <value>أدخل اسم الشباك (انجليزي)</value>
+  </data>
+	<data name="Counter_NameArabic_Placeholder" xml:space="preserve">
+    <value>أدخل اسم الشباك (عربي)</value>
+  </data>
+	<data name="Counter_NoChangesDetected" xml:space="preserve">
+    <value>لا يوجد تحديثات على الشباك</value>
+  </data>
+	<data name="Counter_Type_Label" xml:space="preserve">
+    <value>نوع الشباك</value>
   </data>
 </root>

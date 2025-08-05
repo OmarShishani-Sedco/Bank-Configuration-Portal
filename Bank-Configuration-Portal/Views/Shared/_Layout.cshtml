@@ -1,6 +1,12 @@
 ﻿@using System.Threading
 @using System.Globalization
 @using Bank_Configuration_Portal.Resources
+@{
+    var bankName = Session["BankName"]?.ToString();
+    var key = "Bank_" + bankName;
+    var localizedBankName = Bank_Configuration_Portal.Resources.Language.ResourceManager.GetString(key) ?? bankName;
+    var showBankInfo = !string.IsNullOrWhiteSpace(localizedBankName);
+}
 <!DOCTYPE html>
 <html dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
       lang="@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
@@ -25,7 +31,10 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "Login")">
                 <img src="@Url.Content("~/Content/Images/Application_Icon.png")" alt="@Language.Application_Label" height="30" class="me-2 rounded-5" />
-                @Language.Application_Label
+                <span>
+                    @if (showBankInfo)
+                    {@($"{localizedBankName} - ")} @Language.Application_Label
+                </span>
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -35,6 +44,16 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                    @if (Session["BankId"] != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Branch")">@Language.Branch_Index_Title</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Service")">@Language.Service_Index_Title</a>
+                        </li>
+                    }
+
                 </ul>
 
                 <form action="@Url.Action("ChangeLanguage", "Base")" method="get" class="d-flex me-3">

@@ -22,6 +22,11 @@ namespace Bank_Configuration_Portal.App_Start
             builder.RegisterType<BankManager>().As<IBankManager>().InstancePerRequest();
             builder.RegisterType<BranchDAL>().As<IBranchDAL>().InstancePerRequest();
             builder.RegisterType<BranchManager>().As<IBranchManager>().InstancePerRequest();
+            builder.RegisterType<ServiceDAL>().As<IServiceDAL>().InstancePerRequest();
+            builder.RegisterType<ServiceManager>().As<IServiceManager>().InstancePerRequest();
+            builder.RegisterType<CounterDAL>().As<ICounterDAL>().InstancePerRequest();
+            builder.RegisterType<CounterManager>().As<ICounterManager>().InstancePerRequest();
+
             builder.Register(context =>
             {
                 var config = AutoMapperConfig.GetMapperConfiguration();

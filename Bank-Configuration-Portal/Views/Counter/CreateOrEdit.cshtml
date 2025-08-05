@@ -1,8 +1,8 @@
-﻿@model Bank_Configuration_Portal.Models.BranchViewModel
+@model Bank_Configuration_Portal.Models.CounterViewModel
 @using Bank_Configuration_Portal.Resources
 
 @{
-    ViewBag.Title = Model.Id == 0 ? Language.Branch_Create_Title : Language.Branch_Edit_Title;
+    ViewBag.Title = Model.Id == 0 ? Language.Counter_Create_Title : Language.Counter_Edit_Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var formAction = Model.Id == 0 ? "Create" : "Edit";
 }
@@ -11,7 +11,7 @@
     <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
         <div class="card-header text-center bg-primary text-white">
             <h3 class="mb-0">
-                @(Model.Id == 0 ? Language.Branch_Create_Title : Language.Branch_Edit_Title)
+                @(Model.Id == 0 ? Language.Counter_Create_Title : Language.Counter_Edit_Title)
             </h3>
         </div>
 
@@ -20,15 +20,16 @@
             @if (ViewBag.ShowForceUpdate != null && (bool)ViewBag.ShowForceUpdate)
             {
                 <div class="alert alert-warning text-center">
-                    <p>@Language.Branch_Concurrency_Error</p>
+                    <p>@Language.Counter_Concurrency_Error</p>
 
                     <form method="post" asp-action="Edit">
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.Id)
-                        @Html.HiddenFor(m => m.BankId)
                         @Html.HiddenFor(m => m.RowVersion)
+                        @Html.HiddenFor(m => m.BranchId)
                         @Html.HiddenFor(m => m.NameEnglish)
                         @Html.HiddenFor(m => m.NameArabic)
+                        @Html.HiddenFor(m => m.Type)
                         @Html.HiddenFor(m => m.IsActive)
 
                         <input type="hidden" name="forceUpdate" value="true" />
@@ -37,7 +38,7 @@
                             <button type="submit" class="btn btn-danger">
                                 @Language.Force_Save
                             </button>
-                            <a href="@Url.Action("Edit", "Branch", new { id = Model.Id })" class="btn btn-outline-secondary">
+                            <a href="@Url.Action("Edit", "Counter", new { id = Model.Id })" class="btn btn-outline-secondary">
                                 @Language.Reload_Changes
                             </a>
                         </div>
@@ -45,16 +46,17 @@
                 </div>
             }
 
-            @using (Html.BeginForm(formAction, "Branch", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
+            @using (Html.BeginForm(formAction, "Counter", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.Id)
-                @Html.HiddenFor(m => m.BankId)
                 @Html.HiddenFor(m => m.RowVersion)
+                @Html.HiddenFor(m => m.BranchId) @* Hidden field for the branch association *@
 
                 <div id="validationSummary" class="text-danger mb-3">
                     @Html.ValidationSummary(true)
                 </div>
+
 
                 <div class="mb-3">
                     @Html.LabelFor(m => m.NameEnglish, new { @class = "form-label" })
@@ -63,7 +65,7 @@
                         @Html.TextBoxFor(m => m.NameEnglish, new
                         {
                             @class = "form-control",
-                            placeholder = Language.Branch_NameEnglish_Placeholder,
+                            placeholder = Language.Counter_NameEnglish_Placeholder,
                             maxlength = "100"
                         })
                     </div>
@@ -77,11 +79,18 @@
                         @Html.TextBoxFor(m => m.NameArabic, new
                         {
                             @class = "form-control",
-                            placeholder = Language.Branch_NameArabic_Placeholder,
+                            placeholder = Language.Counter_NameArabic_Placeholder,
                             maxlength = "100"
                         })
                     </div>
                     @Html.ValidationMessageFor(m => m.NameArabic, "", new { @class = "text-danger" })
+                </div>
+
+                @* Dropdown list for the new CounterType enum *@
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Type, new { @class = "form-label" })
+                    @Html.EnumDropDownListFor(m => m.Type, Language.Select_Type_Placeholder, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="mb-3 form-check">
@@ -91,8 +100,9 @@
 
                 <div class="d-grid gap-2 mt-4">
                     <button type="submit" class="btn btn-primary">
-                        @(Model.Id == 0 ? Language.Branch_Create_Button : Language.Update_Button)
+                        @(Model.Id == 0 ? Language.Counter_Create_Button : Language.Update_Button)
                     </button>
+                    @Html.ActionLink(Language.Cancel_Button, "Index", "Counter", new { branchId = Model.BranchId }, new { @class = "btn btn-outline-secondary mt-2" })
                 </div>
             }
         </div>

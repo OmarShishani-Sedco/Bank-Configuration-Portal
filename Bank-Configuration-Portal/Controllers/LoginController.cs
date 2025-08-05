@@ -50,6 +50,8 @@ namespace Bank_Configuration_Portal.Controllers
 
                 Session["BankId"] = bank.Id;
                 Session["UserName"] = model.UserName;
+                Session["BankName"] = bank.Name;
+
 
                 return RedirectToAction("Index", "Branch");
             }

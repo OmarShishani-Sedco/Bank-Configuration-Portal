@@ -9,10 +9,10 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
 {
     public interface IBranchDAL
     {
-        List<BranchModel> GetAllByBankId(int bankId);
-        BranchModel GetById(int id, int bankId);
-        void Delete(int id, int bankId, byte[] rowVersion);
-        void Update(BranchModel branch, bool forceUpdate = false);
-        void Create(BranchModel branch);
+        Task<List<BranchModel>> GetAllByBankIdAsync(int bankId);
+        Task<BranchModel?> GetByIdAsync(int id, int bankId);
+        Task CreateAsync(BranchModel branch);
+        Task UpdateAsync(BranchModel branch, bool forceUpdate = false);
+        Task DeleteAsync(int id, int bankId, byte[] rowVersion);
     }
 }

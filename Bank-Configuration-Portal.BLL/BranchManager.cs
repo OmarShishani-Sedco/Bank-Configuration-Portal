@@ -4,6 +4,7 @@ using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Bank_Configuration_Portal.BLL
 {
@@ -16,11 +17,11 @@ namespace Bank_Configuration_Portal.BLL
             _branchDAL = branchDAL;
         }
 
-        public void Create(BranchModel branch)
+        public async Task CreateAsync(BranchModel branch)
         {
             try
             {
-                _branchDAL.Create(branch);
+                await _branchDAL.CreateAsync(branch);
             }
             catch (Exception ex)
             {
@@ -29,11 +30,11 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public void Update(BranchModel branch, bool forceUpdate = false)
+        public async Task UpdateAsync(BranchModel branch, bool forceUpdate = false)
         {
             try
             {
-                _branchDAL.Update(branch);
+                await _branchDAL.UpdateAsync(branch);
             }
             catch (Exception ex)
             {
@@ -42,11 +43,11 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public void Delete(int id, int bankId, byte[] rowVersion)
+        public async Task DeleteAsync(int id, int bankId, byte[] rowVersion)
         {
             try
             {
-                _branchDAL.Delete(id, bankId, rowVersion);
+                await _branchDAL.DeleteAsync(id, bankId, rowVersion);
             }
             catch (Exception ex)
             {
@@ -55,11 +56,11 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public List<BranchModel> GetAllByBankId(int bankId)
+        public async Task<List<BranchModel>> GetAllByBankIdAsync(int bankId)
         {
             try
             {
-                return _branchDAL.GetAllByBankId(bankId);
+                return await _branchDAL.GetAllByBankIdAsync(bankId);
             }
             catch (Exception ex)
             {
@@ -68,11 +69,11 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public BranchModel GetById(int id, int bankId)
+        public async Task<BranchModel> GetByIdAsync(int id, int bankId)
         {
             try
             {
-                return _branchDAL.GetById(id, bankId);
+                return await _branchDAL.GetByIdAsync(id, bankId);
             }
             catch (Exception ex)
             {
@@ -81,4 +82,5 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
     }
+
 }
