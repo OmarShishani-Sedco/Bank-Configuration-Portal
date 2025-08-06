@@ -358,10 +358,10 @@
     <value>الشبابيك</value>
   </data>
 	<data name="Counter_Create_Title" xml:space="preserve">
-    <value>إنشاء شباك</value>
+    <value>إنشاء الشباك</value>
   </data>
 	<data name="Counter_Edit_Title" xml:space="preserve">
-    <value>تعديل شباك</value>
+    <value>تعديل الشباك</value>
   </data>
 	<data name="Counter_NameEnglish_Placeholder" xml:space="preserve">
     <value>أدخل اسم الشباك (انجليزي)</value>
@@ -374,5 +374,46 @@
   </data>
 	<data name="Counter_Type_Label" xml:space="preserve">
     <value>نوع الشباك</value>
+  </data>
+	<data name="View_Counters_Button" xml:space="preserve">
+    <value>عرض الشبابيك</value>
+  </data>
+	<data name="Back_To_Branches_Button" xml:space="preserve">
+    <value>العودة الى الأفرع</value>
+  </data>
+	<data name="Select_Type_Placeholder" xml:space="preserve">
+    <value>اختر نوع الشباك</value>
+  </data><data name="CounterType_Teller" xml:space="preserve">
+    <value>صراف</value>
+  </data>
+	<data name="CounterType_CustomerService" xml:space="preserve">
+    <value>خدمة الزبائن</value>
+  </data>
+	<data name="No_Services_Allocated" xml:space="preserve">
+    <value>لا توجد خدمات مخصصة</value>
+  </data>
+	<data name="Active_Service_Index_Title" xml:space="preserve">
+    <value>الخدمات النشطة</value>
+  </data>
+	<data name="Selected_Service_Index_Title" xml:space="preserve">
+    <value>الخدمات المختارة</value>
+  </data>
+	<data name="More_Button" xml:space="preserve">
+    <value>المزيد</value>
+  </data>
+	<data name="Select_Button" xml:space="preserve">
+    <value>--اختر--</value>
+  </data>
+	<data name="Search_Name_Placeholder" xml:space="preserve">
+    <value>ادخل الاسم (انجليزي/عربي)</value>
+  </data>
+	<data name="Clear_Button" xml:space="preserve">
+    <value>مسح</value>
+  </data>
+	<data name="Search_Button" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+	<data name="Search_Name_Label" xml:space="preserve">
+    <value>الاسم</value>
   </data>
 </root>

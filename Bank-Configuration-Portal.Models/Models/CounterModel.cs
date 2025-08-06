@@ -15,5 +15,7 @@ namespace Bank_Configuration_Portal.Models.Models
         public bool IsActive { get; set; }
         public CounterType Type { get; set; }
         public byte[] RowVersion { get; set; }
+        public List<int> AllocatedServiceIds { get; set; }
+
     }
 }

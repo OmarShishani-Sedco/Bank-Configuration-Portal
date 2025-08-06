@@ -22,9 +22,36 @@
     {
         <div class="alert alert-info fadeout3s">@TempData["Info"]</div>
     }
-    <div class="glass-card   p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
+    <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
         <h2 class="mb-0">@Language.Branch_Index_Title</h2>
         @Html.ActionLink(Language.Branch_Create_Button, "Create", "Branch", null, new { @class = "btn btn-primary" })
+    </div>
+
+    <div class="glass-card p-3 mb-4 shadow-sm">
+        @using (Html.BeginForm("Index", "Branch", FormMethod.Get, new { @class = "row g-3 align-items-end" }))
+        {
+            <div class="col-md-5">
+                @Html.Label("searchTerm", Language.Search_Name_Label, new { @class = "form-label" })
+                @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control glass-bg", placeholder = Language.Search_Name_Placeholder })
+            </div>
+
+            <div class="col-md-3">
+                @Html.Label("isActive", Language.IsActive_Label, new { @class = "form-label" })
+                @Html.DropDownList("isActive",
+                    new SelectList(new[]
+                    {
+                        new { Value = "", Text = Language.Select_Button },
+                        new { Value = "true", Text = Language.Active_Label },
+                        new { Value = "false", Text = Language.Inactive_Label }
+                    }, "Value", "Text", Model.IsActive?.ToString().ToLower()),
+                    new { @class = "form-select glass-bg" })
+            </div>
+
+            <div class="col-md-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> @Language.Search_Button</button>
+                <a href="@Url.Action("Index", "Branch")" class="btn btn-secondary"><i class="bi bi-x-circle"></i> @Language.Clear_Button</a>
+            </div>
+        }
     </div>
 
 

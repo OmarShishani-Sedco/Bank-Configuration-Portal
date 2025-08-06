@@ -10,7 +10,11 @@ namespace Bank_Configuration_Portal.Mappings
         {
             CreateMap<BranchModel, BranchViewModel>().ReverseMap();
             CreateMap<ServiceModel, ServiceViewModel>().ReverseMap();
-            CreateMap<CounterModel, CounterViewModel>().ReverseMap();
+            CreateMap<CounterModel, CounterViewModel>()
+                       .ForMember(dest => dest.SelectedServiceIds, opt => opt.MapFrom(src => src.AllocatedServiceIds))
+                       .ForMember(dest => dest.AllActiveServices, opt => opt.Ignore()) // The controller populates this list
+                       .ReverseMap()
+                       .ForMember(dest => dest.AllocatedServiceIds, opt => opt.MapFrom(src => src.SelectedServiceIds));
         }
     }
 }

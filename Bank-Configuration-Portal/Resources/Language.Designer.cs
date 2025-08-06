@@ -79,6 +79,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active Services.
+        /// </summary>
+        public static string Active_Service_Index_Title {
+            get {
+                return ResourceManager.GetString("Active_Service_Index_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bank Configuration Portal.
         /// </summary>
         public static string Application_Label {
@@ -250,6 +259,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string Clear_Button {
+            get {
+                return ResourceManager.GetString("Clear_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Concurrent update failed.
         /// </summary>
         public static string Concurrency_ForceFailed {
@@ -390,6 +408,24 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Counter_Updated_Successfully {
             get {
                 return ResourceManager.GetString("Counter_Updated_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customer Service.
+        /// </summary>
+        public static string CounterType_CustomerService {
+            get {
+                return ResourceManager.GetString("CounterType_CustomerService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teller.
+        /// </summary>
+        public static string CounterType_Teller {
+            get {
+                return ResourceManager.GetString("CounterType_Teller", resourceCulture);
             }
         }
         
@@ -619,6 +655,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to More.
+        /// </summary>
+        public static string More_Button {
+            get {
+                return ResourceManager.GetString("More_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only Arabic characters allowed.
         /// </summary>
         public static string NameArabic_Invalid {
@@ -691,6 +736,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No services allocated.
+        /// </summary>
+        public static string No_Services_Allocated {
+            get {
+                return ResourceManager.GetString("No_Services_Allocated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No records found..
         /// </summary>
         public static string NoRecordsFound {
@@ -718,11 +772,56 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search_Button {
+            get {
+                return ResourceManager.GetString("Search_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Search_Name_Label {
+            get {
+                return ResourceManager.GetString("Search_Name_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Name (AR/EN).
+        /// </summary>
+        public static string Search_Name_Placeholder {
+            get {
+                return ResourceManager.GetString("Search_Name_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to --Select--.
+        /// </summary>
+        public static string Select_Button {
+            get {
+                return ResourceManager.GetString("Select_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Type.
         /// </summary>
         public static string Select_Type_Placeholder {
             get {
                 return ResourceManager.GetString("Select_Type_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Services.
+        /// </summary>
+        public static string Selected_Service_Index_Title {
+            get {
+                return ResourceManager.GetString("Selected_Service_Index_Title", resourceCulture);
             }
         }
         

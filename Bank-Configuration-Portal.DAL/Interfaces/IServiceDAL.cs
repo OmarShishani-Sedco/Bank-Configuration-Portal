@@ -10,6 +10,7 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
     public interface IServiceDAL
     {
         Task<List<ServiceModel>> GetAllByBankIdAsync(int bankId);
+        Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId);
         Task<ServiceModel?> GetByIdAsync(int serviceId);
         Task<int> CreateAsync(ServiceModel service);
         Task UpdateAsync(ServiceModel service, bool forceUpdate = false);

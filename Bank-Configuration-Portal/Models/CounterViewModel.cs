@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Bank_Configuration_Portal.Models
 {
@@ -25,14 +26,49 @@ namespace Bank_Configuration_Portal.Models
         [RegularExpression("^[\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\s\\d\\p{P}]*$", ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameArabic_Invalid")]
         public string NameArabic { get; set; }
 
-        [Display(Name = "Is Active")]
+        [Display(Name = "IsActive", ResourceType = typeof(Language))]
         public bool IsActive { get; set; }
 
-        [Display(Name = "Type")]
+        [Display(Name = "Counter_Type_Label", ResourceType = typeof(Language))]
         [Required]
         public CounterType Type { get; set; }
 
         public byte[] RowVersion { get; set; }
+        public List<int> SelectedServiceIds { get; set; } = new List<int>();
+        public List<ServiceViewModel> SelectedServices { get; set; } = new List<ServiceViewModel>();
+
+        public List<ServiceViewModel> AllActiveServices { get; set; } = new List<ServiceViewModel>();
+
+
+        public SelectList LocalizedCounterTypes
+        {
+            get
+            {
+                var types = Enum.GetValues(typeof(CounterType))
+                                .Cast<CounterType>()
+                                .Select(t => new SelectListItem
+                                {
+                                    Text = GetLocalizedName(t),
+                                    Value = ((int)t).ToString()
+                                });
+
+                return new SelectList(types, "Value", "Text");
+            }
+        }
+
+        // Helper method within the ViewModel to get localized name
+        public string GetLocalizedName(CounterType counterType)
+        {
+            switch (counterType)
+            {
+                case CounterType.Teller:
+                    return Language.CounterType_Teller;
+                case CounterType.CustomerService:
+                    return Language.CounterType_CustomerService;
+                default:
+                    return counterType.ToString();
+            }
+        }
     }
 
 }

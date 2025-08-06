@@ -28,15 +28,29 @@ namespace Bank_Configuration_Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(int page = 1, int pageSize = 6)
+        public async Task<ActionResult> Index(string searchTerm, bool? isActive, int page = 1, int pageSize = 6)
         {
             try
             {
                 int bankId = (int)Session["BankId"];
                 var allServices = await _serviceManager.GetAllByBankIdAsync(bankId);
 
-                int totalServices = allServices.Count;
-                var pagedServices = allServices
+                var filteredServices = allServices.AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    filteredServices = filteredServices.Where(b =>
+                        b.NameEnglish.ToLower().Contains(searchTerm.ToLower()) ||
+                        b.NameArabic.ToLower().Contains(searchTerm.ToLower()));
+                }
+
+                if (isActive.HasValue)
+                {
+                    filteredServices = filteredServices.Where(b => b.IsActive == isActive.Value);
+                }
+
+                int totalServices = filteredServices.Count();
+                var pagedServices = filteredServices
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -48,7 +62,9 @@ namespace Bank_Configuration_Portal.Controllers
                     Services = vmList,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalCount = totalServices
+                    TotalCount = totalServices,
+                    SearchTerm = searchTerm,
+                    IsActive = isActive
                 };
 
                 return View(viewModel);

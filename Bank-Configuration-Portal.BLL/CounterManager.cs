@@ -5,6 +5,7 @@ using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +37,13 @@ namespace Bank_Configuration_Portal.BLL
         {
             try
             {
-                return await _counterDAL.GetByIdAsync(id);
+                var counter = await _counterDAL.GetByIdAsync(id);
+
+                if (counter != null)
+                {
+                    counter.AllocatedServiceIds = await _counterDAL.GetAllocatedServiceIdsAsync(id);
+                }
+                return counter;
             }
             catch (Exception ex)
             {
@@ -49,13 +56,20 @@ namespace Bank_Configuration_Portal.BLL
         {
             try
             {
-                return await _counterDAL.CreateAsync(counter);
+                int newCounterId = await _counterDAL.CreateAsync(counter);
+
+                if (newCounterId > 0 && counter.AllocatedServiceIds != null)
+                {
+                    await _counterDAL.SaveAllocationsAsync(newCounterId, counter.AllocatedServiceIds);
+                }
+                return newCounterId;
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "CounterManager.CreateAsync");
+                Logger.LogError(ex, "CounterManager.UpdateAsync");
                 throw;
             }
+
         }
 
         public async Task UpdateAsync(CounterModel counter, bool forceUpdate = false)
@@ -63,6 +77,15 @@ namespace Bank_Configuration_Portal.BLL
             try
             {
                 await _counterDAL.UpdateAsync(counter, forceUpdate);
+
+                if (counter.AllocatedServiceIds != null)
+                {
+                    await _counterDAL.SaveAllocationsAsync(counter.Id, counter.AllocatedServiceIds);
+                }
+                else
+                {
+                    await _counterDAL.DeleteAllocationsByCounterIdAsync(counter.Id);
+                }
             }
             catch (Exception ex)
             {

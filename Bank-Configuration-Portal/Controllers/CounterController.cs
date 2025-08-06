@@ -18,17 +18,19 @@ public class CounterController : BaseController
 {
     private readonly ICounterManager _counterManager;
     private readonly IBranchManager _branchManager;
+    private readonly IServiceManager _serviceManager;
     private readonly IMapper _mapper;
 
-    public CounterController(ICounterManager counterManager, IBranchManager branchManager, IMapper mapper)
+    public CounterController(ICounterManager counterManager, IBranchManager branchManager, IMapper mapper, IServiceManager serviceManager)
     {
         _counterManager = counterManager;
         _branchManager = branchManager;
         _mapper = mapper;
+        _serviceManager = serviceManager;
     }
 
     [HttpGet]
-    public async Task<ActionResult> Index(int branchId, int page = 1, int pageSize = 6)
+    public async Task<ActionResult> Index(int branchId, string searchTerm, bool? isActive, int page = 1, int pageSize = 6)
     {
         if (branchId == 0)
         {
@@ -41,6 +43,20 @@ public class CounterController : BaseController
             int bankId = (int)Session["BankId"];
             var allCounters = await _counterManager.GetAllByBranchIdAsync(branchId);
             var branch = await _branchManager.GetByIdAsync(branchId, bankId);
+            var allServices = await _serviceManager.GetAllByBankIdAsync(bankId);
+            var filteredCounters = allCounters.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                filteredCounters = filteredCounters.Where(b =>
+                    b.NameEnglish.ToLower().Contains(searchTerm.ToLower()) ||
+                    b.NameArabic.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            if (isActive.HasValue)
+            {
+                filteredCounters = filteredCounters.Where(b => b.IsActive == isActive.Value);
+            }
 
             if (branch == null)
             {
@@ -48,18 +64,27 @@ public class CounterController : BaseController
                 return RedirectToAction("Index", "Branch");
             }
 
+
             if (page < 1)
             {
                 return RedirectToAction("Index", new { branchId = branchId, page = 1, pageSize = pageSize });
             }
 
-            int totalCounters = allCounters.Count;
-            var pagedCounters = allCounters
+            int totalCounters = filteredCounters.Count();
+            var pagedCounters = filteredCounters
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
             var vmList = _mapper.Map<List<CounterViewModel>>(pagedCounters);
+            foreach (var counterViewModel in vmList)
+            {
+                var allocatedServiceDetails = allServices
+                    .Where(s => counterViewModel.SelectedServiceIds.Contains(s.Id))
+                    .ToList();
+
+                counterViewModel.SelectedServices = _mapper.Map<List<ServiceViewModel>>(allocatedServiceDetails);
+            }
 
             var viewModel = new CounterListViewModel
             {
@@ -69,7 +94,9 @@ public class CounterController : BaseController
                 TotalCount = totalCounters,
                 BranchId = branchId,
                 BranchNameEnglish = branch.NameEnglish,
-                BranchNameArabic = branch.NameArabic
+                BranchNameArabic = branch.NameArabic,
+                SearchTerm = searchTerm,
+                IsActive = isActive
             };
 
             return View(viewModel);
@@ -82,8 +109,9 @@ public class CounterController : BaseController
         }
     }
 
+    
     [HttpGet]
-    public ActionResult Create(int branchId)
+    public async Task<ActionResult> Create(int branchId)
     {
         if (branchId == 0)
         {
@@ -91,7 +119,12 @@ public class CounterController : BaseController
             return RedirectToAction("Index", "Branch");
         }
 
-        var viewModel = new CounterViewModel { BranchId = branchId };
+        int bankId = (int)Session["BankId"];
+        var viewModel = new CounterViewModel
+        {
+            BranchId = branchId,
+            AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId)) 
+        };
         return View("CreateOrEdit", viewModel);
     }
 
@@ -101,12 +134,15 @@ public class CounterController : BaseController
     {
         if (!ModelState.IsValid)
         {
+            int bankId = (int)Session["BankId"];
+            model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId)); 
             return View("CreateOrEdit", model);
         }
 
         try
         {
             var counter = _mapper.Map<CounterModel>(model);
+            
             await _counterManager.CreateAsync(counter);
             TempData["Success"] = Language.Counter_Created_Successfully;
             return RedirectToAction("Index", new { branchId = counter.BranchId });
@@ -115,23 +151,33 @@ public class CounterController : BaseController
         {
             Logger.LogError(ex);
             ModelState.AddModelError("", Language.Generic_Error);
+            int bankId = (int)Session["BankId"];
+            model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId)); 
             return View("CreateOrEdit", model);
         }
     }
 
+    
+  
     [HttpGet]
     public async Task<ActionResult> Edit(int id)
     {
         try
         {
-            var counter = await _counterManager.GetByIdAsync(id);
+            int bankId = (int)Session["BankId"];
+            var counter = await _counterManager.GetByIdAsync(id); 
+
             if (counter == null)
             {
                 TempData["Error"] = Language.Counter_Not_Found;
+               
                 return RedirectToAction("Index", "Branch");
             }
 
             var viewModel = _mapper.Map<CounterViewModel>(counter);
+            viewModel.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId)); 
+            viewModel.SelectedServiceIds = counter.AllocatedServiceIds ?? new List<int>(); 
+
             return View("CreateOrEdit", viewModel);
         }
         catch (Exception ex)
@@ -148,23 +194,15 @@ public class CounterController : BaseController
     {
         if (!ModelState.IsValid)
         {
+            int bankId = (int)Session["BankId"];
+            model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
             return View("CreateOrEdit", model);
         }
 
         try
         {
             var counter = _mapper.Map<CounterModel>(model);
-            var existingCounter = await _counterManager.GetByIdAsync(model.Id);
-
-            if (existingCounter != null && !forceUpdate)
-            {
-                if (UiUtility.AreObjectsEqual(existingCounter, counter, "RowVersion", "Id", "BranchId"))
-                {
-                    TempData["Info"] = Language.Counter_NoChangesDetected;
-                    return RedirectToAction("Index", new { branchId = counter.BranchId });
-                }
-            }
-
+            
             await _counterManager.UpdateAsync(counter, forceUpdate);
             TempData["Success"] = Language.Counter_Updated_Successfully;
             return RedirectToAction("Index", new { branchId = counter.BranchId });
@@ -173,13 +211,15 @@ public class CounterController : BaseController
         {
             if (!forceUpdate)
             {
-                var latestCounter = await _counterManager.GetByIdAsync(model.Id);
+                var latestCounter = await _counterManager.GetByIdAsync(model.Id); 
                 if (latestCounter != null)
                 {
                     model.RowVersion = latestCounter.RowVersion;
                 }
                 ModelState.AddModelError("", Language.Counter_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
                 ViewBag.ShowForceUpdate = true;
+                int bankId = (int)Session["BankId"];
+                model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
             }
             else
             {
@@ -191,10 +231,13 @@ public class CounterController : BaseController
         {
             Logger.LogError(ex);
             TempData["Error"] = Language.Generic_Error;
+            int bankId = (int)Session["BankId"];
+            model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId)); 
             return View("CreateOrEdit", model);
         }
     }
 
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<ActionResult> Delete(int id, byte[] rowVersion)
@@ -202,7 +245,7 @@ public class CounterController : BaseController
         int branchId = 0;
         try
         {
-            var counter = await _counterManager.GetByIdAsync(id);
+            var counter = await _counterManager.GetByIdAsync(id); 
             if (counter != null)
             {
                 branchId = counter.BranchId;
@@ -214,7 +257,7 @@ public class CounterController : BaseController
                 return RedirectToAction("Index", "Branch");
             }
 
-            await _counterManager.DeleteAsync(id, rowVersion);
+            await _counterManager.DeleteAsync(id, rowVersion); 
             TempData["Success"] = Language.Counter_Deleted_Successfully;
             return RedirectToAction("Index", new { branchId = branchId });
         }
@@ -230,5 +273,5 @@ public class CounterController : BaseController
         }
     }
 
-   
+
 }

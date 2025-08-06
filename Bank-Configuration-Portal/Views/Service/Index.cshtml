@@ -27,12 +27,42 @@
         @Html.ActionLink(Language.Service_Create_Button, "Create", "Service", null, new { @class = "btn btn-primary" })
     </div>
 
+    <div class="glass-card p-3 mb-4 shadow-sm">
+        @using (Html.BeginForm("Index", "Service", FormMethod.Get, new { @class = "row g-3 align-items-end" }))
+        {
+            <div class="col-md-5">
+                @Html.Label("searchTerm", Language.Search_Name_Label, new { @class = "form-label" })
+                @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control glass-bg", placeholder = Language.Search_Name_Placeholder })
+            </div>
+
+            <div class="col-md-3">
+                @Html.Label("isActive", Language.IsActive_Label, new { @class = "form-label" })
+                @Html.DropDownList("isActive",
+                    new SelectList(new[]
+                    {
+                        new { Value = "", Text = Language.Select_Button },
+                        new { Value = "true", Text = Language.Active_Label },
+                        new { Value = "false", Text = Language.Inactive_Label }
+                    }, "Value", "Text", Model.IsActive?.ToString().ToLower()),
+                    new { @class = "form-select glass-bg" })
+            </div>
+
+            <div class="col-md-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> @Language.Search_Button</button>
+                <a href="@Url.Action("Index", "Branch")" class="btn btn-secondary"><i class="bi bi-x-circle"></i> @Language.Clear_Button</a>
+            </div>
+        }
+    </div>
+
+
     @if (!Model.Services.Any())
     {
         <div class="text-muted text-center">@Language.NoRecordsFound</div>
     }
     else
     {
+
+
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach (var service in Model.Services)
             {
@@ -66,7 +96,7 @@
                                 }
                             </p>
 
-                            <div class="d-flex justify-content-between mt-3">
+                            <div class="d-flex float-start mt-3">
                                 @Html.ActionLink(Language.Edit_Label, "Edit", new { id = service.Id }, new { @class = "btn btn-md btn-warning me-2" })
 
                                 @using (Html.BeginForm("Delete", "Service", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))

@@ -31,6 +31,18 @@ namespace Bank_Configuration_Portal.BLL
                 throw;
             }
         }
+        public async Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId)
+        {
+            try
+            {
+                return await _serviceDAL.GetAllActiveByBankIdAsync(bankId);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "ServiceManager.GetAllActiveByBankIdAsync");
+                throw;
+            }
+        }
 
         public async Task<ServiceModel?> GetByIdAsync(int Id)
         {

@@ -8,7 +8,7 @@
     var showBankInfo = !string.IsNullOrWhiteSpace(localizedBankName);
 }
 <!DOCTYPE html>
-<html dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
+<html  data-bs-theme="dark" dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
       lang="@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
@@ -17,12 +17,12 @@
     @if (Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft)
     {
         <link rel="stylesheet" href="~/Content/Site.css" />
-        <link rel="stylesheet" href="~/Content/bootstrap.rtl.min.css" />
+        <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
     }
     else
     {
         <link rel="stylesheet" href="~/Content/Site.css" />
-        <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/Content/bootstrap.css" />
     }    @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="~/Content/font/bootstrap-icons.min.css">
 </head>
@@ -57,7 +57,7 @@
                 </ul>
 
                 <form action="@Url.Action("ChangeLanguage", "Base")" method="get" class="d-flex me-3">
-                    <select name="lang" onchange="this.form.submit();" class="form-select">
+                    <select data-bs-theme="dark" name="lang" onchange="this.form.submit();" class="form-select">
                         <option value="en" @(Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en") ? "selected" : "")>English</option>
                         <option value="ar" @(Thread.CurrentThread.CurrentUICulture.Name.StartsWith("ar") ? "selected" : "")>العربية</option>
                     </select>

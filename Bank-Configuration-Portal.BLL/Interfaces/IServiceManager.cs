@@ -10,6 +10,8 @@ namespace Bank_Configuration_Portal.BLL.Interfaces
     public interface IServiceManager
     {
         Task<List<ServiceModel>> GetAllByBankIdAsync(int bankId);
+        Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId);
+
         Task<ServiceModel?> GetByIdAsync(int id);
         Task<int> CreateAsync(ServiceModel service);
         Task UpdateAsync(ServiceModel service, bool forceUpdate = false);

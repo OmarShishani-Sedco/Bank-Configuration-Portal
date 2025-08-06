@@ -14,28 +14,47 @@ namespace Bank_Configuration_Portal.DAL.DAL
     {
         public async Task<List<CounterModel>> GetAllByBranchIdAsync(int branchId)
         {
-            var counters = new List<CounterModel>();
+            var countersDictionary = new Dictionary<int, CounterModel>();
 
             using var connection = DatabaseHelper.GetConnection();
-            var command = new SqlCommand("SELECT * FROM Counter WHERE BranchId = @BranchId", connection);
+            var command = new SqlCommand(@"
+              SELECT c.*, a.ServiceId 
+              FROM Counter c
+              LEFT JOIN CounterServiceAllocation a ON c.CounterId = a.CounterId
+              WHERE c.BranchId = @BranchId", connection);
             command.Parameters.AddWithValue("@BranchId", branchId);
 
             try
             {
                 await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
+
                 while (await reader.ReadAsync())
                 {
-                    counters.Add(new CounterModel
+                    var counterId = (int)reader["CounterId"];
+                    CounterModel counter;
+
+                    if (!countersDictionary.TryGetValue(counterId, out counter))
                     {
-                        Id = (int)reader["CounterId"],
-                        BranchId = (int)reader["BranchId"],
-                        NameEnglish = reader["NameEnglish"].ToString() ?? "",
-                        NameArabic = reader["NameArabic"].ToString() ?? "",
-                        IsActive = (bool)reader["IsActive"],
-                        Type = (CounterType)reader["CounterType"],
-                        RowVersion = (byte[])reader["RowVersion"]
-                    });
+                        counter = new CounterModel
+                        {
+                            Id = counterId,
+                            BranchId = (int)reader["BranchId"],
+                            NameEnglish = reader["NameEnglish"].ToString() ?? "",
+                            NameArabic = reader["NameArabic"].ToString() ?? "",
+                            IsActive = (bool)reader["IsActive"],
+                            Type = (CounterType)Convert.ToInt32(reader["CounterType"]),
+                            RowVersion = (byte[])reader["RowVersion"],
+                            AllocatedServiceIds = new List<int>()
+                        };
+                        countersDictionary.Add(counterId, counter);
+                    }
+
+                    if (reader["ServiceId"] != DBNull.Value)
+                    {
+                        var serviceId = Convert.ToInt32(reader["ServiceId"]);
+                        counter.AllocatedServiceIds.Add(serviceId);
+                    }
                 }
             }
             catch (SqlException ex)
@@ -44,7 +63,7 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 throw;
             }
 
-            return counters;
+            return countersDictionary.Values.ToList();
         }
 
         public async Task<CounterModel?> GetByIdAsync(int id)
@@ -66,7 +85,7 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         NameEnglish = reader["NameEnglish"].ToString() ?? "",
                         NameArabic = reader["NameArabic"].ToString() ?? "",
                         IsActive = (bool)reader["IsActive"],
-                        Type = (CounterType)reader["CounterType"],
+                        Type = (CounterType)Convert.ToInt32(reader["CounterType"]),
                         RowVersion = (byte[])reader["RowVersion"]
                     };
                 }
@@ -157,6 +176,82 @@ namespace Bank_Configuration_Portal.DAL.DAL
             catch (SqlException ex)
             {
                 Logger.LogError(ex, "CounterDAL.DeleteAsync");
+                throw;
+            }
+        }
+
+
+        public async Task<List<int>> GetAllocatedServiceIdsAsync(int counterId)
+        {
+            var serviceIds = new List<int>();
+            using var connection = DatabaseHelper.GetConnection();
+            var command = new SqlCommand("SELECT ServiceId FROM CounterServiceAllocation WHERE CounterId = @CounterId", connection);
+            command.Parameters.AddWithValue("@CounterId", counterId);
+
+            try
+            {
+                await connection.OpenAsync();
+                using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    serviceIds.Add(Convert.ToInt32(reader["ServiceId"]));
+                }
+            }
+            catch (SqlException ex)
+            {
+                Logger.LogError(ex, "CounterDAL.GetAllocatedServiceIdsAsync");
+                throw;
+            }
+
+            return serviceIds;
+        }
+
+        public async Task SaveAllocationsAsync(int counterId, List<int> serviceIds)
+        {
+            using var connection = DatabaseHelper.GetConnection();
+            await connection.OpenAsync();
+
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                var deleteCommand = new SqlCommand("DELETE FROM CounterServiceAllocation WHERE CounterId = @CounterId", connection, transaction);
+                deleteCommand.Parameters.AddWithValue("@CounterId", counterId);
+                await deleteCommand.ExecuteNonQueryAsync();
+
+                foreach (var serviceId in serviceIds)
+                {
+                    var insertCommand = new SqlCommand(
+                        "INSERT INTO CounterServiceAllocation (CounterId, ServiceId) VALUES (@CounterId, @ServiceId)", connection, transaction);
+                    insertCommand.Parameters.AddWithValue("@CounterId", counterId);
+                    insertCommand.Parameters.AddWithValue("@ServiceId", serviceId);
+                    await insertCommand.ExecuteNonQueryAsync();
+                }
+
+                transaction.Commit();
+            }
+            catch (SqlException ex)
+            {
+                transaction.Rollback();
+                Logger.LogError(ex, $"CounterDAL.SaveAllocationsAsync for CounterId: {counterId}");
+                throw;
+            }
+        }
+
+        public async Task DeleteAllocationsByCounterIdAsync(int counterId)
+        {
+            using var connection = DatabaseHelper.GetConnection();
+            var command = new SqlCommand("DELETE FROM CounterServiceAllocation WHERE CounterId = @CounterId", connection);
+            command.Parameters.AddWithValue("@CounterId", counterId);
+
+            try
+            {
+                await connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (SqlException ex)
+            {
+                Logger.LogError(ex, $"CounterDAL.DeleteAllocationsByCounterIdAsync for CounterId: {counterId}");
                 throw;
             }
         }

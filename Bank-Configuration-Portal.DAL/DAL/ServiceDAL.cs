@@ -41,6 +41,32 @@ namespace Bank_Configuration_Portal.DAL.DAL
 
             return services;
         }
+        public async Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId)
+        {
+            var services = new List<ServiceModel>();
+            using (var connection = DatabaseHelper.GetConnection())
+            using (var command = new SqlCommand("SELECT * FROM Service WHERE BankId = @BankId AND IsActive = 1", connection))
+            {
+                command.Parameters.AddWithValue("@BankId", bankId);
+                try
+                {
+                    await connection.OpenAsync();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            services.Add(MapReaderToService(reader));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex);
+                    throw;
+                }
+            }
+            return services;
+        }
 
         public async Task<ServiceModel?> GetByIdAsync(int serviceId)
         {

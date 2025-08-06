@@ -384,4 +384,37 @@
 	<data name="Select_Type_Placeholder" xml:space="preserve">
     <value>Select Type</value>
   </data>
+	<data name="CounterType_Teller" xml:space="preserve">
+    <value>Teller</value>
+  </data>
+	<data name="CounterType_CustomerService" xml:space="preserve">
+    <value>Customer Service</value>
+  </data>
+	<data name="Active_Service_Index_Title" xml:space="preserve">
+    <value>Active Services</value>
+  </data>
+	<data name="No_Services_Allocated" xml:space="preserve">
+    <value>No services allocated</value>
+  </data>
+	<data name="Selected_Service_Index_Title" xml:space="preserve">
+    <value>Selected Services</value>
+  </data>
+	<data name="More_Button" xml:space="preserve">
+    <value>More</value>
+  </data>
+	<data name="Select_Button" xml:space="preserve">
+    <value>--Select--</value>
+  </data>
+	<data name="Search_Name_Placeholder" xml:space="preserve">
+    <value>Enter Name (AR/EN)</value>
+  </data>
+	<data name="Clear_Button" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+	<data name="Search_Button" xml:space="preserve">
+    <value>Search</value>
+  </data>
+	<data name="Search_Name_Label" xml:space="preserve">
+    <value>Name</value>
+  </data>
 </root>

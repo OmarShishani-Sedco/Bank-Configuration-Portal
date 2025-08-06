@@ -1,5 +1,4 @@
-
-//fade out  after 3 seconds elements with class fadeout3s
+//fade out after 3 seconds elements with class fadeout3s
 $(document).ready(function () {
     const DURATION = 3000; // 3 seconds
 
@@ -8,5 +7,9 @@ $(document).ready(function () {
     setTimeout(function () {
         validationSummary.fadeOut('slow');
     }, DURATION);
+
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    })
 
 });

@@ -13,5 +13,9 @@ namespace Bank_Configuration_Portal.Models
         public int TotalCount { get; set; }
 
         public int TotalPages => (int)System.Math.Ceiling((double)TotalCount / PageSize);
+
+        // Filter properties
+        public string SearchTerm { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

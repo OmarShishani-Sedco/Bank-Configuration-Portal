@@ -26,15 +26,29 @@ namespace Bank_Configuration_Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(int page = 1, int pageSize = 6)
+        public async Task<ActionResult> Index(string searchTerm, bool? isActive, int page = 1, int pageSize = 6)
         {
             try
             {
                 int bankId = (int)Session["BankId"];
                 var allBranches = await _branchManager.GetAllByBankIdAsync(bankId);
 
-                int totalBranches = allBranches.Count;
-                var pagedBranches = allBranches
+                var filteredBranches = allBranches.AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    filteredBranches = filteredBranches.Where(b =>
+                        b.NameEnglish.ToLower().Contains(searchTerm.ToLower()) ||
+                        b.NameArabic.ToLower().Contains(searchTerm.ToLower()));
+                }
+
+                if (isActive.HasValue)
+                {
+                    filteredBranches = filteredBranches.Where(b => b.IsActive == isActive.Value);
+                }
+
+                int totalCount = filteredBranches.Count();
+                var pagedBranches = filteredBranches
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -46,7 +60,9 @@ namespace Bank_Configuration_Portal.Controllers
                     Branches = vmList,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalCount = totalBranches
+                    TotalCount = totalCount,
+                    SearchTerm = searchTerm,
+                    IsActive = isActive
                 };
 
                 return View(viewModel);
