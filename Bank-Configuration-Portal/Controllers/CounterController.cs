@@ -240,7 +240,7 @@ public class CounterController : BaseController
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Delete(int id, byte[] rowVersion)
+    public async Task<ActionResult> Delete(int id, byte[] rowVersion, bool forceDelete = false)
     {
         int branchId = 0;
         try
@@ -257,9 +257,26 @@ public class CounterController : BaseController
                 return RedirectToAction("Index", "Branch");
             }
 
-            await _counterManager.DeleteAsync(id, rowVersion); 
+            await _counterManager.DeleteAsync(id, rowVersion,forceDelete); 
             TempData["Success"] = Language.Counter_Deleted_Successfully;
             return RedirectToAction("Index", new { branchId = branchId });
+        }
+        catch (CustomConcurrencyDeletedException)
+        {
+            TempData["Error"] = Language.Counter_Already_Deleted;
+        }
+        catch (CustomConcurrencyModifiedException)
+        {
+            if (!forceDelete)
+            {
+                TempData["ConcurrencyConflictId"] = id;
+                TempData["OriginalRowVersion"] = rowVersion;
+                TempData["Error"] = Language.Counter_Delete_Concurrency_Error;
+            }
+            else
+            {
+                TempData["Error"] = Language.Concurrency_ForceFailed;
+            }
         }
         catch (Exception ex)
         {
@@ -271,6 +288,8 @@ public class CounterController : BaseController
             }
             return RedirectToAction("Index", "Branch");
         }
+        return RedirectToAction("Index", new { branchId = branchId });
+
     }
 
 

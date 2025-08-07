@@ -1,0 +1,23 @@
+@using Bank_Configuration_Portal.Resources
+
+@if (TempData["ConcurrencyConflictId"] != null && TempData["OriginalRowVersion"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            const concurrencyConflictId = '@(TempData["ConcurrencyConflictId"] as int? ?? 0)';
+            const originalRowVersionBase64 = '@(TempData["OriginalRowVersion"] != null ? Convert.ToBase64String(TempData["OriginalRowVersion"] as byte[]) : string.Empty)';
+            const concurrencyModalElement = $('#concurrencyModal');
+
+            if (concurrencyConflictId > 0 && originalRowVersionBase64 !== '' && concurrencyModalElement.length) {
+                const concurrencyModal = new bootstrap.Modal(concurrencyModalElement[0]);
+                const forceDeleteForm = $('#forceDeleteForm');
+
+                if (forceDeleteForm.length) {
+                    forceDeleteForm.find('#forceDeleteId').val(concurrencyConflictId);
+                    forceDeleteForm.find('#forceDeleteRowVersion').val(originalRowVersionBase64);
+                    concurrencyModal.show();
+                }
+            }
+        });
+    </script>
+}

@@ -180,13 +180,30 @@ namespace Bank_Configuration_Portal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, byte[] rowVersion)
+        public async Task<ActionResult> Delete(int id, byte[] rowVersion, bool forceDelete = false)
         {
             try
             {
                 int bankId = (int)Session["BankId"];
-                await _serviceManager.DeleteAsync(id, rowVersion);
+                await _serviceManager.DeleteAsync(id, rowVersion, forceDelete);
                 TempData["Success"] = Language.Service_Deleted_Successfully;
+            }
+            catch (CustomConcurrencyDeletedException)
+            {
+                TempData["Error"] = Language.Service_Already_Deleted;
+            }
+            catch (CustomConcurrencyModifiedException)
+            {
+                if (!forceDelete)
+                {
+                    TempData["ConcurrencyConflictId"] = id;
+                    TempData["OriginalRowVersion"] = rowVersion;
+                    TempData["Error"] = Language.Service_Delete_Concurrency_Error;
+                }
+                else
+                {
+                    TempData["Error"] = Language.Concurrency_ForceFailed;
+                }
             }
             catch (Exception ex)
             {

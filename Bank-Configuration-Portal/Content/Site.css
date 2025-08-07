@@ -49,7 +49,7 @@ textarea {
 
 /*Custom CSS */
 .glass-card {
-    background: rgba(152, 210, 255, 0.26) !important;
+    background: rgb(2 16 15 / 26%) !important;
     border-radius: 16px !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
     backdrop-filter: blur(9px) !important;
@@ -58,11 +58,15 @@ textarea {
 }
 
 .glass-bg {
-    background: rgba(152, 210, 255, 0.26) !important;
+    background: rgb(2 16 15 / 26%) !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
     backdrop-filter: blur(9px) !important;
     -webkit-backdrop-filter: blur(9px) !important;
     border: 1px solid rgba(152, 210, 255, 0.24) !important;
+}
+.form-select.glass-bg option {
+    background-color: #333; 
+    color: white;
 }
 
 

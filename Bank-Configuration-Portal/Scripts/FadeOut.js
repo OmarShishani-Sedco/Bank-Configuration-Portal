@@ -7,9 +7,4 @@ $(document).ready(function () {
     setTimeout(function () {
         validationSummary.fadeOut('slow');
     }, DURATION);
-
-    $(function () {
-        $('[data-bs-toggle="tooltip"]').tooltip();
-    })
-
 });

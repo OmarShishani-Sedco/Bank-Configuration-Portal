@@ -94,11 +94,11 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public async Task DeleteAsync(int id, byte[] rowVersion)
+        public async Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false)
         {
             try
             {
-                await _counterDAL.DeleteAsync(id, rowVersion);
+                await _counterDAL.DeleteAsync(id, rowVersion, forceDelete);
             }
             catch (Exception ex)
             {

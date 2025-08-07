@@ -13,7 +13,7 @@ namespace Bank_Configuration_Portal.BLL.Interfaces
         Task<CounterModel?> GetByIdAsync(int id);
         Task<int> CreateAsync(CounterModel counter);
         Task UpdateAsync(CounterModel counter, bool forceUpdate = false);
-        Task DeleteAsync(int id, byte[] rowVersion);
+        Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false);
     }
 
 }

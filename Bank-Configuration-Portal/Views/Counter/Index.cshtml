@@ -133,15 +133,14 @@
                             </p>
 
                             <div class="d-flex float-start mt-3">
-                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = counter.Id }, new { @class = "btn btn-md btn-warning me-2" })
+                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = counter.Id }, new { @class = "btn btn-sm btn-warning me-2" })
 
-                                @using (Html.BeginForm("Delete", "Counter", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    @Html.Hidden("id", counter.Id)
-                                    @Html.Hidden("rowVersion", counter.RowVersion)
-                                    <button type="submit" class="btn btn-md btn-danger">@Language.Delete_Label</button>
-                                }
+                                <button type="button" class="btn btn-sm btn-danger delete-btn"
+                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                        data-id="@counter.Id"
+                                        data-rowversion="@(counter.RowVersion != null ? Convert.ToBase64String(counter.RowVersion) : string.Empty)">
+                                    @Language.Delete_Label
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -161,11 +160,12 @@
         })
     }
 </div>
+@Html.Partial("_DeleteModals", new Bank_Configuration_Portal.Models.DeleteModalViewModel
+{
+    ControllerName = "Counter",
+    ConcurrencyErrorMessage = Language.Counter_Delete_Concurrency_Error
+})
+
 @section scripts {
-    <script>
-        // Initialize tooltips
-        $(function () {
-            $('[data-bs-toggle="tooltip"]').tooltip();
-        })
-    </script>
+    @Html.Partial("_ConcurrencyScript")
 }

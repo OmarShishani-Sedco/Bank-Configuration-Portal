@@ -220,7 +220,7 @@
     <value>Delete</value>
   </data>
 	<data name="ConfirmDelete_Message" xml:space="preserve">
-    <value>Are you sure you want to delete this branch?</value>
+    <value>Are you sure you want to delete this record?</value>
   </data>
 	<data name="NoRecordsFound" xml:space="preserve">
     <value>No records found.</value>
@@ -242,6 +242,9 @@
   </data>
 	<data name="Branch_Concurrency_Error" xml:space="preserve">
     <value>The branch has been modified by another user</value>
+  </data>
+	<data name="Branch_Delete_Concurrency_Error" xml:space="preserve">
+    <value>The branch has been modified by another user. Are you sure you want to delete it?</value>
   </data>
 	<data name="IsActive" xml:space="preserve">
     <value>Is Active</value>
@@ -282,6 +285,9 @@
 	<data name="Concurrency_ForceFailed" xml:space="preserve">
     <value>Concurrent update failed</value>
   </data>
+	<data name="Branch_Already_Deleted" xml:space="preserve">
+    <value>Branch already deleted by another user (Refreshing changes)</value>
+  </data>
 	<data name="Branch_NoChangesDetected" xml:space="preserve">
     <value>No changes detected to branch</value>
   </data>
@@ -305,6 +311,12 @@
   </data>
 	<data name="Service_Concurrency_Error" xml:space="preserve">
     <value>The service has been modified by another user</value>
+  </data>
+	<data name="Service_Delete_Concurrency_Error" xml:space="preserve">
+    <value>The service has been modified by another user. Are you sure you want to delete it?</value>
+  </data>
+	<data name="Service_Already_Deleted" xml:space="preserve">
+    <value>Service already deleted by another user (Refreshing changes)</value>
   </data>
 	<data name="Service_Not_Found" xml:space="preserve">
     <value>Service not found</value>
@@ -348,6 +360,9 @@
 	<data name="Counter_Concurrency_Error" xml:space="preserve">
     <value>The Counter has been modified by another user</value>
   </data>
+	<data name="Counter_Delete_Concurrency_Error" xml:space="preserve">
+    <value>The Counter has been modified by another user, Are you sure you want to delete it?</value>
+  </data>
 	<data name="Counter_Not_Found" xml:space="preserve">
     <value>Counter not found</value>
   </data>
@@ -371,6 +386,9 @@
   </data>
 	<data name="Counter_NoChangesDetected" xml:space="preserve">
     <value>No changes detected to Counter</value>
+  </data>
+	<data name="Counter_Already_Deleted" xml:space="preserve">
+    <value>Counter already deleted by another user (Refreshing changes)</value>
   </data>
 	<data name="Back_To_Branches_Button" xml:space="preserve">
     <value>Back to branches</value>
@@ -416,5 +434,11 @@
   </data>
 	<data name="Search_Name_Label" xml:space="preserve">
     <value>Name</value>
+  </data>
+	<data name="Refresh_Button" xml:space="preserve">
+    <value>Refresh Changes</value>
+  </data>
+	<data name="Concurrency_Conflict_Title" xml:space="preserve">
+    <value>Concurrency Conflict</value>
   </data>
 </root>

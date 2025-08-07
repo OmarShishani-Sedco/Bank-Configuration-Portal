@@ -184,33 +184,59 @@ namespace Bank_Configuration_Portal.DAL.DAL
             }
         }
 
-        public async Task DeleteAsync(int id, int bankId, byte[] rowVersion)
+        public async Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false)
         {
             try
             {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
-                string query = @"DELETE FROM Branch 
-                                 WHERE BranchId = @Id AND BankId = @BankId AND RowVersion = @RowVersion";
+                string deleteQuery = forceDelete ?
+                    @"DELETE FROM Branch
+              WHERE BranchId = @Id AND BankId = @BankId" :
+                    @"DELETE FROM Branch
+              WHERE BranchId = @Id AND BankId = @BankId AND RowVersion = @RowVersion";
 
-                using var cmd = new SqlCommand(query, conn);
+                using var cmd = new SqlCommand(deleteQuery, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 cmd.Parameters.AddWithValue("@BankId", bankId);
-                cmd.Parameters.Add(new SqlParameter("@RowVersion", SqlDbType.Timestamp) { Value = rowVersion });
+
+                if (!forceDelete)
+                {
+                    cmd.Parameters.Add(new SqlParameter("@RowVersion", SqlDbType.Timestamp) { Value = rowVersion });
+                }
 
                 int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
                 if (rowsAffected == 0)
-                    throw new DBConcurrencyException("Delete failed. The branch was modified or already deleted.");
+                {
+                    string checkQuery = "SELECT COUNT(1) FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
+                    using var checkCmd = new SqlCommand(checkQuery, conn);
+                    checkCmd.Parameters.AddWithValue("@Id", id);
+                    checkCmd.Parameters.AddWithValue("@BankId", bankId);
+
+                    bool exists = (int)await checkCmd.ExecuteScalarAsync() > 0;
+
+                    if (exists)
+                    {
+                        // The record exists, but the RowVersion didn't match. It was modified.
+                        throw new CustomConcurrencyModifiedException("The branch was modified by another user.");
+                    }
+                    else
+                    {
+                        // The record no longer exists. It was deleted.
+                        throw new CustomConcurrencyDeletedException("The branch was deleted by another user.");
+                    }
+                }
             }
-            catch (DBConcurrencyException ex)
+            catch (CustomConcurrencyModifiedException ex)
             {
-                Logger.LogError(ex, "BranchDAL.DeleteAsync");
+                Logger.LogError(ex, "BranchDAL.DeleteAsync - Concurrency Modified");
                 throw;
             }
-            catch (SqlException ex)
+            catch (CustomConcurrencyDeletedException ex)
             {
-                Logger.LogError(ex, "BranchDAL.DeleteAsync");
+                Logger.LogError(ex, "BranchDAL.DeleteAsync - Concurrency Deleted");
                 throw;
             }
             catch (Exception ex)

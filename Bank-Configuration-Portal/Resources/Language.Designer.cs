@@ -115,6 +115,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Branch already deleted by another user (Refreshing changes).
+        /// </summary>
+        public static string Branch_Already_Deleted {
+            get {
+                return ResourceManager.GetString("Branch_Already_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The branch has been modified by another user.
         /// </summary>
         public static string Branch_Concurrency_Error {
@@ -147,6 +156,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Branch_Created_Successfully {
             get {
                 return ResourceManager.GetString("Branch_Created_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The branch has been modified by another user. Are you sure you want to delete it?.
+        /// </summary>
+        public static string Branch_Delete_Concurrency_Error {
+            get {
+                return ResourceManager.GetString("Branch_Delete_Concurrency_Error", resourceCulture);
             }
         }
         
@@ -268,6 +286,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Concurrency Conflict.
+        /// </summary>
+        public static string Concurrency_Conflict_Title {
+            get {
+                return ResourceManager.GetString("Concurrency_Conflict_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Concurrent update failed.
         /// </summary>
         public static string Concurrency_ForceFailed {
@@ -286,11 +313,20 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to delete this branch?.
+        ///   Looks up a localized string similar to Are you sure you want to delete this record?.
         /// </summary>
         public static string ConfirmDelete_Message {
             get {
                 return ResourceManager.GetString("ConfirmDelete_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter already deleted by another user (Refreshing changes).
+        /// </summary>
+        public static string Counter_Already_Deleted {
+            get {
+                return ResourceManager.GetString("Counter_Already_Deleted", resourceCulture);
             }
         }
         
@@ -327,6 +363,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Counter_Created_Successfully {
             get {
                 return ResourceManager.GetString("Counter_Created_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Counter has been modified by another user, Are you sure you want to delete it?.
+        /// </summary>
+        public static string Counter_Delete_Concurrency_Error {
+            get {
+                return ResourceManager.GetString("Counter_Delete_Concurrency_Error", resourceCulture);
             }
         }
         
@@ -763,6 +808,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh Changes.
+        /// </summary>
+        public static string Refresh_Button {
+            get {
+                return ResourceManager.GetString("Refresh_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reload changes.
         /// </summary>
         public static string Reload_Changes {
@@ -826,6 +880,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Service already deleted by another user (Refreshing changes).
+        /// </summary>
+        public static string Service_Already_Deleted {
+            get {
+                return ResourceManager.GetString("Service_Already_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The service has been modified by another user.
         /// </summary>
         public static string Service_Concurrency_Error {
@@ -858,6 +921,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Service_Created_Successfully {
             get {
                 return ResourceManager.GetString("Service_Created_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The service has been modified by another user. Are you sure you want to delete it?.
+        /// </summary>
+        public static string Service_Delete_Concurrency_Error {
+            get {
+                return ResourceManager.GetString("Service_Delete_Concurrency_Error", resourceCulture);
             }
         }
         

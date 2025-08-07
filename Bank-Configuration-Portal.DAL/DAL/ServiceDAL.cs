@@ -196,25 +196,61 @@ namespace Bank_Configuration_Portal.DAL.DAL
         }
 
 
-        public async Task<bool> DeleteAsync(int serviceId, byte[] rowVersion)
+        public async Task DeleteAsync(int serviceId, byte[] rowVersion, bool forceDelete = false)
         {
-            using (var connection = DatabaseHelper.GetConnection())
-            using (var command = new SqlCommand("DELETE FROM Service WHERE ServiceId = @ServiceId AND RowVersion = @RowVersion", connection))
+            try
             {
-                command.Parameters.AddWithValue("@ServiceId", serviceId);
-                command.Parameters.Add("@RowVersion", SqlDbType.Timestamp).Value = rowVersion;
+                using var connection = DatabaseHelper.GetConnection();
+                await connection.OpenAsync();
 
-                try
+                string deleteQuery = forceDelete ?
+                    @"DELETE FROM Service WHERE ServiceId = @ServiceId" :
+                    @"DELETE FROM Service WHERE ServiceId = @ServiceId AND RowVersion = @RowVersion";
+
+                using var command = new SqlCommand(deleteQuery, connection);
+                command.Parameters.AddWithValue("@ServiceId", serviceId);
+
+                if (!forceDelete)
                 {
-                    await connection.OpenAsync();
-                    int affected = await command.ExecuteNonQueryAsync();
-                    return affected > 0;
+                    command.Parameters.Add("@RowVersion", SqlDbType.Timestamp).Value = rowVersion;
                 }
-                catch (Exception ex)
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected == 0)
                 {
-                    Logger.LogError(ex);
-                    throw;
+                    string checkQuery = "SELECT COUNT(1) FROM Service WHERE ServiceId = @ServiceId";
+                    using var checkCommand = new SqlCommand(checkQuery, connection);
+                    checkCommand.Parameters.AddWithValue("@ServiceId", serviceId);
+
+                    bool exists = (int)await checkCommand.ExecuteScalarAsync() > 0;
+
+                    if (exists)
+                    {
+                        // The record exists, but the RowVersion didn't match. It was modified.
+                        throw new CustomConcurrencyModifiedException("The service was modified by another user.");
+                    }
+                    else
+                    {
+                        // The record no longer exists. It was deleted.
+                        throw new CustomConcurrencyDeletedException("The service was deleted by another user.");
+                    }
                 }
+            }
+            catch (CustomConcurrencyModifiedException ex)
+            {
+                Logger.LogError(ex, "ServiceDAL.DeleteAsync - Concurrency Modified");
+                throw;
+            }
+            catch (CustomConcurrencyDeletedException ex)
+            {
+                Logger.LogError(ex, "ServiceDAL.DeleteAsync - Concurrency Deleted");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "ServiceDAL.DeleteAsync");
+                throw;
             }
         }
 

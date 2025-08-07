@@ -8,7 +8,7 @@
     var showBankInfo = !string.IsNullOrWhiteSpace(localizedBankName);
 }
 <!DOCTYPE html>
-<html  data-bs-theme="dark" dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
+<html data-bs-theme="dark" dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
       lang="@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
@@ -17,7 +17,7 @@
     @if (Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft)
     {
         <link rel="stylesheet" href="~/Content/Site.css" />
-        <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/Content/bootstrap.rtl.min.css" />
     }
     else
     {

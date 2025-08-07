@@ -158,22 +158,58 @@ namespace Bank_Configuration_Portal.DAL.DAL
             }
         }
 
-        public async Task DeleteAsync(int id, byte[] rowVersion)
+        public async Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false)
         {
-            using var connection = DatabaseHelper.GetConnection();
-            var command = new SqlCommand("DELETE FROM Counter WHERE CounterId = @Id AND RowVersion = @RowVersion", connection);
-
-            command.Parameters.AddWithValue("@Id", id);
-            command.Parameters.AddWithValue("@RowVersion", rowVersion);
-
             try
             {
+                using var connection = DatabaseHelper.GetConnection();
                 await connection.OpenAsync();
-                var affected = await command.ExecuteNonQueryAsync();
-                if (affected == 0)
-                    throw new DBConcurrencyException("The record was modified or deleted by another user.");
+
+                string deleteQuery = forceDelete ?
+                    @"DELETE FROM Counter WHERE CounterId = @Id" :
+                    @"DELETE FROM Counter WHERE CounterId = @Id AND RowVersion = @RowVersion";
+
+                using var command = new SqlCommand(deleteQuery, connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                if (!forceDelete)
+                {
+                    command.Parameters.Add("@RowVersion", SqlDbType.Timestamp).Value = rowVersion;
+                }
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected == 0)
+                {
+                    string checkQuery = "SELECT COUNT(1) FROM Counter WHERE CounterId = @Id";
+                    using var checkCommand = new SqlCommand(checkQuery, connection);
+                    checkCommand.Parameters.AddWithValue("@Id", id);
+
+                    bool exists = (int)await checkCommand.ExecuteScalarAsync() > 0;
+
+                    if (exists)
+                    {
+                        // The record exists, but the RowVersion didn't match. It was modified.
+                        throw new CustomConcurrencyModifiedException("The counter was modified by another user.");
+                    }
+                    else
+                    {
+                        // The record no longer exists. It was deleted.
+                        throw new CustomConcurrencyDeletedException("The counter was deleted by another user.");
+                    }
+                }
             }
-            catch (SqlException ex)
+            catch (CustomConcurrencyModifiedException ex)
+            {
+                Logger.LogError(ex, "CounterDAL.DeleteAsync - Concurrency Modified");
+                throw;
+            }
+            catch (CustomConcurrencyDeletedException ex)
+            {
+                Logger.LogError(ex, "CounterDAL.DeleteAsync - Concurrency Deleted");
+                throw;
+            }
+            catch (Exception ex)
             {
                 Logger.LogError(ex, "CounterDAL.DeleteAsync");
                 throw;

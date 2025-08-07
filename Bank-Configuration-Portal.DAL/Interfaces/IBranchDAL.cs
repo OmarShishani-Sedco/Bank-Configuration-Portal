@@ -13,6 +13,6 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
         Task<BranchModel?> GetByIdAsync(int id, int bankId);
         Task CreateAsync(BranchModel branch);
         Task UpdateAsync(BranchModel branch, bool forceUpdate = false);
-        Task DeleteAsync(int id, int bankId, byte[] rowVersion);
+        Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false);
     }
 }

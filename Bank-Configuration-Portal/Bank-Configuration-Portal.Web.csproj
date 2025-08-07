@@ -216,6 +216,7 @@
     <Compile Include="Models\BranchViewModel.cs" />
     <Compile Include="Models\CounterListViewModel.cs" />
     <Compile Include="Models\CounterViewModel.cs" />
+    <Compile Include="Models\DeleteModalViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\ServiceListViewModel.cs" />
@@ -263,7 +264,8 @@
     <Content Include="Content\font\fonts\bootstrap-icons.woff" />
     <Content Include="Content\font\fonts\bootstrap-icons.woff2" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
-    <Content Include="Scripts\Custom.js" />
+    <Content Include="Scripts\concurrency.js" />
+    <Content Include="Scripts\FadeOut.js" />
     <Content Include="Scripts\darkreader.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -275,6 +277,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\fadeout3s.js" />
+    <Content Include="Scripts\modal_scripts.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -296,6 +299,8 @@
     <Content Include="Views\Service\CreateOrEdit.cshtml" />
     <Content Include="Views\Counter\Index.cshtml" />
     <Content Include="Views\Counter\CreateOrEdit.cshtml" />
+    <Content Include="Views\Shared\_DeleteModals.cshtml" />
+    <Content Include="Views\Shared\_ConcurrencyScript.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

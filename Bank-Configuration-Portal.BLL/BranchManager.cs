@@ -43,11 +43,11 @@ namespace Bank_Configuration_Portal.BLL
             }
         }
 
-        public async Task DeleteAsync(int id, int bankId, byte[] rowVersion)
+        public async Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false)
         {
             try
             {
-                await _branchDAL.DeleteAsync(id, bankId, rowVersion);
+                await _branchDAL.DeleteAsync(id, bankId, rowVersion, forceDelete);
             }
             catch (Exception ex)
             {

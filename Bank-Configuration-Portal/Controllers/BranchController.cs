@@ -178,13 +178,32 @@ namespace Bank_Configuration_Portal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, byte[] rowVersion)
+        public async Task<ActionResult> Delete(int id, byte[] rowVersion, bool forceDelete = false)
         {
             try
             {
                 int bankId = (int)Session["BankId"];
-                await _branchManager.DeleteAsync(id, bankId, rowVersion);
+
+                await _branchManager.DeleteAsync(id, bankId, rowVersion, forceDelete);
+
                 TempData["Success"] = Language.Branch_Deleted_Successfully;
+            }
+            catch (CustomConcurrencyDeletedException)
+            {
+                TempData["Error"] = Language.Branch_Already_Deleted;
+            }
+            catch (CustomConcurrencyModifiedException)
+            {
+                if (!forceDelete)
+                {
+                    TempData["ConcurrencyConflictId"] = id;
+                    TempData["OriginalRowVersion"] = rowVersion;
+                    TempData["Error"] = Language.Branch_Delete_Concurrency_Error;
+                }
+                else
+                {
+                    TempData["Error"] = Language.Concurrency_ForceFailed;
+                }
             }
             catch (Exception ex)
             {

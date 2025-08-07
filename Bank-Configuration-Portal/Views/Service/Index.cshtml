@@ -97,15 +97,14 @@
                             </p>
 
                             <div class="d-flex float-start mt-3">
-                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = service.Id }, new { @class = "btn btn-md btn-warning me-2" })
+                                @Html.ActionLink(Language.Edit_Label, "Edit", new { id = service.Id }, new { @class = "btn btn-sm btn-warning me-2" })
 
-                                @using (Html.BeginForm("Delete", "Service", FormMethod.Post, new { onsubmit = "return confirm('" + Language.ConfirmDelete_Message + "');", style = "display:inline;" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    @Html.Hidden("id", service.Id)
-                                    @Html.Hidden("rowVersion", service.RowVersion)
-                                    <button type="submit" class="btn btn-md btn-danger">@Language.Delete_Label</button>
-                                }
+                                <button type="button" class="btn btn-sm btn-danger delete-btn"
+                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                        data-id="@service.Id"
+                                        data-rowversion="@(service.RowVersion != null ? Convert.ToBase64String(service.RowVersion) : string.Empty)">
+                                    @Language.Delete_Label
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -126,3 +125,13 @@
     }
 
 </div>
+
+@Html.Partial("_DeleteModals", new Bank_Configuration_Portal.Models.DeleteModalViewModel
+{
+    ControllerName = "Service",
+    ConcurrencyErrorMessage = Language.Service_Delete_Concurrency_Error
+})
+
+@section scripts {
+    @Html.Partial("_ConcurrencyScript")
+}

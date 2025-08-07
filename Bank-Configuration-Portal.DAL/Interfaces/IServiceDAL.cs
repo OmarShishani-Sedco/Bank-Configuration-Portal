@@ -14,6 +14,6 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
         Task<ServiceModel?> GetByIdAsync(int serviceId);
         Task<int> CreateAsync(ServiceModel service);
         Task UpdateAsync(ServiceModel service, bool forceUpdate = false);
-        Task<bool> DeleteAsync(int serviceId, byte[] rowVersion);
+        Task DeleteAsync(int serviceId, byte[] rowVersion, bool forceDelete = false);
     }
 }

@@ -20,9 +20,10 @@ namespace Bank_Configuration_Portal
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js")); 
             bundles.Add(new ScriptBundle("~/bundles/Custom").Include(
-                        "~/Scripts/Custom.js")); 
+                        "~/Scripts/FadeOut.js",
+                        "~/Scripts/modal_scripts.js")); 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

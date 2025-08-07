@@ -8,6 +8,7 @@ namespace Bank_Configuration_Portal.Controllers
 {
     public class ErrorController : BaseController
     {
+        [AllowAnonymous]
         public ActionResult Startup()
         {
             string error = HttpContext.Application["StartupError"]?.ToString() ?? "Unknown startup error.";

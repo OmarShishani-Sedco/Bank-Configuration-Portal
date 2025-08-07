@@ -1,22 +1,43 @@
 ﻿@{
-    ViewBag.Title = "Startup Error";
+    ViewBag.Title = "Application Startup Error";
     Layout = null;
 }
 
-<div>
-    <h1>Application Startup Error</h1>
-    <div>
-        <!-- Display the specific error message from the controller -->
-        @ViewBag.ErrorMessage
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.css" /> 
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+    <div class="container text-center">
+        <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+            <div class="card-body">
+                <h1 class="card-title text-danger mb-3">Application Startup Error</h1>
+                <p class="card-text text-muted">
+                    It looks like there was a critical issue preventing the application from starting correctly. This usually indicates a problem with the database connection or core configuration.
+                </p>
+
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <div class="alert alert-danger text-start mt-4" role="alert">
+                        <h4 class="alert-heading">Error Details:</h4>
+                        <p class="mb-0">
+                            @ViewBag.ErrorMessage
+                        </p>
+                    </div>
+                }
+
+                <a href="javascript:location.reload();" class="btn btn-primary mt-4">
+                    Try Again
+                </a>
+                <p class="text-muted mt-3 mb-0">
+                    If the problem persists, please contact your system administrator.
+                </p>
+            </div>
+        </div>
     </div>
-    <p>
-        It looks like there was a critical issue preventing the application from starting correctly.
-        This usually indicates a problem with the database connection or core configuration.
-    </p>
-    <a href="javascript:location.reload();">
-        Try Again
-    </a>
-    <p>
-        If the problem persists, please contact your system administrator.
-    </p>
-</div>
+</body>
+</html>
