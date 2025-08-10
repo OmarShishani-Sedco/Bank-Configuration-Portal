@@ -116,12 +116,14 @@
     @if (Model.TotalPages > 1)
     {
         @Html.Partial("_Pagination", new Bank_Configuration_Portal.Models.PaginationViewModel
-        {
-            CurrentPage = Model.CurrentPage,
-            TotalPages = Model.TotalPages,
-            ActionName = "Index",
-            ControllerName = "Service"
-        })
+   {
+       CurrentPage = Model.CurrentPage,
+       TotalPages = Model.TotalPages,
+       ActionName = "Index",
+       ControllerName = "Service",
+       SearchTerm = Model.SearchTerm,
+       IsActive = Model.IsActive,
+   })
     }
 
 </div>

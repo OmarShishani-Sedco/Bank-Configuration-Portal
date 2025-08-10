@@ -152,12 +152,15 @@
     @if (Model.TotalPages > 1)
     {
         @Html.Partial("_Pagination", new Bank_Configuration_Portal.Models.PaginationViewModel
-        {
-            CurrentPage = Model.CurrentPage,
-            TotalPages = Model.TotalPages,
-            ActionName = "Index",
-            ControllerName = "Counter",
-        })
+   {
+       CurrentPage = Model.CurrentPage,
+       TotalPages = Model.TotalPages,
+       ActionName = "Index",
+       ControllerName = "Counter",
+       SearchTerm = Model.SearchTerm,
+       BranchId = Model.BranchId,
+       IsActive = Model.IsActive
+   })
     }
 </div>
 @Html.Partial("_DeleteModals", new Bank_Configuration_Portal.Models.DeleteModalViewModel

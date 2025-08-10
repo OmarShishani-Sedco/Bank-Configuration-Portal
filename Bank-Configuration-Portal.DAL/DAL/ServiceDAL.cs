@@ -41,6 +41,50 @@ namespace Bank_Configuration_Portal.DAL.DAL
 
             return services;
         }
+
+        public async Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds)
+        {
+            var services = new List<ServiceModel>();
+
+            var idsSqlParameters = new List<SqlParameter>();
+            var parameterNames = new List<string>();
+
+            int i = 0;
+            foreach (var id in serviceIds)
+            {
+                var paramName = $"@p{i}";
+                parameterNames.Add(paramName);
+                idsSqlParameters.Add(new SqlParameter(paramName, id));
+                i++;
+            }
+
+            string sqlQuery = $"SELECT * FROM Service WHERE ServiceId IN ({string.Join(",", parameterNames)})";
+
+            using (var connection = DatabaseHelper.GetConnection())
+            using (var command = new SqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddRange(idsSqlParameters.ToArray());
+
+                try
+                {
+                    await connection.OpenAsync();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            services.Add(MapReaderToService(reader));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex);
+                    throw;
+                }
+            }
+
+            return services;
+        }
         public async Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId)
         {
             var services = new List<ServiceModel>();

@@ -11,5 +11,9 @@ namespace Bank_Configuration_Portal.Models
         public int TotalPages { get; set; }
         public string ActionName { get; set; }
         public string ControllerName { get; set; }
+        public string? SearchTerm { get; set; }
+        public bool? IsActive { get; set; }
+        public int? BranchId { get; set; }
+
     }
 }

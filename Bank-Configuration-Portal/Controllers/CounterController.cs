@@ -43,7 +43,7 @@ public class CounterController : BaseController
             int bankId = (int)Session["BankId"];
             var allCounters = await _counterManager.GetAllByBranchIdAsync(branchId);
             var branch = await _branchManager.GetByIdAsync(branchId, bankId);
-            var allServices = await _serviceManager.GetAllByBankIdAsync(bankId);
+
             var filteredCounters = allCounters.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -64,7 +64,6 @@ public class CounterController : BaseController
                 return RedirectToAction("Index", "Branch");
             }
 
-
             if (page < 1)
             {
                 return RedirectToAction("Index", new { branchId = branchId, page = 1, pageSize = pageSize });
@@ -76,14 +75,21 @@ public class CounterController : BaseController
                 .Take(pageSize)
                 .ToList();
 
+            var allSelectedServiceIds = pagedCounters
+                .SelectMany(c => c.AllocatedServiceIds)
+                .Distinct()
+                .ToList();
+
+            var allocatedServices = await _serviceManager.GetByIdsAsync(allSelectedServiceIds);
+            var allocatedServiceModels = _mapper.Map<List<ServiceViewModel>>(allocatedServices);
+
             var vmList = _mapper.Map<List<CounterViewModel>>(pagedCounters);
+
             foreach (var counterViewModel in vmList)
             {
-                var allocatedServiceDetails = allServices
+                counterViewModel.SelectedServices = allocatedServiceModels
                     .Where(s => counterViewModel.SelectedServiceIds.Contains(s.Id))
                     .ToList();
-
-                counterViewModel.SelectedServices = _mapper.Map<List<ServiceViewModel>>(allocatedServiceDetails);
             }
 
             var viewModel = new CounterListViewModel
@@ -109,7 +115,7 @@ public class CounterController : BaseController
         }
     }
 
-    
+
     [HttpGet]
     public async Task<ActionResult> Create(int branchId)
     {

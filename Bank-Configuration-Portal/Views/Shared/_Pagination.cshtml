@@ -1,5 +1,4 @@
-﻿
-@model Bank_Configuration_Portal.Models.PaginationViewModel
+﻿@model Bank_Configuration_Portal.Models.PaginationViewModel
 @using Bank_Configuration_Portal.Resources
 
 @if (Model.TotalPages > 1)
@@ -11,25 +10,44 @@
                 int currentPage = Model.CurrentPage;
                 int totalPages = Model.TotalPages;
 
+                var baseRouteValues = new RouteValueDictionary();
+                if (Model.BranchId.HasValue)
+                {
+                    baseRouteValues.Add("branchId", Model.BranchId.Value);
+                }
+                if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {
+                    baseRouteValues.Add("searchTerm", Model.SearchTerm);
+                }
+                if (Model.IsActive.HasValue)
+                {
+                    baseRouteValues.Add("isActive", Model.IsActive.Value);
+                }
+
                 // Previous
                 <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = currentPage - 1 })" aria-label="Previous">
+                    @{
+                        var prevRouteValues = new RouteValueDictionary(baseRouteValues);
+                        prevRouteValues["page"] = currentPage - 1;
+                    }
+                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, prevRouteValues)" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                ;
 
-                // Always show page 1
+                // Page 1 link
                 <li class="page-item @(currentPage == 1 ? "active" : "")">
-                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = 1 })">1</a>
+                    @{
+                        var pageOneRouteValues = new RouteValueDictionary(baseRouteValues);
+                        pageOneRouteValues["page"] = 1;
+                    }
+                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, pageOneRouteValues)">1</a>
                 </li>
-                ;
 
                 // Ellipsis before current block
                 if (currentPage > 3)
                 {
                     <li class="page-item disabled"><span class="page-link glass-bg border border-primary">…</span></li>
-                    ;
                 }
 
                 // Show a few pages around current
@@ -38,9 +56,12 @@
                     if (i > 1 && i < totalPages)
                     {
                         <li class="page-item @(i == currentPage ? "active" : "")">
-                            <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = i })">@i</a>
+                            @{
+                                var pageRouteValues = new RouteValueDictionary(baseRouteValues);
+                                pageRouteValues["page"] = i;
+                            }
+                            <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, pageRouteValues)">@i</a>
                         </li>
-                        ;
                     }
                 }
 
@@ -48,29 +69,37 @@
                 if (currentPage < totalPages - 2)
                 {
                     <li class="page-item disabled"><span class="page-link glass-bg border border-primary">…</span></li>
-                    ;
                 }
 
                 // Last page
                 if (totalPages > 1)
                 {
                     <li class="page-item @(currentPage == totalPages ? "active" : "")">
-                        <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = totalPages })">@totalPages</a>
+                        @{
+                            var lastPageRouteValues = new RouteValueDictionary(baseRouteValues);
+                            lastPageRouteValues["page"] = totalPages;
+                        }
+                        <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, lastPageRouteValues)">@totalPages</a>
                     </li>
-                    ;
                 }
 
                 // Next
                 <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                    <a class="page-link  glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = currentPage + 1 })" aria-label="Next">
+                    @{
+                        var nextRouteValues = new RouteValueDictionary(baseRouteValues);
+                        nextRouteValues["page"] = currentPage + 1;
+                    }
+                    <a class="page-link glass-bg border border-primary" href="@Url.Action(Model.ActionName, Model.ControllerName, nextRouteValues)" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
-                ;
             }
 
             <li class="page-item ms-3">
-                <form method="get" action="@Url.Action(Model.ActionName, Model.ControllerName)" class="d-flex align-items-center">
+                @{
+                    var formActionUrl = Url.Action(Model.ActionName, Model.ControllerName, baseRouteValues);
+                }
+                <form method="get" action="@formActionUrl" class="d-flex align-items-center">
                     <div class="input-group input-group-md">
                         <input type="number" name="page" min="1" max="@Model.TotalPages"
                                class="form-control page-link glass-bg border border-primary"

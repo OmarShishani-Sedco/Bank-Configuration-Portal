@@ -16,5 +16,6 @@ namespace Bank_Configuration_Portal.BLL.Interfaces
         Task<int> CreateAsync(ServiceModel service);
         Task UpdateAsync(ServiceModel service, bool forceUpdate = false);
         Task DeleteAsync(int id, byte[] rowversion, bool forceDelete = false);
+        Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds);
     }
 }

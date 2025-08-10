@@ -31,6 +31,23 @@ namespace Bank_Configuration_Portal.BLL
                 throw;
             }
         }
+        public async Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds)
+        {
+            try
+            {
+                if (serviceIds == null || !serviceIds.Any())
+                {
+                    return new List<ServiceModel>();
+                }
+
+                return await _serviceDAL.GetByIdsAsync(serviceIds);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "ServiceManager.GetByIdsAsync");
+                throw;
+            }
+        }
         public async Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId)
         {
             try
