@@ -60,13 +60,14 @@
 
                 </ul>
 
-                <form action="@Url.Action("ChangeLanguage", "Base")" method="get" class="d-flex me-3">
+                @using (Html.BeginForm("ChangeLanguage", "Base", FormMethod.Get, new { @class = "d-flex me-3" }))
+                {
                     <select data-bs-theme="dark" name="lang" onchange="this.form.submit();" class="form-select">
                         <option value="en" @(Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en") ? "selected" : "")>English</option>
                         <option value="ar" @(Thread.CurrentThread.CurrentUICulture.Name.StartsWith("ar") ? "selected" : "")>العربية</option>
                     </select>
                     <input type="hidden" name="returnUrl" value="@Context.Request.RawUrl" />
-                </form>
+                }
 
                 @if (Session["BankId"] != null)
                 {
@@ -100,10 +101,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Language.Cancel_Button</button>
-                    <form action="@Url.Action("Logout", "Login")" method="post" class="d-inline">
+                    @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { @class = "d-inline" }))
+                    {
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-danger">@Language.Logout</button>
-                    </form>
+                    }
                 </div>
             </div>
         </div>

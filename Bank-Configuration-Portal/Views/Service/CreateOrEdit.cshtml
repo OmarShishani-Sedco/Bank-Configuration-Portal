@@ -22,7 +22,8 @@
                 <div class="alert alert-warning text-center">
                     <p>@Language.Service_Concurrency_Error</p>
 
-                    <form method="post" asp-action="Edit">
+                    @using (Html.BeginForm("Edit", "Service", FormMethod.Post))
+                    {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.Id)
                         @Html.HiddenFor(m => m.RowVersion)
@@ -30,13 +31,14 @@
                         @Html.HiddenFor(m => m.NameArabic)
                         @Html.HiddenFor(m => m.MaxTicketsPerDay)
                         @Html.HiddenFor(m => m.IsActive)
+
                         <input type="hidden" name="forceUpdate" value="true" />
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-danger">@Language.Force_Save</button>
                             <a href="@Url.Action("Edit", "Service", new { id = Model.Id })" class="btn btn-outline-secondary">@Language.Reload_Changes</a>
                         </div>
-                    </form>
+                    }
                 </div>
             }
 

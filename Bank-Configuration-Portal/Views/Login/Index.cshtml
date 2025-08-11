@@ -11,7 +11,7 @@
             <h3 class="mb-0">@Language.Login_Title</h3>
         </div>
         <div class="card-body p-4">
-            @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { role = "form" }))
+            @using (Html.BeginForm("Index", "Login", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 <div id="validationSummary" class="text-danger mb-3 fadeout3s">
@@ -24,7 +24,7 @@
                     @Html.LabelFor(m => m.BankName, new { @class = "form-label" })
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-bank"></i></span>
-                        @Html.TextBoxFor(m => m.BankName, new { @class = "form-control", placeholder = Language.Login_BankName_Placeholder })
+                        @Html.TextBoxFor(m => m.BankName, new { @class = "form-control", placeholder = Language.Login_BankName_Placeholder, maxlength = "100" })
                     </div>
                     @Html.ValidationMessageFor(m => m.BankName, "", new { @class = "text-danger" })
                 </div>
@@ -33,7 +33,7 @@
                     @Html.LabelFor(m => m.UserName, new { @class = "form-label" })
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = Language.Login_UserName_Placeholder })
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = Language.Login_UserName_Placeholder, maxlength = "100" })
                     </div>
                     @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
                 </div>

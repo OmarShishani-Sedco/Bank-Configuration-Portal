@@ -263,6 +263,8 @@
     <Content Include="Content\font\bootstrap-icons.scss" />
     <Content Include="Content\font\fonts\bootstrap-icons.woff" />
     <Content Include="Content\font\fonts\bootstrap-icons.woff2" />
+    <None Include="Properties\PublishProfiles\Dev.pubxml" />
+    <None Include="Properties\PublishProfiles\Main.pubxml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\FadeOut.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />

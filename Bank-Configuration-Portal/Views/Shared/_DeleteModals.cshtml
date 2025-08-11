@@ -14,12 +14,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Language.Cancel_Button</button>
-                <form id="deleteForm" method="post" action="@Url.Action("Delete", @Model.ControllerName)" style="display:inline;">
+                @using (Html.BeginForm("Delete", @Model.ControllerName, FormMethod.Post, new { id = "deleteForm", style = "display:inline;" }))
+                {
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" id="deleteId" />
-                    <input type="hidden" name="rowVersion" id="deleteRowVersion" />
+                    @Html.Hidden("id", null, new { id = "deleteId" })
+                    @Html.Hidden("rowVersion", null, new { id = "deleteRowVersion" })
                     <button type="submit" class="btn btn-danger">@Language.Delete_Label</button>
-                </form>
+                }
             </div>
         </div>
     </div>
@@ -37,13 +38,16 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Language.Cancel_Button</button>
-                <form id="forceDeleteForm" method="post" action="@Url.Action("Delete", @Model.ControllerName)" style="display:inline;">
+                @using (Html.BeginForm("Delete", @Model.ControllerName, FormMethod.Post, new { id = "forceDeleteForm", style = "display:inline;" }))
+                {
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" id="forceDeleteId" />
-                    <input type="hidden" name="rowVersion" id="forceDeleteRowVersion" />
+                    @Html.Hidden("id", null, new { id = "forceDeleteId" })
+                    @Html.Hidden("rowVersion", null, new { id = "forceDeleteRowVersion" })
+
+                    // Non-Model value so we used standard HTML tag
                     <input type="hidden" name="forceDelete" value="true" />
                     <button type="submit" class="btn btn-danger">@Language.Delete_Label</button>
-                </form>
+                }
             </div>
         </div>
     </div>

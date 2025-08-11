@@ -95,23 +95,25 @@
                 </li>
             }
 
-            <li class="page-item ms-3">
-                @{
-                    var formActionUrl = Url.Action(Model.ActionName, Model.ControllerName, baseRouteValues);
-                }
-                <form method="get" action="@formActionUrl" class="d-flex align-items-center">
-                    <div class="input-group input-group-md">
-                        <input type="number" name="page" min="1" max="@Model.TotalPages"
-                               class="form-control page-link glass-bg border border-primary"
-                               placeholder="@Language.Page"
-                               style="width: 80px;" />
-                        <button type="submit"
-                                class="btn btn-primary glass-bg border border-primary">
-                            @Language.Go
-                        </button>
-                    </div>
-                </form>
-            </li>
+        <li class="page-item ms-3">
+            @using (Html.BeginForm(Model.ActionName, Model.ControllerName, baseRouteValues, FormMethod.Get, new { @class = "d-flex align-items-center" }))
+            {
+                <div class="input-group input-group-md">
+                    @Html.TextBox("page", null, new
+                    {
+                        type = "number",
+                        min = "1",
+                        max = Model.TotalPages,
+                        @class = "form-control page-link glass-bg border border-primary",
+                        placeholder = Language.Page,
+                        style = "width: 80px;"
+                    })
+                    <button type="submit" class="btn btn-primary glass-bg border border-primary">
+                        @Language.Go
+                    </button>
+                </div>
+            }
+        </li>
         </ul>
     </nav>
 }

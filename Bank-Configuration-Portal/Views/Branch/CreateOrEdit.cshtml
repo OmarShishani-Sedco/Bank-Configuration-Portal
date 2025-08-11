@@ -22,7 +22,8 @@
                 <div class="alert alert-warning text-center">
                     <p>@Language.Branch_Concurrency_Error</p>
 
-                    <form method="post" asp-action="Edit">
+                    @using (Html.BeginForm("Edit", "Branch", FormMethod.Post))
+                    {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.Id)
                         @Html.HiddenFor(m => m.BankId)
@@ -41,7 +42,7 @@
                                 @Language.Reload_Changes
                             </a>
                         </div>
-                    </form>
+                    }
                 </div>
             }
 
