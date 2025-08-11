@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Access Denied";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100">
+    <div class="container text-center">
+        <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+            <div class="card-body">
+                <h1 class="card-title text-danger mb-3">403 - Access Denied</h1>
+                <p class="card-text text-muted">
+                    You do not have the necessary permissions to view this page.
+                </p>
+
+                <a href="@Url.Action("Index", "Login")" class="btn btn-primary mt-4">
+                    Go to Login
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
-using Bank_Configuration_Portal.Common; 
+using System.Web.Routing;
+using System.Web.Security;
+using Bank_Configuration_Portal.Common;
 
 public class CustomHandleErrorAttribute : HandleErrorAttribute
 {
@@ -10,14 +12,34 @@ public class CustomHandleErrorAttribute : HandleErrorAttribute
             return;
 
         Exception ex = filterContext.Exception;
-
         Logger.LogError(ex);
 
-        // Redirect to error page
-        filterContext.Result = new ViewResult
+        bool isAntiForgeryError = ex is HttpAntiForgeryException ||
+                                  (ex.Message != null && ex.Message.Contains("required anti-forgery cookie"));
+
+        if (isAntiForgeryError)
         {
-            ViewName = "~/Views/Shared/Error.cshtml"
-        };
+            filterContext.Result = new RedirectToRouteResult(
+                new RouteValueDictionary
+                {
+                    { "controller", "Error" },
+                    { "action", "Generic" },
+                    { "errorMessage", "Your session has expired or the security token is invalid. Please try again." }
+                });
+
+            FormsAuthentication.SignOut();
+        }
+        else
+        {
+            filterContext.Result = new RedirectToRouteResult(
+                new RouteValueDictionary
+                {
+                    { "controller", "Error" },
+                    { "action", "Generic" },
+                    { "errorMessage", "An unexpected error occurred. Please contact your system administrator." }
+                });
+        }
+
         filterContext.ExceptionHandled = true;
     }
 }

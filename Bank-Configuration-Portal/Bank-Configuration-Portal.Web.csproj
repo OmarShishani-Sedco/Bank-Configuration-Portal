@@ -299,6 +299,9 @@
     <Content Include="Views\Counter\CreateOrEdit.cshtml" />
     <Content Include="Views\Shared\_DeleteModals.cshtml" />
     <Content Include="Views\Shared\_ConcurrencyScript.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\Forbidden.cshtml" />
+    <Content Include="Views\Error\Generic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
