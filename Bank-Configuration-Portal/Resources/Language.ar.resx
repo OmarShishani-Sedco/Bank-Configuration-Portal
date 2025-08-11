@@ -177,6 +177,9 @@
   <data name="Branch_Created_Successfully" xml:space="preserve">
     <value>تم إنشاء الفرع بنجاح</value>
   </data>
+	<data name="Branch_Name_Placeholder" xml:space="preserve">
+  <value>أدخل اسم الفرع</value>
+</data>
   <data name="Branch_Updated_Successfully" xml:space="preserve">
     <value>تم تحديث الفرع بنجاح</value>
   </data>
@@ -184,7 +187,7 @@
     <value>تم حذف الفرع بنجاح</value>
   </data>
   <data name="Branch_Not_Found" xml:space="preserve">
-    <value>الفرع غير موجود</value>
+    <value>الفرع غير موجود.</value>
   </data>
   <data name="Branch_Create_Title" xml:space="preserve">
     <value>إضافة فرع</value>
@@ -319,7 +322,7 @@
     <value>تم حذف الخدمة بواسطة مستخدم اخر (تم تحديث التغييرات)</value>
   </data>
 	<data name="Service_Not_Found" xml:space="preserve">
-    <value>الخدمة غير موجودة</value>
+    <value>الخدمة غير موجودة.</value>
   </data>
 	<data name="Service_Tickets_Range" xml:space="preserve">
     <value>يجب ان يتراوح عدد التذاكر بين (1-100)</value>
@@ -367,7 +370,7 @@
     <value>تم حذف الشباك بواسطة مستخدم اخر (تم تحديث التغييرات)</value>
   </data>
 	<data name="Counter_Not_Found" xml:space="preserve">
-    <value>الشباك غير موجود</value>
+    <value>الشباك غير موجود.</value>
   </data>
 	<data name="Counter_Create_Button" xml:space="preserve">
     <value>إنشاء شباك جديد</value>

@@ -141,6 +141,11 @@ namespace Bank_Configuration_Portal.Controllers
                 var branchModel = _mapper.Map<BranchModel>(model);
                 branchModel.BankId = (int)Session["BankId"];
                 var existingBranch = await _branchManager.GetByIdAsync(model.Id, branchModel.BankId);
+                if (existingBranch == null)
+                {
+                    TempData["Error"] = Language.Branch_Not_Found + " " + Language.Branch_Already_Deleted;
+                    return RedirectToAction("Index");
+                }
 
                 if (existingBranch != null && !forceUpdate)
                 {

@@ -319,7 +319,7 @@
     <value>Service already deleted by another user (Refreshing changes)</value>
   </data>
 	<data name="Service_Not_Found" xml:space="preserve">
-    <value>Service not found</value>
+    <value>Service not found.</value>
   </data>
 	<data name="Service_Tickets_Range" xml:space="preserve">
     <value>Tickets range should be between (1-100)</value>
@@ -364,7 +364,7 @@
     <value>The Counter has been modified by another user, Are you sure you want to delete it?</value>
   </data>
 	<data name="Counter_Not_Found" xml:space="preserve">
-    <value>Counter not found</value>
+    <value>Counter not found.</value>
   </data>
 	<data name="Counter_Create_Button" xml:space="preserve">
     <value>Create New Counter</value>

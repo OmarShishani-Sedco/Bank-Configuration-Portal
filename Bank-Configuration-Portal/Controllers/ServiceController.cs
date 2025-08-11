@@ -143,6 +143,11 @@ namespace Bank_Configuration_Portal.Controllers
                 var serviceModel = _mapper.Map<ServiceModel>(model);
                 serviceModel.BankId = (int)Session["BankId"];
                 var existingService = await _serviceManager.GetByIdAsync(model.Id);
+                if (existingService == null)
+                    {
+                    TempData["Error"] = Language.Service_Not_Found + " " + Language.Service_Already_Deleted;
+                    return RedirectToAction("Index");
+                }
 
                 if (existingService != null && !forceUpdate)
                 {

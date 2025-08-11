@@ -430,7 +430,7 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Counter not found.
+        ///   Looks up a localized string similar to Counter not found..
         /// </summary>
         public static string Counter_Not_Found {
             get {
@@ -988,7 +988,7 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Service not found.
+        ///   Looks up a localized string similar to Service not found..
         /// </summary>
         public static string Service_Not_Found {
             get {

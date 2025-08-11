@@ -176,8 +176,8 @@ public class CounterController : BaseController
             if (counter == null)
             {
                 TempData["Error"] = Language.Counter_Not_Found;
-               
-                return RedirectToAction("Index", "Branch");
+
+                return RedirectToAction("Index", new { branchId = counter.BranchId });
             }
 
             var viewModel = _mapper.Map<CounterViewModel>(counter);
@@ -208,7 +208,22 @@ public class CounterController : BaseController
         try
         {
             var counter = _mapper.Map<CounterModel>(model);
-            
+            var existingCounter = await _counterManager.GetByIdAsync(model.Id);
+            if (existingCounter == null)
+            {
+                TempData["Error"] = Language.Counter_Not_Found + " " + Language.Counter_Already_Deleted;
+                return RedirectToAction("Index", new { branchId = counter.BranchId });
+            }
+
+            if (existingCounter != null && !forceUpdate)
+            {
+                if (UiUtility.AreObjectsEqual(existingCounter, counter, "RowVersion", "Id", "BranchId"))
+                {
+                    TempData["Info"] = Language.Counter_NoChangesDetected;
+                    return RedirectToAction("Index");
+                }
+            }
+
             await _counterManager.UpdateAsync(counter, forceUpdate);
             TempData["Success"] = Language.Counter_Updated_Successfully;
             return RedirectToAction("Index", new { branchId = counter.BranchId });
