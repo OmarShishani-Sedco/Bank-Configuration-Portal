@@ -115,8 +115,11 @@
                             foreach (var service in Model.AllActiveServices)
                             {
                                 <div class="form-check">
-                                    @Html.CheckBox("SelectedServiceIds", Model.SelectedServiceIds.Contains(service.Id), new { @class = "form-check-input", value = service.Id, id = "service_" + service.Id })
-                                    <label class="form-check-label" for="service_@(service.Id)">
+                                    <input class="form-check-input" type="checkbox"
+                                           id="service_@(service.Id)"
+                                           name="SelectedServiceIds"
+                                           value="@service.Id"
+                                           @(Model.SelectedServiceIds.Contains(service.Id) ? "checked" : "") />                                    <label class="form-check-label" for="service_@(service.Id)">
                                         @(lang == "ar" ? service.NameArabic : service.NameEnglish)
                                     </label>
                                 </div>
