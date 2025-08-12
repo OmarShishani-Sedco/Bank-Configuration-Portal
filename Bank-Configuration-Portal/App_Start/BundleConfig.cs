@@ -23,7 +23,7 @@ namespace Bank_Configuration_Portal
                       "~/Scripts/bootstrap.js")); 
             bundles.Add(new ScriptBundle("~/bundles/Custom").Include(
                         "~/Scripts/FadeOut.js",
-                        "~/Scripts/modal_scripts.js")); 
+                        "~/Scripts/modal_scripts.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

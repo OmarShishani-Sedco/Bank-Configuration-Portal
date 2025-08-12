@@ -48,10 +48,11 @@ namespace Bank_Configuration_Portal.Controllers
                     return View(model);
                 }
 
+                FormsAuthentication.SetAuthCookie(model.UserName, false);
+
                 Session["BankId"] = bank.Id;
                 Session["UserName"] = model.UserName;
                 Session["BankName"] = bank.Name;
-
 
                 return RedirectToAction("Index", "Branch");
             }
@@ -63,13 +64,15 @@ namespace Bank_Configuration_Portal.Controllers
             }
         }
 
-
-
+        [AllowAnonymous]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+
             Session.Clear();
-            return RedirectToAction("Index");
+            Session.Abandon();
+
+            return RedirectToAction("Index", "Login");
         }
     }
 }

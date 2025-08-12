@@ -8,6 +8,8 @@ namespace Bank_Configuration_Portal
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new AuthorizeAttribute()); 
+            filters.Add(new NoCacheAttribute());
             filters.Add(new CustomHandleErrorAttribute());
             filters.Add(new Filters.CultureAttribute());
             filters.Add(new Filters.SessionAuthorizeAttribute());

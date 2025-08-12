@@ -85,6 +85,7 @@
                     <button type="submit" class="btn btn-primary">
                         @(Model.Id == 0 ? Language.Service_Create_Button : Language.Update_Button)
                     </button>
+                    @Html.ActionLink(Language.Cancel_Button, "Index", "Service", new { @class = "btn btn-outline-secondary mt-2" })
                 </div>
             }
         </div>

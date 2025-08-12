@@ -37,6 +37,13 @@ namespace Bank_Configuration_Portal.Controllers
             ViewBag.Title = "Access Denied";
             return View();
         }
+
+        [AllowAnonymous]
+        public ActionResult Unauthorized()
+        {
+            ViewBag.Title = "Unauthorized";
+            return View();
+        }
     }
 
 }

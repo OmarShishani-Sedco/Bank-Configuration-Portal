@@ -207,6 +207,7 @@
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Filters\CultureAttribute.cs" />
     <Compile Include="Filters\CustomHandleErrorAttribute.cs" />
+    <Compile Include="Filters\NoCacheAttribute.cs" />
     <Compile Include="Filters\SessionAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -253,6 +254,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\Authentication.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -304,6 +306,7 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\Forbidden.cshtml" />
     <Content Include="Views\Error\Generic.cshtml" />
+    <Content Include="Views\Error\Unauthorized.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

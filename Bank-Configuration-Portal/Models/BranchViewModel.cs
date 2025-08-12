@@ -15,13 +15,13 @@ namespace Bank_Configuration_Portal.Models
         [Required(ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameEnglish_Required")]
         [Display(Name = "NameEnglish_Label", ResourceType = typeof(Language))]
         [MaxLength(100, ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameEnglish_MaxLimit") ]
-        [RegularExpression("^[a-zA-Z0-9\\s]*$", ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameEnglish_Invalid")]
+        [RegularExpression("^[a-zA-Z0-9\\s'_-]*$", ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameEnglish_Invalid")] 
         public string NameEnglish { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameArabic_Required")]
         [Display(Name = "NameArabic_Label", ResourceType = typeof(Language))]
         [MaxLength(100, ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameArabic_MaxLimit")]
-        [RegularExpression("^[\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\s\\d\\p{P}]*$", ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameArabic_Invalid")]
+        [RegularExpression("^[\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\s\\d\\p{P}'_-]*$", ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "NameArabic_Invalid")]
         public string NameArabic { get; set; }
 
         [Display(Name = "IsActive", ResourceType = typeof(Language))]
