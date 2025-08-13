@@ -168,7 +168,7 @@
   <data name="Login_UserName_Placeholder" xml:space="preserve">
     <value>أدخل اسم المستخدم</value>
   </data>
-  <data name="Login_UserName_Required" xml:space="preserve">
+  <data name="UserName_Required" xml:space="preserve">
     <value>اسم المستخدم مطلوب</value>
   </data>
   <data name="Logout_Button" xml:space="preserve">
@@ -443,4 +443,103 @@
 	<data name="Concurrency_Conflict_Title" xml:space="preserve">
     <value>تعارض في تزامن البيانات</value>
   </data>
+	<data name="Login_Password_Placeholder" xml:space="preserve">
+  <value>أدخل كلمة المرور</value>
+</data>
+	<data name="ChangePassword_Title" xml:space="preserve">
+  <value>تغيير كلمة المرور</value>
+</data>
+	<data name="ChangePassword_Old_Placeholder" xml:space="preserve">
+  <value>أدخل كلمة المرور الحالية</value>
+</data>
+	<data name="ChangePassword_New_Placeholder" xml:space="preserve">
+  <value>أدخل كلمة مرور جديدة</value>
+</data>
+	<data name="ChangePassword_Confirm_Placeholder" xml:space="preserve">
+  <value>أعد إدخال كلمة المرور الجديدة</value>
+</data>
+	<data name="ChangePassword_Button" xml:space="preserve">
+  <value>تحديث كلمة المرور</value>
+</data>
+	<data name="Maint_CreateReset_Title" xml:space="preserve">
+  <value>إنشاء / إعادة تعيين مستخدم البنك</value>
+</data>
+	<data name="Maint_UserName_Label" xml:space="preserve">
+  <value>اسم المستخدم</value>
+</data>
+	<data name="Maint_BankId_Label" xml:space="preserve">
+  <value>معرّف البنك (ID)</value>
+</data>
+	<data name="Maint_CreateReset_Button" xml:space="preserve">
+  <value>إنشاء / إعادة تعيين المستخدم</value>
+</data>
+	<data name="Maint_Result_Created" xml:space="preserve">
+  <value>تم إنشاء المستخدم بنجاح.</value>
+</data>
+	<data name="Maint_Result_Reset" xml:space="preserve">
+  <value>تم إعادة تعيين كلمة المرور بنجاح.</value>
+</data>
+	<data name="Maint_Result_User" xml:space="preserve">
+  <value>اسم المستخدم</value>
+</data>
+	<data name="Maint_Result_Bank" xml:space="preserve">
+  <value>معرّف البنك(ID)</value>
+</data>
+	<data name="Maint_Result_Password" xml:space="preserve">
+  <value>كلمة مرور لمرة واحدة</value>
+</data>
+	<data name="Maint_Result_Note" xml:space="preserve">
+  <value>سيُطلب من المستخدم تغيير كلمة المرور عند أول تسجيل دخول.</value>
+</data>
+	<data name="ChangePassword_Success" xml:space="preserve">
+  <value>تم تغيير كلمة المرور بنجاح.</value>
+</data>
+	<data name="ChangePassword_InvalidOldPassword" xml:space="preserve">
+  <value>كلمة المرور الحالية التي أدخلتها غير صحيحة.</value>
+</data>
+	<data name="Login_Invalid_Credentials" xml:space="preserve">
+  <value>كلمة المرور غير صحيحة.</value>
+</data>
+	<data name="Login_Password_Label" xml:space="preserve">
+  <value>كلمة المرور</value>
+</data>
+	<data name="Login_Password_Required" xml:space="preserve">
+  <value>كلمة المرور مطلوبة.</value>
+</data>
+	<data name="ChangePassword_Old_Label" xml:space="preserve">
+  <value>كلمة المرور الحالية</value>
+</data>
+	<data name="ChangePassword_Old_Required" xml:space="preserve">
+  <value>كلمة المرور الحالية مطلوبة.</value>
+</data>
+	<data name="ChangePassword_New_Label" xml:space="preserve">
+  <value>كلمة المرور الجديدة</value>
+</data>
+	<data name="ChangePassword_New_Required" xml:space="preserve">
+  <value>كلمة المرور الجديدة مطلوبة.</value>
+</data>
+	<data name="ChangePassword_Confirm_Label" xml:space="preserve">
+  <value>تأكيد كلمة المرور الجديدة</value>
+</data>
+	<data name="ChangePassword_Confirm_Required" xml:space="preserve">
+  <value>يجب تأكيد كلمة المرور الجديدة.</value>
+</data>
+	<data name="MaxLength_100" xml:space="preserve">
+  <value>الحد الأقصى 100 حرف.</value>
+</data>
+	<data name="Password_Min_Length" xml:space="preserve">
+  <value>يجب أن تكون كلمة المرور 8 أحرف على الأقل.</value>
+</data>
+	<data name="Passwords_Must_Match" xml:space="preserve">
+  <value>كلمتا المرور غير متطابقتين.</value>
+</data>
+	<data name="ChangePassword_Required_Note" xml:space="preserve">
+  <value>يرجى تغيير كلمة المرور للمتابعة.</value>
+</data>
+	<data name="Maint_BankId_Required" xml:space="preserve">
+  <value>معرف البنك (ID) مطلوب</value>
+</data>
+	<data name="Maint_BankId_Range" xml:space="preserve">
+  <value>رقم البنك يجب أن يكون رقماً موجباً</value>
+</data>
 </root>

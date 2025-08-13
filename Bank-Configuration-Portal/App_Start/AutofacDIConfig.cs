@@ -26,6 +26,8 @@ namespace Bank_Configuration_Portal.App_Start
             builder.RegisterType<ServiceManager>().As<IServiceManager>().InstancePerRequest();
             builder.RegisterType<CounterDAL>().As<ICounterDAL>().InstancePerRequest();
             builder.RegisterType<CounterManager>().As<ICounterManager>().InstancePerRequest();
+            builder.RegisterType<UserDAL>().As<IUserDAL>().InstancePerRequest();
+            builder.RegisterType<UserManager>().As<IUserManager>().InstancePerRequest();
 
             builder.Register(context =>
             {

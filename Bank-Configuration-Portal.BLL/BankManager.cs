@@ -41,5 +41,16 @@ namespace Bank_Configuration_Portal.BLL
                 throw;
             }
         }
+        public async Task<bool> BankExistsAsync(int bankId)
+        {
+            try
+            { 
+                return await _bankDAL.BankExistsAsync(bankId); 
+            }
+            catch (Exception ex) 
+            { 
+                Logger.LogError(ex); throw;
+            }
+        }
     }
 }

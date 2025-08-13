@@ -168,7 +168,7 @@
 	<data name="Login_UserName_Placeholder" xml:space="preserve">
     <value>Enter username </value>
   </data>
-	<data name="Login_UserName_Required" xml:space="preserve">
+	<data name="UserName_Required" xml:space="preserve">
     <value>Username is required</value>
   </data>
 	<data name="Logout_Button" xml:space="preserve">
@@ -441,4 +441,109 @@
 	<data name="Concurrency_Conflict_Title" xml:space="preserve">
     <value>Concurrency Conflict</value>
   </data>
+	<data name="Login_Password_Placeholder" xml:space="preserve">
+  <value>Enter your password</value>
+</data>
+	<data name="ChangePassword_Title" xml:space="preserve">
+  <value>Change Password</value>
+</data>
+	<data name="ChangePassword_Old_Placeholder" xml:space="preserve">
+  <value>Enter your current password</value>
+</data>
+	<data name="ChangePassword_New_Placeholder" xml:space="preserve">
+  <value>Enter a new password</value>
+</data>
+	<data name="ChangePassword_Confirm_Placeholder" xml:space="preserve">
+  <value>Re-enter the new password</value>
+</data>
+	<data name="ChangePassword_Button" xml:space="preserve">
+  <value>Update Password</value>
+</data>
+	<data name="Maint_CreateReset_Title" xml:space="preserve">
+  <value>Create / Reset Bank User</value>
+</data>
+	<data name="Maint_UserName_Label" xml:space="preserve">
+  <value>User Name</value>
+</data>
+	<data name="Maint_UserName_Placeholder" xml:space="preserve">
+  <value>e.g., john.doe</value>
+</data>
+	<data name="Maint_BankId_Label" xml:space="preserve">
+  <value>Bank ID</value>
+</data>
+	<data name="Maint_BankId_Placeholder" xml:space="preserve">
+  <value>e.g., 5</value>
+</data>
+	<data name="Maint_CreateReset_Button" xml:space="preserve">
+  <value>Create / Reset User</value>
+</data>
+	<data name="Maint_Result_Created" xml:space="preserve">
+  <value>User created successfully.</value>
+</data>
+	<data name="Maint_Result_Reset" xml:space="preserve">
+  <value>Password reset successfully.</value>
+</data>
+	<data name="Maint_Result_User" xml:space="preserve">
+  <value>Username</value>
+</data>
+	<data name="Maint_Result_Bank" xml:space="preserve">
+  <value>Bank ID</value>
+</data>
+	<data name="Maint_Result_Password" xml:space="preserve">
+  <value>One-time password</value>
+</data>
+	<data name="Maint_Result_Note" xml:space="preserve">
+  <value>User will be forced to change the password on first login.</value>
+</data>
+	<data name="ChangePassword_Success" xml:space="preserve">
+  <value>Password changed successfully.</value>
+</data>
+	<data name="ChangePassword_InvalidOldPassword" xml:space="preserve">
+  <value>The current password you entered is incorrect.</value>
+</data>
+	<data name="Login_Invalid_Credentials" xml:space="preserve">
+  <value>Invalid password.</value>
+</data>
+	<data name="Login_Password_Label" xml:space="preserve">
+  <value>Password</value>
+</data>
+	<data name="Login_Password_Required" xml:space="preserve">
+  <value>Password is required.</value>
+</data>
+	<data name="ChangePassword_Old_Label" xml:space="preserve">
+  <value>Current Password</value>
+</data>
+	<data name="ChangePassword_Old_Required" xml:space="preserve">
+  <value>Current password is required.</value>
+</data>
+	<data name="ChangePassword_New_Label" xml:space="preserve">
+  <value>New Password</value>
+</data>
+	<data name="ChangePassword_New_Required" xml:space="preserve">
+  <value>New password is required.</value>
+</data>
+	<data name="ChangePassword_Confirm_Label" xml:space="preserve">
+  <value>Confirm New Password</value>
+</data>
+	<data name="ChangePassword_Confirm_Required" xml:space="preserve">
+  <value>Please confirm the new password.</value>
+</data>
+	<data name="MaxLength_100" xml:space="preserve">
+  <value>Maximum length is 100 characters.</value>
+</data>
+	<data name="Password_Min_Length" xml:space="preserve">
+  <value>Password must be at least 8 characters.</value>
+</data>
+	<data name="Passwords_Must_Match" xml:space="preserve">
+  <value>The password and confirmation do not match.</value>
+</data>
+	<data name="ChangePassword_Required_Note" xml:space="preserve">
+  <value>Please change your password to continue.</value>
+</data>
+	<data name="Maint_BankId_Required" xml:space="preserve">
+  <value>Bank ID is required</value>
+</data>
+	<data name="Maint_BankId_Range" xml:space="preserve">
+  <value>Bank ID must be a positive number</value>
+</data>
 </root>

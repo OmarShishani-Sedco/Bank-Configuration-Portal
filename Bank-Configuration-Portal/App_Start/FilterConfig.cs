@@ -9,8 +9,8 @@ namespace Bank_Configuration_Portal
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthorizeAttribute()); 
-            filters.Add(new NoCacheAttribute());
-            filters.Add(new CustomHandleErrorAttribute());
+            filters.Add(new Filters.NoCacheAttribute());
+            filters.Add(new Filters.CustomHandleErrorAttribute());
             filters.Add(new Filters.CultureAttribute());
             filters.Add(new Filters.SessionAuthorizeAttribute());
         }

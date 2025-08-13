@@ -2,16 +2,27 @@
 using System.Web;
 using System.Web.Mvc;
 
-public class NoCacheAttribute : ActionFilterAttribute
+namespace Bank_Configuration_Portal.Filters
 {
-    public override void OnResultExecuting(ResultExecutingContext filterContext)
+    public class NoCacheAttribute : ActionFilterAttribute
     {
-        filterContext.HttpContext.Response.Cache.SetExpires(DateTime.UtcNow.AddYears(-1));
-        filterContext.HttpContext.Response.Cache.SetValidUntilExpires(false);
-        filterContext.HttpContext.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
-        filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        filterContext.HttpContext.Response.Cache.SetNoStore();
+        public override void OnResultExecuting(ResultExecutingContext ctx)
+        {
+            var resp = ctx.HttpContext.Response;
 
-        base.OnResultExecuting(filterContext);
+            resp.Cache.SetCacheability(HttpCacheability.NoCache);
+            resp.Cache.SetNoStore();
+            resp.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            resp.Cache.SetExpires(DateTime.UtcNow.AddYears(-1));
+            resp.Cache.SetMaxAge(TimeSpan.Zero);
+            resp.Cache.SetNoServerCaching();
+            resp.Cache.SetNoTransforms();
+
+            resp.Headers["Pragma"] = "no-cache";
+            resp.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0";
+            resp.Headers["Expires"] = "0";
+
+            base.OnResultExecuting(ctx);
+        }
     }
 }

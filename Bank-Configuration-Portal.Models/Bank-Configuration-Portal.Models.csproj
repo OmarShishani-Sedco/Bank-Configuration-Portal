@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\BankUserMappingModel.cs" />
     <Compile Include="Models\BranchModel.cs" />

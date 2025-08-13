@@ -28,15 +28,18 @@ namespace Bank_Configuration_Portal.Common
 
         public static void LogError(Exception ex, string context = "")
         {
+            string contextPrefix = string.IsNullOrWhiteSpace(context) ? "" : $"[{context}] ";
+
             var log = new ErrorLog
             {
                 ErrorTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                Message = $"[{context}] {ex.Message}",
+                Message = $"{contextPrefix}{ex.Message}",
                 StackTrace = ex.StackTrace ?? "No stack trace available"
             };
 
             string json = JsonConvert.SerializeObject(log, Formatting.Indented);
             File.AppendAllText(logFilePath, json + "," + Environment.NewLine);
         }
+
     }
 }

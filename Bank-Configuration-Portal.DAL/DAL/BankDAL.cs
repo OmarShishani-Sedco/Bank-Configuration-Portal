@@ -74,6 +74,27 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 throw;
             }
         }
+        public async Task<bool> BankExistsAsync(int bankId)
+        {
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    await conn.OpenAsync();
+                    using (var cmd = new SqlCommand("SELECT 1 FROM Bank WHERE BankId = @Id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", bankId);
+                        var result = await cmd.ExecuteScalarAsync();
+                        return result != null;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Logger.LogError(ex);
+                throw;
+            }
+        }
     }
 
 }

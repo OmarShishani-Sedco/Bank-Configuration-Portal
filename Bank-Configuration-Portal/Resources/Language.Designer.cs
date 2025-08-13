@@ -277,6 +277,132 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update Password.
+        /// </summary>
+        public static string ChangePassword_Button {
+            get {
+                return ResourceManager.GetString("ChangePassword_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm New Password.
+        /// </summary>
+        public static string ChangePassword_Confirm_Label {
+            get {
+                return ResourceManager.GetString("ChangePassword_Confirm_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Re-enter the new password.
+        /// </summary>
+        public static string ChangePassword_Confirm_Placeholder {
+            get {
+                return ResourceManager.GetString("ChangePassword_Confirm_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm the new password..
+        /// </summary>
+        public static string ChangePassword_Confirm_Required {
+            get {
+                return ResourceManager.GetString("ChangePassword_Confirm_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The current password you entered is incorrect..
+        /// </summary>
+        public static string ChangePassword_InvalidOldPassword {
+            get {
+                return ResourceManager.GetString("ChangePassword_InvalidOldPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Password.
+        /// </summary>
+        public static string ChangePassword_New_Label {
+            get {
+                return ResourceManager.GetString("ChangePassword_New_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a new password.
+        /// </summary>
+        public static string ChangePassword_New_Placeholder {
+            get {
+                return ResourceManager.GetString("ChangePassword_New_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New password is required..
+        /// </summary>
+        public static string ChangePassword_New_Required {
+            get {
+                return ResourceManager.GetString("ChangePassword_New_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Password.
+        /// </summary>
+        public static string ChangePassword_Old_Label {
+            get {
+                return ResourceManager.GetString("ChangePassword_Old_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your current password.
+        /// </summary>
+        public static string ChangePassword_Old_Placeholder {
+            get {
+                return ResourceManager.GetString("ChangePassword_Old_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current password is required..
+        /// </summary>
+        public static string ChangePassword_Old_Required {
+            get {
+                return ResourceManager.GetString("ChangePassword_Old_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please change your password to continue..
+        /// </summary>
+        public static string ChangePassword_Required_Note {
+            get {
+                return ResourceManager.GetString("ChangePassword_Required_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password changed successfully..
+        /// </summary>
+        public static string ChangePassword_Success {
+            get {
+                return ResourceManager.GetString("ChangePassword_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Password.
+        /// </summary>
+        public static string ChangePassword_Title {
+            get {
+                return ResourceManager.GetString("ChangePassword_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string Clear_Button {
@@ -610,6 +736,42 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid password..
+        /// </summary>
+        public static string Login_Invalid_Credentials {
+            get {
+                return ResourceManager.GetString("Login_Invalid_Credentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Login_Password_Label {
+            get {
+                return ResourceManager.GetString("Login_Password_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your password.
+        /// </summary>
+        public static string Login_Password_Placeholder {
+            get {
+                return ResourceManager.GetString("Login_Password_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is required..
+        /// </summary>
+        public static string Login_Password_Required {
+            get {
+                return ResourceManager.GetString("Login_Password_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login_Title {
@@ -646,15 +808,6 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username is required.
-        /// </summary>
-        public static string Login_UserName_Required {
-            get {
-                return ResourceManager.GetString("Login_UserName_Required", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Logout.
         /// </summary>
         public static string Logout {
@@ -687,6 +840,141 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Logout_Confirm_Title {
             get {
                 return ResourceManager.GetString("Logout_Confirm_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank ID.
+        /// </summary>
+        public static string Maint_BankId_Label {
+            get {
+                return ResourceManager.GetString("Maint_BankId_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g., 5.
+        /// </summary>
+        public static string Maint_BankId_Placeholder {
+            get {
+                return ResourceManager.GetString("Maint_BankId_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank ID must be a positive number.
+        /// </summary>
+        public static string Maint_BankId_Range {
+            get {
+                return ResourceManager.GetString("Maint_BankId_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank ID is required.
+        /// </summary>
+        public static string Maint_BankId_Required {
+            get {
+                return ResourceManager.GetString("Maint_BankId_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create / Reset User.
+        /// </summary>
+        public static string Maint_CreateReset_Button {
+            get {
+                return ResourceManager.GetString("Maint_CreateReset_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create / Reset Bank User.
+        /// </summary>
+        public static string Maint_CreateReset_Title {
+            get {
+                return ResourceManager.GetString("Maint_CreateReset_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank ID.
+        /// </summary>
+        public static string Maint_Result_Bank {
+            get {
+                return ResourceManager.GetString("Maint_Result_Bank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User created successfully..
+        /// </summary>
+        public static string Maint_Result_Created {
+            get {
+                return ResourceManager.GetString("Maint_Result_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User will be forced to change the password on first login..
+        /// </summary>
+        public static string Maint_Result_Note {
+            get {
+                return ResourceManager.GetString("Maint_Result_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One-time password.
+        /// </summary>
+        public static string Maint_Result_Password {
+            get {
+                return ResourceManager.GetString("Maint_Result_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password reset successfully..
+        /// </summary>
+        public static string Maint_Result_Reset {
+            get {
+                return ResourceManager.GetString("Maint_Result_Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string Maint_Result_User {
+            get {
+                return ResourceManager.GetString("Maint_Result_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Name.
+        /// </summary>
+        public static string Maint_UserName_Label {
+            get {
+                return ResourceManager.GetString("Maint_UserName_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g., john.doe.
+        /// </summary>
+        public static string Maint_UserName_Placeholder {
+            get {
+                return ResourceManager.GetString("Maint_UserName_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum length is 100 characters..
+        /// </summary>
+        public static string MaxLength_100 {
+            get {
+                return ResourceManager.GetString("MaxLength_100", resourceCulture);
             }
         }
         
@@ -804,6 +1092,24 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Page {
             get {
                 return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must be at least 8 characters..
+        /// </summary>
+        public static string Password_Min_Length {
+            get {
+                return ResourceManager.GetString("Password_Min_Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The password and confirmation do not match..
+        /// </summary>
+        public static string Passwords_Must_Match {
+            get {
+                return ResourceManager.GetString("Passwords_Must_Match", resourceCulture);
             }
         }
         
@@ -1020,6 +1326,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Update_Button {
             get {
                 return ResourceManager.GetString("Update_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username is required.
+        /// </summary>
+        public static string UserName_Required {
+            get {
+                return ResourceManager.GetString("UserName_Required", resourceCulture);
             }
         }
         
