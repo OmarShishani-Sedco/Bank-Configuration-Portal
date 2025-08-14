@@ -10,9 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Web;
+using System.Web.Mvc;
 namespace Bank_Configuration_Portal.Controllers
 {
     public class CounterController : BaseController
@@ -41,7 +42,7 @@ namespace Bank_Configuration_Portal.Controllers
 
             try
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 var allCounters = await _counterManager.GetAllByBranchIdAsync(branchId);
                 var branch = await _branchManager.GetByIdAsync(branchId, bankId);
 
@@ -110,7 +111,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "CounterController.Index");
                 TempData["Error"] = Language.Generic_Error;
                 return View(new CounterListViewModel());
             }
@@ -126,7 +127,7 @@ namespace Bank_Configuration_Portal.Controllers
                 return RedirectToAction("Index", "Branch");
             }
 
-            int bankId = (int)Session["BankId"];
+            if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
             var viewModel = new CounterViewModel
             {
                 BranchId = branchId,
@@ -141,7 +142,7 @@ namespace Bank_Configuration_Portal.Controllers
         {
             if (!ModelState.IsValid)
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
                 return View("CreateOrEdit", model);
             }
@@ -156,9 +157,9 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "CounterController.Create(POST)");
                 ModelState.AddModelError("", Language.Generic_Error);
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
                 return View("CreateOrEdit", model);
             }
@@ -171,7 +172,7 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 var counter = await _counterManager.GetByIdAsync(id);
 
                 if (counter == null)
@@ -189,7 +190,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "CounterController.Edit(GET)");
                 TempData["Error"] = Language.Generic_Error;
                 return RedirectToAction("Index", "Branch");
             }
@@ -201,7 +202,7 @@ namespace Bank_Configuration_Portal.Controllers
         {
             if (!ModelState.IsValid)
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
                 return View("CreateOrEdit", model);
             }
@@ -240,7 +241,7 @@ namespace Bank_Configuration_Portal.Controllers
                     }
                     ModelState.AddModelError("", Language.Counter_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
                     ViewBag.ShowForceUpdate = true;
-                    int bankId = (int)Session["BankId"];
+                    if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                     model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
                 }
                 else
@@ -251,9 +252,9 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "CounterController.Edit(POST)");
                 TempData["Error"] = Language.Generic_Error;
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
                 return View("CreateOrEdit", model);
             }
@@ -302,7 +303,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "CounterController.Delete(POST)");
                 TempData["Error"] = Language.Generic_Error;
                 if (branchId != 0)
                 {

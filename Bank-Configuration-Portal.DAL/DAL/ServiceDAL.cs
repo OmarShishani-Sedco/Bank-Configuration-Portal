@@ -21,8 +21,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
             {
                 command.Parameters.AddWithValue("@BankId", bankId);
 
-                try
-                {
                     await connection.OpenAsync();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -31,14 +29,7 @@ namespace Bank_Configuration_Portal.DAL.DAL
                             services.Add(MapReaderToService(reader));
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex);
-                    throw;
-                }
             }
-
             return services;
         }
 
@@ -65,8 +56,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
             {
                 command.Parameters.AddRange(idsSqlParameters.ToArray());
 
-                try
-                {
                     await connection.OpenAsync();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -75,12 +64,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                             services.Add(MapReaderToService(reader));
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex);
-                    throw;
-                }
             }
 
             return services;
@@ -92,8 +75,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
             using (var command = new SqlCommand("SELECT * FROM Service WHERE BankId = @BankId AND IsActive = 1", connection))
             {
                 command.Parameters.AddWithValue("@BankId", bankId);
-                try
-                {
                     await connection.OpenAsync();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -102,12 +83,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                             services.Add(MapReaderToService(reader));
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex);
-                    throw;
-                }
             }
             return services;
         }
@@ -119,20 +94,12 @@ namespace Bank_Configuration_Portal.DAL.DAL
             {
                 command.Parameters.AddWithValue("@ServiceId", serviceId);
 
-                try
-                {
                     await connection.OpenAsync();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
                             return MapReaderToService(reader);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex);
-                    throw;
-                }
             }
 
             return null;
@@ -152,24 +119,14 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 command.Parameters.AddWithValue("@IsActive", service.IsActive);
                 command.Parameters.AddWithValue("@MaxTicketsPerDay", service.MaxTicketsPerDay);
 
-                try
-                {
                     await connection.OpenAsync();
                     var result = await command.ExecuteScalarAsync();
                     return Convert.ToInt32(result);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex);
-                    throw;
-                }
             }
         }
 
         public async Task UpdateAsync(ServiceModel service, bool forceUpdate = false)
         {
-            try
-            {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
@@ -221,29 +178,11 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 using var versionReader = await refreshCmd.ExecuteReaderAsync();
                 if (await versionReader.ReadAsync())
                     service.RowVersion = (byte[])versionReader["RowVersion"];
-            }
-            catch (DBConcurrencyException ex)
-            {
-                Logger.LogError(ex, "ServiceDAL.UpdateAsync");
-                throw;
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "ServiceDAL.UpdateAsync");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceDAL.UpdateAsync");
-                throw;
-            }
         }
 
 
         public async Task DeleteAsync(int serviceId, byte[] rowVersion, bool forceDelete = false)
         {
-            try
-            {
                 using var connection = DatabaseHelper.GetConnection();
                 await connection.OpenAsync();
 
@@ -280,22 +219,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         throw new CustomConcurrencyDeletedException("The service was deleted by another user.");
                     }
                 }
-            }
-            catch (CustomConcurrencyModifiedException ex)
-            {
-                Logger.LogError(ex, "ServiceDAL.DeleteAsync - Concurrency Modified");
-                throw;
-            }
-            catch (CustomConcurrencyDeletedException ex)
-            {
-                Logger.LogError(ex, "ServiceDAL.DeleteAsync - Concurrency Deleted");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceDAL.DeleteAsync");
-                throw;
-            }
         }
 
         private ServiceModel MapReaderToService(SqlDataReader reader)

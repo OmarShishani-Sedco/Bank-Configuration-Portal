@@ -19,26 +19,16 @@ namespace Bank_Configuration_Portal.BLL
 
         public async Task<(bool valid, bool mustChange)> ValidateCredentialsAsync(string userName, string password)
         {
-            try
-            {
                 var user = await _userDAL.GetByUserNameAsync(userName);
                 if (user == null || !user.IsActive)
                     return (false, false);
 
                 var valid = PasswordHasher.Verify(password, user.PasswordHash, user.PasswordSalt, user.Iterations);
                 return (valid, valid && user.MustChangePassword);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task<(string plainPassword, bool created)> CreateOrResetUserAsync(string userName, int? mapToBankId = null)
         {
-            try
-            {
                 var existing = await _userDAL.GetByUserNameAsync(userName);
                 var pwd = PasswordGenerator.Generate();
                 var (hash, salt, iters) = PasswordHasher.Hash(pwd);
@@ -69,18 +59,10 @@ namespace Bank_Configuration_Portal.BLL
 
                     return (pwd, false);
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task<bool> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
-            try
-            {
                 var user = await _userDAL.GetByUserNameAsync(userName);
                 if (user == null)
                     return false;
@@ -91,12 +73,6 @@ namespace Bank_Configuration_Portal.BLL
                 var (hash, salt, iters) = PasswordHasher.Hash(newPassword, user.Iterations);
                 await _userDAL.UpdatePasswordAsync(userName, hash, salt, iters, false);
                 return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
     }
 }

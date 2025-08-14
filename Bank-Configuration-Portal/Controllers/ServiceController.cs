@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -32,7 +33,7 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 var allServices = await _serviceManager.GetAllByBankIdAsync(bankId);
 
                 var filteredServices = allServices.AsQueryable();
@@ -71,7 +72,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "ServiceController.Index");
                 TempData["Error"] = Language.Generic_Error;
                 return View(new ServiceListViewModel());
             }
@@ -93,7 +94,8 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 var serviceModel = _mapper.Map<ServiceModel>(model);
-                serviceModel.BankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
+                serviceModel.BankId = bankId;
                 await _serviceManager.CreateAsync(serviceModel);
 
                 TempData["Success"] = Language.Service_Created_Successfully;
@@ -101,7 +103,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "ServiceController.Create(POST)");
                 ModelState.AddModelError("", Language.Generic_Error);
                 return View("CreateOrEdit", model);
             }
@@ -112,7 +114,6 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
                 var service = await _serviceManager.GetByIdAsync(id);
                 if (service == null)
                 {
@@ -125,7 +126,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "ServiceController.Edit(GET)");
                 TempData["Error"] = Language.Generic_Error;
                 return RedirectToAction("Index");
             }
@@ -141,7 +142,8 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 var serviceModel = _mapper.Map<ServiceModel>(model);
-                serviceModel.BankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
+                serviceModel.BankId = bankId;
                 var existingService = await _serviceManager.GetByIdAsync(model.Id);
                 if (existingService == null)
                     {
@@ -189,7 +191,6 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
                 await _serviceManager.DeleteAsync(id, rowVersion, forceDelete);
                 TempData["Success"] = Language.Service_Deleted_Successfully;
             }
@@ -212,7 +213,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "ServiceController.Delete(POST)");
                 TempData["Error"] = Language.Generic_Error;
             }
 

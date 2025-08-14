@@ -14,8 +14,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
     {
         public async Task<BankModel?> GetByNameAsync(string name)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -39,18 +37,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 }
 
                 return null;
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task<bool> BankUserMappingExistsAsync(string username, int bankId)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -67,17 +57,9 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         return Convert.ToInt32(result) > 0;
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
         public async Task<bool> BankExistsAsync(int bankId)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -88,12 +70,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         return result != null;
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
     }
 

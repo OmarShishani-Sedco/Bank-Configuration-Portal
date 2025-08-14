@@ -19,67 +19,27 @@ namespace Bank_Configuration_Portal.BLL
 
         public async Task CreateAsync(BranchModel branch)
         {
-            try
-            {
                 await _branchDAL.CreateAsync(branch);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task UpdateAsync(BranchModel branch, bool forceUpdate = false)
         {
-            try
-            {
                 await _branchDAL.UpdateAsync(branch);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false)
         {
-            try
-            {
                 await _branchDAL.DeleteAsync(id, bankId, rowVersion, forceDelete);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task<List<BranchModel>> GetAllByBankIdAsync(int bankId)
         {
-            try
-            {
                 return await _branchDAL.GetAllByBankIdAsync(bankId);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task<BranchModel> GetByIdAsync(int id, int bankId)
         {
-            try
-            {
                 return await _branchDAL.GetByIdAsync(id, bankId);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
     }
 

@@ -1,13 +1,13 @@
 ﻿using Bank_Configuration_Portal.BLL.Interfaces;
 using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Models;
-using Bank_Configuration_Portal.Models.Models;
 using Bank_Configuration_Portal.Resources;
+using Microsoft.Owin.Security;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace Bank_Configuration_Portal.Controllers
 {
@@ -46,12 +46,11 @@ namespace Bank_Configuration_Portal.Controllers
                     return View(model);
                 }
 
-                if (!(await _bankManager.IsUserMappedToBankAsync(model.UserName, bank.Id)))
+                if (!await _bankManager.IsUserMappedToBankAsync(model.UserName, bank.Id))
                 {
                     ModelState.AddModelError("", Language.Login_Unauthorized_User);
                     return View(model);
                 }
-
 
                 var (valid, mustChange) = await _userManager.ValidateCredentialsAsync(model.UserName, model.Password);
                 if (!valid)
@@ -60,12 +59,25 @@ namespace Bank_Configuration_Portal.Controllers
                     return View(model);
                 }
 
-                FormsAuthentication.SetAuthCookie(model.UserName, false);
+                var ttl = TimeSpan.FromMinutes(30); 
+                var stamp = Startup.IssueNewStamp(model.UserName, bank.Id.ToString(), ttl);
 
-                Session["BankId"] = bank.Id;
-                Session["UserName"] = model.UserName;
-                Session["BankName"] = bank.Name;
-                Session["MustChangePassword"] = mustChange;
+                // grab current UA/IP
+                var ua = HttpContext.Request.UserAgent ?? "";
+                var ip = HttpContext.Request.UserHostAddress ?? "";
+
+                // OWIN cookie sign-in with claims
+                var identity = new ClaimsIdentity("AppCookie");
+                identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
+                identity.AddClaim(new Claim("BankId", bank.Id.ToString()));
+                identity.AddClaim(new Claim("BankName", bank.Name));
+                identity.AddClaim(new Claim("MustChangePassword", mustChange ? "true" : "false"));
+                identity.AddClaim(new Claim("SessionStamp", stamp));
+                identity.AddClaim(new Claim("UA", ua));
+                identity.AddClaim(new Claim("IP", ip));
+
+                HttpContext.GetOwinContext().Authentication.SignIn(
+                    new AuthenticationProperties { IsPersistent = false }, identity);
 
                 if (mustChange)
                     return RedirectToAction("ChangePassword");
@@ -74,7 +86,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "LoginController.Index");
                 ModelState.AddModelError("", Language.Generic_Error);
                 return View(model);
             }
@@ -83,9 +95,6 @@ namespace Bank_Configuration_Portal.Controllers
         [HttpGet]
         public ActionResult ChangePassword()
         {
-            if (Session["UserName"] == null)
-                return RedirectToAction("Index");
-
             return View(new ChangePasswordViewModel());
         }
 
@@ -93,43 +102,56 @@ namespace Bank_Configuration_Portal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-
-            if (Session["UserName"] == null)
-                return RedirectToAction("Index");
-
             if (!ModelState.IsValid)
                 return View(model);
 
             try
             {
-                var userName = (string)Session["UserName"];
+                var cp = User as ClaimsPrincipal;
+                var userName = cp?.Identity?.Name;
+                if (string.IsNullOrWhiteSpace(userName))
+                    return RedirectToAction("Index");
+
                 var ok = await _userManager.ChangePasswordAsync(userName, model.OldPassword, model.NewPassword);
                 if (!ok)
                 {
                     ModelState.AddModelError("", Language.ChangePassword_InvalidOldPassword);
                     return View(model);
                 }
-                Session["MustChangePassword"] = false;
+
+                // Re-issue cookie with MustChangePassword=false
+                var bankId = cp.FindFirst("BankId")?.Value ?? "";
+                var bankName = cp.FindFirst("BankName")?.Value ?? "";
+
+                var newIdentity = new ClaimsIdentity("AppCookie");
+                newIdentity.AddClaim(new Claim(ClaimTypes.Name, userName));
+                if (!string.IsNullOrEmpty(bankId))
+                    newIdentity.AddClaim(new Claim("BankId", bankId));
+                if (!string.IsNullOrEmpty(bankName)) 
+                    newIdentity.AddClaim(new Claim("BankName", bankName));
+                newIdentity.AddClaim(new Claim("MustChangePassword", "false"));
+
+                var auth = HttpContext.GetOwinContext().Authentication;
+                auth.SignOut("AppCookie");
+                auth.SignIn(new AuthenticationProperties { IsPersistent = false }, newIdentity);
+
                 TempData["Success"] = Language.ChangePassword_Success;
                 return RedirectToAction("Index", "Branch");
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "LoginController.ChangePassword(POST)");
                 ModelState.AddModelError("", Language.Generic_Error);
                 return View(model);
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
-
-            Session.Clear();
-            Session.Abandon();
-
-
+            HttpContext.GetOwinContext().Authentication.SignOut("AppCookie");
             return RedirectToAction("Index", "Login");
         }
     }

@@ -24,8 +24,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
               WHERE c.BranchId = @BranchId", connection);
             command.Parameters.AddWithValue("@BranchId", branchId);
 
-            try
-            {
                 await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
 
@@ -56,13 +54,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         counter.AllocatedServiceIds.Add(serviceId);
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.GetAllByBranchIdAsync");
-                throw;
-            }
-
             return countersDictionary.Values.ToList();
         }
 
@@ -72,8 +63,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
             var command = new SqlCommand("SELECT * FROM Counter WHERE CounterId = @Id", connection);
             command.Parameters.AddWithValue("@Id", id);
 
-            try
-            {
                 await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
                 if (await reader.ReadAsync())
@@ -89,13 +78,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         RowVersion = (byte[])reader["RowVersion"]
                     };
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.GetByIdAsync");
-                throw;
-            }
-
             return null;
         }
 
@@ -113,16 +95,8 @@ namespace Bank_Configuration_Portal.DAL.DAL
             command.Parameters.AddWithValue("@IsActive", counter.IsActive);
             command.Parameters.AddWithValue("@CounterType", (int)counter.Type);
 
-            try
-            {
                 await connection.OpenAsync();
                 return Convert.ToInt32(await command.ExecuteScalarAsync());
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.CreateAsync");
-                throw;
-            }
         }
 
         public async Task UpdateAsync(CounterModel counter, bool forceUpdate = false)
@@ -144,24 +118,14 @@ namespace Bank_Configuration_Portal.DAL.DAL
             command.Parameters.AddWithValue("@RowVersion", counter.RowVersion);
             command.Parameters.AddWithValue("@ForceUpdate", forceUpdate ? 1 : 0);
 
-            try
-            {
                 await connection.OpenAsync();
                 var affected = await command.ExecuteNonQueryAsync();
                 if (!forceUpdate && affected == 0)
                     throw new DBConcurrencyException("The record was modified by another user.");
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.UpdateAsync");
-                throw;
-            }
         }
 
         public async Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false)
         {
-            try
-            {
                 using var connection = DatabaseHelper.GetConnection();
                 await connection.OpenAsync();
 
@@ -198,22 +162,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         throw new CustomConcurrencyDeletedException("The counter was deleted by another user.");
                     }
                 }
-            }
-            catch (CustomConcurrencyModifiedException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.DeleteAsync - Concurrency Modified");
-                throw;
-            }
-            catch (CustomConcurrencyDeletedException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.DeleteAsync - Concurrency Deleted");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "CounterDAL.DeleteAsync");
-                throw;
-            }
         }
 
 
@@ -224,21 +172,12 @@ namespace Bank_Configuration_Portal.DAL.DAL
             var command = new SqlCommand("SELECT ServiceId FROM CounterServiceAllocation WHERE CounterId = @CounterId", connection);
             command.Parameters.AddWithValue("@CounterId", counterId);
 
-            try
-            {
                 await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
                     serviceIds.Add(Convert.ToInt32(reader["ServiceId"]));
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "CounterDAL.GetAllocatedServiceIdsAsync");
-                throw;
-            }
-
             return serviceIds;
         }
 
@@ -280,16 +219,8 @@ namespace Bank_Configuration_Portal.DAL.DAL
             var command = new SqlCommand("DELETE FROM CounterServiceAllocation WHERE CounterId = @CounterId", connection);
             command.Parameters.AddWithValue("@CounterId", counterId);
 
-            try
-            {
                 await connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, $"CounterDAL.DeleteAllocationsByCounterIdAsync for CounterId: {counterId}");
-                throw;
-            }
         }
     }
 

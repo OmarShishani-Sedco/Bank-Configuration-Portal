@@ -4,7 +4,9 @@ using Bank_Configuration_Portal.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -18,6 +20,7 @@ namespace Bank_Configuration_Portal
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimsIdentity.DefaultNameClaimType;
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             if (!DatabaseUtility.TestConnection(out string errorMessage))
             {
@@ -26,6 +29,7 @@ namespace Bank_Configuration_Portal
             }
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutofacConfig.ConfigureContainer();
+
         }
         protected void Application_BeginRequest()
         {

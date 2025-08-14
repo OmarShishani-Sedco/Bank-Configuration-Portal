@@ -1,20 +1,30 @@
 ﻿@using System.Threading
 @using System.Globalization
+@using System.Security.Claims
 @using Bank_Configuration_Portal.Resources
+
 @{
-    var bankName = Session["BankName"]?.ToString();
+    var cp = User as ClaimsPrincipal;
+
+    bool isLoggedIn = cp?.Identity?.IsAuthenticated == true;
+    bool mustChange = cp?.FindFirst("MustChangePassword")?.Value == "true";
+
+    var userName = cp?.Identity?.Name;
+    var bankName = cp?.FindFirst("BankName")?.Value;
+
     var key = "Bank_" + bankName;
-    var localizedBankName = Bank_Configuration_Portal.Resources.Language.ResourceManager.GetString(key) ?? bankName;
+    var localizedBankName = string.IsNullOrWhiteSpace(bankName)
+        ? null
+        : (Bank_Configuration_Portal.Resources.Language.ResourceManager.GetString(key) ?? bankName);
+
     var showBankInfo = !string.IsNullOrWhiteSpace(localizedBankName);
-    bool hasSession = (Session["UserName"] != null) && (Session["BankId"] != null);
-    bool mustChange = (Session["MustChangePassword"] as bool?) ?? false;
-    bool isLoggedIn = Request.IsAuthenticated && hasSession;
 
+    // Where the brand/logo should point
     var targetUrl = (isLoggedIn && !mustChange)
-    ? Url.Action("Index", "Branch")
-    : Url.Action("ChangePassword", "Login");
-
+        ? Url.Action("Index", "Branch")
+        : Url.Action("ChangePassword", "Login");
 }
+
 <!DOCTYPE html>
 <html data-bs-theme="dark" dir="@(Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")"
       lang="@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
@@ -95,12 +105,12 @@
                         </div>
                     }
                     <ul class="navbar-nav d-flex align-items-center">
-                        @if (Session["UserName"] != null)
+                        @if (!string.IsNullOrEmpty(userName))
                         {
                             <li class="nav-item me-3">
-                                <span class="navbar-text d-flex align-items-center text-white text-truncate" title="@Session["UserName"]" style="max-width: 30vw;">
+                                <span class="navbar-text d-flex align-items-center text-white text-truncate" title="@userName" style="max-width: 30vw;">
                                     <i class="bi bi-person-circle me-2"></i>
-                                    @Session["UserName"].ToString()
+                                    @userName
                                 </span>
                             </li>
                         }

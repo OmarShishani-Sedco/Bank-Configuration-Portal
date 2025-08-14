@@ -14,8 +14,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
     {
         public async Task<List<BranchModel>> GetAllByBankIdAsync(int bankId)
         {
-            try
-            {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
@@ -41,18 +39,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 }
 
                 return branches;
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task<BranchModel?> GetByIdAsync(int id, int bankId)
         {
-            try
-            {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
@@ -78,18 +68,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 }
 
                 return null;
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task CreateAsync(BranchModel branch)
         {
-            try
-            {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
@@ -104,18 +86,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 cmd.Parameters.AddWithValue("@IsActive", branch.IsActive);
 
                 branch.Id = Convert.ToInt32(await cmd.ExecuteScalarAsync());
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task UpdateAsync(BranchModel branch, bool forceUpdate = false)
         {
-            try
-            {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
@@ -166,28 +140,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 using var versionReader = await refreshCmd.ExecuteReaderAsync();
                 if (await versionReader.ReadAsync())
                     branch.RowVersion = (byte[])versionReader["RowVersion"];
-            }
-            catch (DBConcurrencyException ex)
-            {
-                Logger.LogError(ex, "BranchDAL.UpdateAsync");
-                throw;
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex, "BranchDAL.UpdateAsync");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "BranchDAL.UpdateAsync");
-                throw;
-            }
         }
 
         public async Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false)
         {
-            try
-            {
                 using var conn = DatabaseHelper.GetConnection();
                 await conn.OpenAsync();
 
@@ -228,22 +184,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         throw new CustomConcurrencyDeletedException("The branch was deleted by another user.");
                     }
                 }
-            }
-            catch (CustomConcurrencyModifiedException ex)
-            {
-                Logger.LogError(ex, "BranchDAL.DeleteAsync - Concurrency Modified");
-                throw;
-            }
-            catch (CustomConcurrencyDeletedException ex)
-            {
-                Logger.LogError(ex, "BranchDAL.DeleteAsync - Concurrency Deleted");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "BranchDAL.DeleteAsync");
-                throw;
-            }
         }
     }
 }

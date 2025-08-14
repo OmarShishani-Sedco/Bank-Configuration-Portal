@@ -12,8 +12,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
     {
         public async Task<AppUserModel> GetByUserNameAsync(string userName)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -43,18 +41,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         }
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task CreateAsync(AppUserModel user)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -75,18 +65,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         await cmd.ExecuteNonQueryAsync();
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task UpdatePasswordAsync(string userName, byte[] hash, byte[] salt, int iterations, bool mustChangePassword)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -108,18 +90,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         await cmd.ExecuteNonQueryAsync();
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
 
         public async Task EnsureUserMappedToBankAsync(string userName, int bankId)
         {
-            try
-            {
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     await conn.OpenAsync();
@@ -134,12 +108,6 @@ namespace Bank_Configuration_Portal.DAL.DAL
                         await cmd.ExecuteNonQueryAsync();
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                Logger.LogError(ex);
-                throw;
-            }
         }
     }
 }

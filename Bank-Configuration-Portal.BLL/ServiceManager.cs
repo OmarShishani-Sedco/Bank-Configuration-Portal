@@ -21,96 +21,40 @@ namespace Bank_Configuration_Portal.BLL
 
         public async Task<List<ServiceModel>> GetAllByBankIdAsync(int bankId)
         {
-            try
-            {
                 return await _serviceDAL.GetAllByBankIdAsync(bankId);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.GetAllByBankIdAsync");
-                throw;
-            }
         }
         public async Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds)
         {
-            try
-            {
                 if (serviceIds == null || !serviceIds.Any())
                 {
                     return new List<ServiceModel>();
                 }
 
                 return await _serviceDAL.GetByIdsAsync(serviceIds);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.GetByIdsAsync");
-                throw;
-            }
         }
         public async Task<List<ServiceModel>> GetAllActiveByBankIdAsync(int bankId)
         {
-            try
-            {
                 return await _serviceDAL.GetAllActiveByBankIdAsync(bankId);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.GetAllActiveByBankIdAsync");
-                throw;
-            }
         }
 
         public async Task<ServiceModel?> GetByIdAsync(int Id)
         {
-            try
-            {
                 return await _serviceDAL.GetByIdAsync(Id);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.GetByIdAsync");
-                throw;
-            }
         }
 
         public async Task<int> CreateAsync(ServiceModel service)
         {
-            try
-            {
                 return await _serviceDAL.CreateAsync(service);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.AddAsync");
-                throw;
-            }
         }
 
         public async Task UpdateAsync(ServiceModel service, bool forceUpdate = false)
         {
-            try
-            {
                 await _serviceDAL.UpdateAsync(service, forceUpdate);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.UpdateAsync");
-                throw;
-            }
         }
 
         public async Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false)
         {
-            try
-            {
                 await _serviceDAL.DeleteAsync(id, rowVersion, forceDelete);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "ServiceManager.DeleteAsync");
-                throw;
-            }
         }
     }
 }

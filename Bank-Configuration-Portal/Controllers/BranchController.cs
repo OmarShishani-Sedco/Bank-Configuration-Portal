@@ -9,8 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Bank_Configuration_Portal.Controllers
 {
@@ -30,9 +32,10 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
-                var allBranches = await _branchManager.GetAllByBankIdAsync(bankId);
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
 
+
+                var allBranches = await _branchManager.GetAllByBankIdAsync(bankId);
                 var filteredBranches = allBranches.AsQueryable();
 
                 if (!string.IsNullOrEmpty(searchTerm))
@@ -69,7 +72,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "BranchController.Index");
                 TempData["Error"] = Language.Generic_Error;
                 return View(new BranchListViewModel());
             }
@@ -91,7 +94,8 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 var branchModel = _mapper.Map<BranchModel>(model);
-                branchModel.BankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
+                branchModel.BankId = bankId;
                 await _branchManager.CreateAsync(branchModel);
 
                 TempData["Success"] = Language.Branch_Created_Successfully;
@@ -99,7 +103,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "BranchController.Create(POST)");
                 ModelState.AddModelError("", Language.Generic_Error);
                 return View("CreateOrEdit", model);
             }
@@ -110,7 +114,7 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 var branch = await _branchManager.GetByIdAsync(id, bankId);
                 if (branch == null)
                 {
@@ -123,7 +127,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "BranchController.Edit(GET)");
                 TempData["Error"] = Language.Generic_Error;
                 return RedirectToAction("Index");
             }
@@ -139,7 +143,8 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 var branchModel = _mapper.Map<BranchModel>(model);
-                branchModel.BankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
+                branchModel.BankId = bankId;
                 var existingBranch = await _branchManager.GetByIdAsync(model.Id, branchModel.BankId);
                 if (existingBranch == null)
                 {
@@ -165,7 +170,8 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 if (!forceUpdate)
                 {
-                    var latestBranch = await _branchManager.GetByIdAsync(model.Id, (int)Session["BankId"]);
+                    if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
+                    var latestBranch = await _branchManager.GetByIdAsync(model.Id, bankId);
                     if (latestBranch != null)
                         model.RowVersion = latestBranch.RowVersion;
 
@@ -187,7 +193,7 @@ namespace Bank_Configuration_Portal.Controllers
         {
             try
             {
-                int bankId = (int)Session["BankId"];
+                if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
 
                 await _branchManager.DeleteAsync(id, bankId, rowVersion, forceDelete);
 
@@ -212,7 +218,7 @@ namespace Bank_Configuration_Portal.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.LogError(ex, "Branch.Delete(POST)");
                 TempData["Error"] = Language.Generic_Error;
             }
 

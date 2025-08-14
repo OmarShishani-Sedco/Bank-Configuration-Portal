@@ -12,7 +12,7 @@ namespace Bank_Configuration_Portal
             filters.Add(new Filters.NoCacheAttribute());
             filters.Add(new Filters.CustomHandleErrorAttribute());
             filters.Add(new Filters.CultureAttribute());
-            filters.Add(new Filters.SessionAuthorizeAttribute());
+            filters.Add(new Filters.ClaimsAuthorizeAttribute());
         }
     }
 }
