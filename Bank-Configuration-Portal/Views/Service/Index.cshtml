@@ -84,6 +84,16 @@
                                 <strong>@Language.MaxTickets_Label:</strong> @service.MaxTicketsPerDay
                             </p>
 
+                           <p class="mb-1">
+                                <strong>@Language.Service_Time_Range:</strong>
+                                  <span title="@string.Format("{0:mm\\:ss} – {1:mm\\:ss}",
+                                               TimeSpan.FromSeconds(service.MinServiceTimeSeconds),
+                                               TimeSpan.FromSeconds(service.MaxServiceTimeSeconds))">
+                                    @service.MinServiceTimeSeconds–@service.MaxServiceTimeSeconds @Language.Seconds
+                                  </span>
+                            </p>
+
+
                             <p>
                                 <strong>@Language.IsActive_Label:</strong>
                                 @if (service.IsActive)

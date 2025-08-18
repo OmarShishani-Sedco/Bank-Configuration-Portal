@@ -21,28 +21,28 @@ public static class DatabaseUtility
         }
         catch (DirectoryNotFoundException ex)
         {
-            Logger.LogError(ex, "DirectoryNotFoundException");
             errorMessage = "Config folder is missing. Please ensure all files are correctly deployed.";
+            Logger.LogError(ex, $"DatabaseUtility.TestConnection | {errorMessage}");
         }
         catch (ConfigurationErrorsException ex)
         {
-            Logger.LogError(ex, "ConfigurationErrorsException");
             errorMessage = "Configuration file error: check appsettings.json. " + ex.Message;
+            Logger.LogError(ex, $"DatabaseUtility.TestConnection | {errorMessage}");
         }
         catch (FileNotFoundException ex)
         {
-            Logger.LogError(ex, "FileNotFoundException");
             errorMessage = "Config file is missing. Please ensure all files are correctly deployed. " + ex.Message;
+            Logger.LogError(ex, $"DatabaseUtility.TestConnection | {errorMessage}");
         }
         catch (SqlException ex)
         {
-            Logger.LogError(ex, "SqlException");
             errorMessage = "Cannot connect to database. Check SQL Server instance and credentials.";
+            Logger.LogError(ex, $"DatabaseUtility.TestConnection | {errorMessage}");
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex);
             errorMessage = "Unexpected error while testing DB connection.";
+            Logger.LogError(ex, $"DatabaseUtility.TestConnection | {errorMessage}");
         }
 
         return false;

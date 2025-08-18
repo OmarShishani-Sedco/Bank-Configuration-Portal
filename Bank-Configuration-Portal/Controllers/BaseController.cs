@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Bank_Configuration_Portal.Models;
+using Bank_Configuration_Portal.Resources;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,6 +13,32 @@ namespace Bank_Configuration_Portal.Controllers
 {
     public class BaseController : Controller
     {
+        protected ClaimsPrincipal CurrentUserClaims { get; private set; }
+        protected BaseViewModel CurrentBaseModel { get; private set; }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            var cp = User as ClaimsPrincipal;
+            CurrentUserClaims = cp;
+
+            var baseModel = new BaseViewModel
+            {
+                IsLoggedIn = cp?.Identity?.IsAuthenticated == true,
+                MustChangePassword = cp?.FindFirst("MustChangePassword")?.Value == "true",
+                UserName = cp?.Identity?.Name,
+                bankName = cp?.FindFirst("BankName")?.Value,
+                TargetUrl = (cp?.Identity?.IsAuthenticated == true &&
+                             cp?.FindFirst("MustChangePassword")?.Value != "true")
+                            ? Url.Action("Index", "Branch")
+                            : Url.Action("ChangePassword", "Login")
+            };
+
+            CurrentBaseModel = baseModel;
+            ViewBag.BaseViewModel = baseModel;
+        }
+
         [AllowAnonymous]
         public ActionResult ChangeLanguage(string lang, string returnUrl)
         {
@@ -35,7 +63,7 @@ namespace Bank_Configuration_Portal.Controllers
 
         protected ActionResult BankIdMissingRedirect()
         {
-            TempData["Error"] = Resources.Language.Generic_Error;
+            TempData["Error"] = Language.Generic_Error;
             return RedirectToAction("Index", "Login");
         }
 

@@ -235,6 +235,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Mappings\AutoMapperProfile .cs" />
+    <Compile Include="Models\BaseViewModel.cs" />
     <Compile Include="Models\BranchListViewModel.cs" />
     <Compile Include="Models\BranchViewModel.cs" />
     <Compile Include="Models\ChangePasswordViewModel.cs" />
@@ -254,6 +255,8 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="UiHelpers\UiUtility.cs" />
+    <Compile Include="Validation\GreaterThanAttribute.cs" />
+    <Compile Include="Validation\LessThanAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -308,8 +311,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\fadeout3s.js" />
+    <Content Include="Scripts\messages_ar.js" />
     <Content Include="Scripts\modal_scripts.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\validation.compare.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

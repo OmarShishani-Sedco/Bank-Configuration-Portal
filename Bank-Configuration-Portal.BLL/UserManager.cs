@@ -22,8 +22,10 @@ namespace Bank_Configuration_Portal.BLL
                 var user = await _userDAL.GetByUserNameAsync(userName);
                 if (user == null || !user.IsActive)
                     return (false, false);
+            if (!user.IsActive && user.MustChangePassword)
+                return (false, true);
 
-                var valid = PasswordHasher.Verify(password, user.PasswordHash, user.PasswordSalt, user.Iterations);
+            var valid = PasswordHasher.Verify(password, user.PasswordHash, user.PasswordSalt, user.Iterations);
                 return (valid, valid && user.MustChangePassword);
         }
 

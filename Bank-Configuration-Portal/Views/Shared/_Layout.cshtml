@@ -2,27 +2,19 @@
 @using System.Globalization
 @using System.Security.Claims
 @using Bank_Configuration_Portal.Resources
+@using Bank_Configuration_Portal.Models
 
 @{
-    var cp = User as ClaimsPrincipal;
+    var baseModel = ViewBag.BaseViewModel as BaseViewModel;
 
-    bool isLoggedIn = cp?.Identity?.IsAuthenticated == true;
-    bool mustChange = cp?.FindFirst("MustChangePassword")?.Value == "true";
-
-    var userName = cp?.Identity?.Name;
-    var bankName = cp?.FindFirst("BankName")?.Value;
-
-    var key = "Bank_" + bankName;
-    var localizedBankName = string.IsNullOrWhiteSpace(bankName)
+    // Handle bank name localization
+    var currentCulture = Thread.CurrentThread.CurrentUICulture;
+    var key = "Bank_" + baseModel.bankName;
+    baseModel.LocalizedBankName = string.IsNullOrWhiteSpace(baseModel.bankName)
         ? null
-        : (Bank_Configuration_Portal.Resources.Language.ResourceManager.GetString(key) ?? bankName);
+        : (Language.ResourceManager.GetString(key, currentCulture) ?? baseModel.bankName);
 
-    var showBankInfo = !string.IsNullOrWhiteSpace(localizedBankName);
-
-    // Where the brand/logo should point
-    var targetUrl = (isLoggedIn && !mustChange)
-        ? Url.Action("Index", "Branch")
-        : Url.Action("ChangePassword", "Login");
+    baseModel.ShowBankInfo = !string.IsNullOrWhiteSpace(baseModel.LocalizedBankName);
 }
 
 <!DOCTYPE html>
@@ -53,14 +45,14 @@
     </script>
     <nav class="navbar navbar-expand-lg glass-bg">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="@targetUrl">
+            <a class="navbar-brand d-flex align-items-center" href="@baseModel.TargetUrl">
                 <img src="@Url.Content("~/Content/Images/Application_Icon.png")" alt="@Language.Application_Label" height="30" class="me-2 rounded-5" />
                 @Language.Application_Label
-                <span class="text-truncate" title="@localizedBankName" style="max-width: 20vw;">
+                <span class="text-truncate" title="@baseModel.LocalizedBankName" style="max-width: 20vw;">
 
-                    @if (showBankInfo)
+                    @if (baseModel.ShowBankInfo)
                     {
-                        @($" - {localizedBankName}")
+                        @($" - {baseModel.LocalizedBankName}")
                     }
                 </span>
             </a>
@@ -72,7 +64,7 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-sm-0">
-                    @if (isLoggedIn && !mustChange)
+                    @if (baseModel.IsLoggedIn && !baseModel.MustChangePassword)
                     {
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Index", "Branch")">@Language.Branch_Index_Title</a>
@@ -94,9 +86,9 @@
                     <input type="hidden" name="returnUrl" value="@Context.Request.RawUrl" />
                 }
 
-                @if (isLoggedIn)
+                @if (baseModel.IsLoggedIn)
                 {
-                    if (mustChange)
+                    if (baseModel.MustChangePassword)
                     {
                         <div class="d-flex flex-column align-items-end me-3">
                             <a href="@Url.Action("ChangePassword", "Login")" class="btn btn-warning btn-sm fw-bold" title=" @Language.ChangePassword_Required_Note">
@@ -105,12 +97,12 @@
                         </div>
                     }
                     <ul class="navbar-nav d-flex align-items-center">
-                        @if (!string.IsNullOrEmpty(userName))
+                        @if (!string.IsNullOrEmpty(baseModel.UserName))
                         {
                             <li class="nav-item me-3">
-                                <span class="navbar-text d-flex align-items-center text-white text-truncate" title="@userName" style="max-width: 30vw;">
+                                <span class="navbar-text d-flex align-items-center text-white text-truncate" title="@baseModel.UserName" style="max-width: 30vw;">
                                     <i class="bi bi-person-circle me-2"></i>
-                                    @userName
+                                    @baseModel.UserName
                                 </span>
                             </li>
                         }
@@ -158,6 +150,10 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/Custom")
+    @if (System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar")
+    {
+        <script src="~/Scripts/messages_ar.js"></script>
+    }
     @RenderSection("scripts", required: false)
 </body>
 </html>

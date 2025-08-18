@@ -53,6 +53,11 @@ namespace Bank_Configuration_Portal.Controllers
                 }
 
                 var (valid, mustChange) = await _userManager.ValidateCredentialsAsync(model.UserName, model.Password);
+                if (!valid && mustChange)
+                {
+                    ModelState.AddModelError("", Language.Inactive_User);
+                    return View(model);
+                }
                 if (!valid)
                 {
                     ModelState.AddModelError("", Language.Login_Invalid_Credentials);
@@ -107,8 +112,8 @@ namespace Bank_Configuration_Portal.Controllers
 
             try
             {
-                var cp = User as ClaimsPrincipal;
-                var userName = cp?.Identity?.Name;
+                var cp = CurrentUserClaims;
+                var userName = CurrentBaseModel.UserName;
                 if (string.IsNullOrWhiteSpace(userName))
                     return RedirectToAction("Index");
 
@@ -130,6 +135,7 @@ namespace Bank_Configuration_Portal.Controllers
                 if (!string.IsNullOrEmpty(bankName)) 
                     newIdentity.AddClaim(new Claim("BankName", bankName));
                 newIdentity.AddClaim(new Claim("MustChangePassword", "false"));
+
 
                 var auth = HttpContext.GetOwinContext().Authentication;
                 auth.SignOut("AppCookie");

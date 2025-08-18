@@ -200,6 +200,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\PasswordGenerator.cs" />
     <Compile Include="Security\PasswordHasher.cs" />
+    <Compile Include="WindowsEventLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

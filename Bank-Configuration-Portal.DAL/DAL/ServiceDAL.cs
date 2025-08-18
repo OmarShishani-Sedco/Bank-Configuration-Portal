@@ -109,8 +109,8 @@ namespace Bank_Configuration_Portal.DAL.DAL
         {
             using (var connection = DatabaseHelper.GetConnection())
             using (var command = new SqlCommand(@"
-                INSERT INTO Service (BankId, NameEnglish, NameArabic, IsActive, MaxTicketsPerDay)
-                VALUES (@BankId, @NameEnglish, @NameArabic, @IsActive, @MaxTicketsPerDay);
+                INSERT INTO Service (BankId, NameEnglish, NameArabic, IsActive, MaxTicketsPerDay, MinServiceTimeSeconds, MaxServiceTimeSeconds)
+                VALUES (@BankId, @NameEnglish, @NameArabic, @IsActive, @MaxTicketsPerDay, @MinServiceTimeSeconds, @MaxServiceTimeSeconds);
                 SELECT SCOPE_IDENTITY();", connection))
             {
                 command.Parameters.AddWithValue("@BankId", service.BankId);
@@ -118,8 +118,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 command.Parameters.AddWithValue("@NameArabic", service.NameArabic);
                 command.Parameters.AddWithValue("@IsActive", service.IsActive);
                 command.Parameters.AddWithValue("@MaxTicketsPerDay", service.MaxTicketsPerDay);
+                command.Parameters.AddWithValue("@MinServiceTimeSeconds", service.MinServiceTimeSeconds);
+                command.Parameters.AddWithValue("@MaxServiceTimeSeconds", service.MaxServiceTimeSeconds);
 
-                    await connection.OpenAsync();
+                await connection.OpenAsync();
                     var result = await command.ExecuteScalarAsync();
                     return Convert.ToInt32(result);
             }
@@ -148,10 +150,10 @@ namespace Bank_Configuration_Portal.DAL.DAL
 
                 string updateQuery = forceUpdate
                     ? @"UPDATE Service 
-               SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive, MaxTicketsPerDay = @MaxTicketsPerDay 
+               SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive, MaxTicketsPerDay = @MaxTicketsPerDay, MinServiceTimeSeconds = @MinServiceTimeSeconds, MaxServiceTimeSeconds = @MaxServiceTimeSeconds
                WHERE ServiceId = @Id AND BankId = @BankId"
                     : @"UPDATE Service 
-               SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive, MaxTicketsPerDay = @MaxTicketsPerDay 
+               SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive, MaxTicketsPerDay = @MaxTicketsPerDay, MinServiceTimeSeconds = @MinServiceTimeSeconds, MaxServiceTimeSeconds = @MaxServiceTimeSeconds
                WHERE ServiceId = @Id AND BankId = @BankId AND RowVersion = @RowVersion";
 
                 using var cmd = new SqlCommand(updateQuery, conn);
@@ -159,7 +161,9 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 cmd.Parameters.AddWithValue("@NameArabic", service.NameArabic);
                 cmd.Parameters.AddWithValue("@IsActive", service.IsActive);
                 cmd.Parameters.AddWithValue("@MaxTicketsPerDay", service.MaxTicketsPerDay);
-                cmd.Parameters.AddWithValue("@Id", service.Id);
+                cmd.Parameters.AddWithValue("@MinServiceTimeSeconds", service.MinServiceTimeSeconds);
+                cmd.Parameters.AddWithValue("@MaxServiceTimeSeconds", service.MaxServiceTimeSeconds);
+            cmd.Parameters.AddWithValue("@Id", service.Id);
                 cmd.Parameters.AddWithValue("@BankId", service.BankId);
 
                 if (!forceUpdate)
@@ -231,7 +235,9 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 NameArabic = reader["NameArabic"] as string,
                 IsActive = Convert.ToBoolean(reader["IsActive"]),
                 MaxTicketsPerDay = Convert.ToInt32(reader["MaxTicketsPerDay"]),
-                RowVersion = (byte[])reader["RowVersion"]
+                RowVersion = (byte[])reader["RowVersion"],
+                MinServiceTimeSeconds = Convert.ToInt32(reader["MinServiceTimeSeconds"]),
+                MaxServiceTimeSeconds = Convert.ToInt32(reader["MaxServiceTimeSeconds"])
             };
         }
     }

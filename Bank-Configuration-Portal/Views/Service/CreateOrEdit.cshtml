@@ -31,6 +31,9 @@
                         @Html.HiddenFor(m => m.NameArabic)
                         @Html.HiddenFor(m => m.MaxTicketsPerDay)
                         @Html.HiddenFor(m => m.IsActive)
+                        @Html.HiddenFor(m => m.MinServiceTimeSeconds)
+                        @Html.HiddenFor(m => m.MaxServiceTimeSeconds)
+
 
                         <input type="hidden" name="forceUpdate" value="true" />
 
@@ -80,6 +83,19 @@
                     @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
                     @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
                 </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.MinServiceTimeSeconds, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.MinServiceTimeSeconds, new { @class = "form-control", type = "number", min = "30", max = "999999", step = "1" })
+                    @Html.ValidationMessageFor(m => m.MinServiceTimeSeconds, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.MaxServiceTimeSeconds, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.MaxServiceTimeSeconds, new { @class = "form-control", type = "number", min = "30", max = "999999", step = "1" })
+                    @Html.ValidationMessageFor(m => m.MaxServiceTimeSeconds, "", new { @class = "text-danger" })
+                </div>
+
 
                 <div class="d-grid gap-2 mt-4">
                     <button type="submit" class="btn btn-primary">

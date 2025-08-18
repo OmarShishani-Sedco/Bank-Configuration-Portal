@@ -1,4 +1,5 @@
 ﻿using Bank_Configuration_Portal.Resources;
+using Bank_Configuration_Portal.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +30,22 @@ namespace Bank_Configuration_Portal.Models
         [Display(Name = "MaxTickets_Label", ResourceType = typeof(Language))]
         [Range(1, 100, ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "Service_Tickets_Range")]
         public int MaxTicketsPerDay { get; set; }
+
+        [Display(ResourceType = typeof(Language), Name = "Service_MinServiceTime_Label")]
+        [Required(ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "Service_MinServiceTime_Required")]
+        [Range(30, 999999, ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "Service_MinServiceTime_Range")]
+        [LessThan(nameof(MaxServiceTimeSeconds),
+            ErrorMessageResourceType = typeof(Language),
+            ErrorMessageResourceName = "Service_Min_LessThan_Max")]
+        public int MinServiceTimeSeconds { get; set; }
+
+        [Display(ResourceType = typeof(Language), Name = "Service_MaxServiceTime_Label")]
+        [Required(ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "Service_MaxServiceTime_Required")]
+        [Range(30, 999999, ErrorMessageResourceType = typeof(Language), ErrorMessageResourceName = "Service_MaxServiceTime_Range")]
+        [GreaterThan(nameof(MinServiceTimeSeconds),
+            ErrorMessageResourceType = typeof(Language),
+            ErrorMessageResourceName = "Service_Max_GreaterThan_Min")]
+        public int MaxServiceTimeSeconds { get; set; }
         public byte[] RowVersion { get; set; }
     }
 }

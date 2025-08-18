@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bank_Configuration_Portal.Common
 {
@@ -22,8 +18,12 @@ namespace Bank_Configuration_Portal.Common
 
         static Logger()
         {
-            if (!Directory.Exists(logDirectory))
-                Directory.CreateDirectory(logDirectory);
+            try
+            {
+                if (!Directory.Exists(logDirectory))
+                    Directory.CreateDirectory(logDirectory);
+            }
+            catch {}
         }
 
         public static void LogError(Exception ex, string context = "")
@@ -37,9 +37,75 @@ namespace Bank_Configuration_Portal.Common
                 StackTrace = ex.StackTrace ?? "No stack trace available"
             };
 
-            string json = JsonConvert.SerializeObject(log, Formatting.Indented);
-            File.AppendAllText(logFilePath, json + "," + Environment.NewLine);
+            // Write JSON file
+            try
+            {
+                string json = JsonConvert.SerializeObject(log, Formatting.Indented);
+                File.AppendAllText(logFilePath, json + "," + Environment.NewLine);
+            }
+            catch {}
+
+            // Mirror to Windows Event Log (Error)
+            try
+            {
+                var evt =
+                    $"[{log.ErrorTime}] {log.Message}" + Environment.NewLine +
+                    $"Exception: {ex.GetType().FullName}" + Environment.NewLine +
+                    $"Stack Trace:" + Environment.NewLine +
+                    $"{log.StackTrace}";
+                WindowsEventLogger.WriteError(evt);
+            }
+            catch {}
         }
 
+        public static void LogWarning(string message, string context = "")
+        {
+            string contextPrefix = string.IsNullOrWhiteSpace(context) ? "" : $"[{context}] ";
+
+            try
+            {
+                var log = new
+                {
+                    TimeUtc = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    Level = "Warning",
+                    Context = context,
+                    Message = message
+                };
+                var json = JsonConvert.SerializeObject(log, Formatting.Indented);
+                File.AppendAllText(logFilePath, json + "," + Environment.NewLine);
+            }
+            catch { }
+
+            try
+            {
+                WindowsEventLogger.WriteWarning($"{contextPrefix}{message}");
+            }
+            catch { }
+        }
+
+        public static void LogInfo(string message, string context = "")
+        {
+            string contextPrefix = string.IsNullOrWhiteSpace(context) ? "" : $"[{context}] ";
+
+            try
+            {
+                var log = new
+                {
+                    TimeUtc = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    Level = "Info",
+                    Context = context,
+                    Message = message
+                };
+                var json = JsonConvert.SerializeObject(log, Formatting.Indented);
+                File.AppendAllText(logFilePath, json + "," + Environment.NewLine);
+            }
+            catch { }
+
+            try
+            {
+                WindowsEventLogger.WriteInfo($"{contextPrefix}{message}");
+            }
+            catch { }
+        }
     }
 }

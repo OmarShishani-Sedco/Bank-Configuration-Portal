@@ -15,6 +15,8 @@ namespace Bank_Configuration_Portal.Models.Models
         public bool IsActive { get; set; }
         public int MaxTicketsPerDay { get; set; }
         public byte[] RowVersion { get; set; }
+        public int MinServiceTimeSeconds { get; set; } 
+        public int MaxServiceTimeSeconds { get; set; } 
     }
 
 }

@@ -24,7 +24,7 @@ namespace Bank_Configuration_Portal.BLL
 
         public async Task UpdateAsync(BranchModel branch, bool forceUpdate = false)
         {
-                await _branchDAL.UpdateAsync(branch);
+                await _branchDAL.UpdateAsync(branch, forceUpdate);
         }
 
         public async Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false)

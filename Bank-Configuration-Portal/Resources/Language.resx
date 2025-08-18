@@ -160,7 +160,7 @@
     <value>Login</value>
   </data>
 	<data name="Login_Unauthorized_User" xml:space="preserve">
-    <value>User doesn't exist or is not authorized for this bank</value>
+    <value>User is not authorized for this bank</value>
   </data>
 	<data name="Login_UserName_Label" xml:space="preserve">
     <value>Username</value>
@@ -546,4 +546,43 @@
 	<data name="Maint_BankId_Range" xml:space="preserve">
   <value>Bank ID must be a positive number</value>
 </data>
+	<data name="Service_MinServiceTime_Label">
+	<value>Minimum Service Time (seconds)</value>
+</data>
+	<data name="Service_MaxServiceTime_Label">
+	<value>Maximum Service Time (seconds)</value>
+</data>
+	<data name="Service_MinServiceTime_Range">
+	<value>Minimum Service Time must be between 30 and 999,999 seconds.</value>
+</data>
+	<data name="Service_MaxServiceTime_Range">
+	<value>Maximum Service Time must be between 30 and 999,999 seconds.</value>
+</data>
+	<data name="Service_Min_LessThan_Max">
+	<value>Minimum Service Time must be less than Maximum Service Time.</value>
+</data>
+	<data name="Service_Max_GreaterThan_Min">
+	<value>Maximum Service Time must be greater than Minimum Service Time.</value>
+</data>
+	<data name="Service_MinServiceTime_Hint">
+	<value>Default is 45 seconds.</value>
+</data>
+	<data name="Service_MaxServiceTime_Hint">
+	<value>Default is 300 seconds.</value>
+</data>
+	<data name="Service_MaxServiceTime_Required">
+		<value>Maximum Service Time Required</value>
+	</data>
+	<data name="Service_MinServiceTime_Required">
+		<value>Minimum Service Time Required</value>
+	</data>
+	<data name="Inactive_User">
+		<value>User is Inactive. Contact administrator to reset password</value>
+	</data>
+	<data name="Service_Time_Range">
+		<value>Service Time Range</value>
+	</data>
+	<data name="Seconds">
+		<value>s</value>
+	</data>
 </root>

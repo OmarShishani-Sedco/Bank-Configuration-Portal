@@ -10,6 +10,7 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Bank_Configuration_Portal.Common;
 
 namespace Bank_Configuration_Portal
 {
@@ -22,6 +23,7 @@ namespace Bank_Configuration_Portal
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimsIdentity.DefaultNameClaimType;
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            WindowsEventLogger.TryEnsureSource();
             if (!DatabaseUtility.TestConnection(out string errorMessage))
             {
                 Application["StartupError"] = errorMessage;

@@ -664,6 +664,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User is Inactive. Contact administrator to reset password.
+        /// </summary>
+        public static string Inactive_User {
+            get {
+                return ResourceManager.GetString("Inactive_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Active.
         /// </summary>
         public static string IsActive {
@@ -781,7 +790,7 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User doesn&apos;t exist or is not authorized for this bank.
+        ///   Looks up a localized string similar to User is not authorized for this bank.
         /// </summary>
         public static string Login_Unauthorized_User {
             get {
@@ -1159,6 +1168,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to s.
+        /// </summary>
+        public static string Seconds {
+            get {
+                return ResourceManager.GetString("Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to --Select--.
         /// </summary>
         public static string Select_Button {
@@ -1267,6 +1285,96 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximum Service Time must be greater than Minimum Service Time..
+        /// </summary>
+        public static string Service_Max_GreaterThan_Min {
+            get {
+                return ResourceManager.GetString("Service_Max_GreaterThan_Min", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default is 300 seconds..
+        /// </summary>
+        public static string Service_MaxServiceTime_Hint {
+            get {
+                return ResourceManager.GetString("Service_MaxServiceTime_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum Service Time (seconds).
+        /// </summary>
+        public static string Service_MaxServiceTime_Label {
+            get {
+                return ResourceManager.GetString("Service_MaxServiceTime_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum Service Time must be between 30 and 999,999 seconds..
+        /// </summary>
+        public static string Service_MaxServiceTime_Range {
+            get {
+                return ResourceManager.GetString("Service_MaxServiceTime_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum Service Time Required.
+        /// </summary>
+        public static string Service_MaxServiceTime_Required {
+            get {
+                return ResourceManager.GetString("Service_MaxServiceTime_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Service Time must be less than Maximum Service Time..
+        /// </summary>
+        public static string Service_Min_LessThan_Max {
+            get {
+                return ResourceManager.GetString("Service_Min_LessThan_Max", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default is 45 seconds..
+        /// </summary>
+        public static string Service_MinServiceTime_Hint {
+            get {
+                return ResourceManager.GetString("Service_MinServiceTime_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Service Time (seconds).
+        /// </summary>
+        public static string Service_MinServiceTime_Label {
+            get {
+                return ResourceManager.GetString("Service_MinServiceTime_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Service Time must be between 30 and 999,999 seconds..
+        /// </summary>
+        public static string Service_MinServiceTime_Range {
+            get {
+                return ResourceManager.GetString("Service_MinServiceTime_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Service Time Required.
+        /// </summary>
+        public static string Service_MinServiceTime_Required {
+            get {
+                return ResourceManager.GetString("Service_MinServiceTime_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter service name (AR).
         /// </summary>
         public static string Service_NameArabic_Placeholder {
@@ -1308,6 +1416,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Service_Tickets_Range {
             get {
                 return ResourceManager.GetString("Service_Tickets_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Time Range.
+        /// </summary>
+        public static string Service_Time_Range {
+            get {
+                return ResourceManager.GetString("Service_Time_Range", resourceCulture);
             }
         }
         

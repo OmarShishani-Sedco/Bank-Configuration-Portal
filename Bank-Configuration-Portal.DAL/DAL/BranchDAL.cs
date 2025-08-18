@@ -108,7 +108,7 @@ namespace Bank_Configuration_Portal.DAL.DAL
                     if (!currentVersion.SequenceEqual(branch.RowVersion))
                         throw new DBConcurrencyException("The branch was modified by another user.");
                 }
-
+                
                 string updateQuery = forceUpdate
                     ? @"UPDATE Branch 
                        SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive 

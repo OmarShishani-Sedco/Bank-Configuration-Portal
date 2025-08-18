@@ -160,7 +160,7 @@
     <value>تسجيل الدخول</value>
   </data>
   <data name="Login_Unauthorized_User" xml:space="preserve">
-    <value>المستخدم غير موجود أو غير مصرح له الوصول لهذا البنك</value>
+    <value>المستخدم غير مصرح له الوصول لهذا البنك</value>
   </data>
   <data name="Login_UserName_Label" xml:space="preserve">
     <value>اسم المستخدم</value>
@@ -542,4 +542,43 @@
 	<data name="Maint_BankId_Range" xml:space="preserve">
   <value>رقم البنك يجب أن يكون رقماً موجباً</value>
 </data>
+	<data name="Service_MinServiceTime_Label">
+	<value>الحد الأدنى لمدة الخدمة (ثوانٍ)</value>
+</data>
+	<data name="Service_MaxServiceTime_Label">
+	<value>الحد الأقصى لمدة الخدمة (ثوانٍ)</value>
+</data>
+	<data name="Service_MaxServiceTime_Required">
+		<value>الحد الأقصى لمدة الخدمة مطلوب</value>
+	</data>
+	<data name="Service_MinServiceTime_Required">
+		<value>الحد الأدنى لمدة الخدمة مطلوب</value>
+	</data>
+	<data name="Service_MinServiceTime_Range">
+	<value>يجب أن تكون مدة الخدمة الدنيا بين 30 و 999,999 ثانية.</value>
+</data>
+	<data name="Service_MaxServiceTime_Range">
+	<value>يجب أن تكون مدة الخدمة القصوى بين 30 و 999,999 ثانية.</value>
+</data>
+	<data name="Service_Min_LessThan_Max">
+	<value>يجب أن تكون مدة الخدمة الدنيا أقل من مدة الخدمة القصوى.</value>
+</data>
+	<data name="Service_Max_GreaterThan_Min">
+	<value>يجب أن تكون مدة الخدمة القصوى أكبر من مدة الخدمة الدنيا.</value>
+</data>
+	<data name="Service_MinServiceTime_Hint">
+	<value>القيمة الافتراضية 45 ثانية.</value>
+</data>
+	<data name="Service_MaxServiceTime_Hint">
+	<value>القيمة الافتراضية 300 ثانية.</value>
+</data>
+	<data name="Inactive_User">
+	<value>المستخدم غير نشط. تواصل مع المسؤول لإعادة تعيين كلمة المرور.</value>
+</data>
+	<data name="Service_Time_Range">
+		<value>نطاق مدة الخدمة</value>
+	</data>
+	<data name="Seconds">
+		<value>ث</value>
+	</data>
 </root>
