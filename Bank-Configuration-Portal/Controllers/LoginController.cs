@@ -64,8 +64,7 @@ namespace Bank_Configuration_Portal.Controllers
                     return View(model);
                 }
 
-                var ttl = TimeSpan.FromMinutes(30); 
-                var stamp = Startup.IssueNewStamp(model.UserName, bank.Id.ToString(), ttl);
+                var stamp = Startup.GetOrIssueNewStamp(model.UserName.ToLower(), bank.Id.ToString());
 
                 // grab current UA/IP
                 var ua = HttpContext.Request.UserAgent ?? "";
@@ -73,7 +72,7 @@ namespace Bank_Configuration_Portal.Controllers
 
                 // OWIN cookie sign-in with claims
                 var identity = new ClaimsIdentity("AppCookie");
-                identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName.ToLower()));
                 identity.AddClaim(new Claim("BankId", bank.Id.ToString()));
                 identity.AddClaim(new Claim("BankName", bank.Name));
                 identity.AddClaim(new Claim("MustChangePassword", mustChange ? "true" : "false"));
@@ -114,8 +113,6 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 var cp = CurrentUserClaims;
                 var userName = CurrentBaseModel.UserName;
-                if (string.IsNullOrWhiteSpace(userName))
-                    return RedirectToAction("Index");
 
                 var ok = await _userManager.ChangePasswordAsync(userName, model.OldPassword, model.NewPassword);
                 if (!ok)
@@ -154,7 +151,6 @@ namespace Bank_Configuration_Portal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut("AppCookie");

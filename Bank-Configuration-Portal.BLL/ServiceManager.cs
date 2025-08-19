@@ -1,5 +1,6 @@
 ﻿using Bank_Configuration_Portal.BLL.Interfaces;
 using Bank_Configuration_Portal.Common;
+using Bank_Configuration_Portal.DAL.DAL;
 using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
 using System;
@@ -47,9 +48,16 @@ namespace Bank_Configuration_Portal.BLL
                 return await _serviceDAL.CreateAsync(service);
         }
 
-        public async Task UpdateAsync(ServiceModel service, bool forceUpdate = false)
+        public async Task<bool> UpdateAsync(ServiceModel service, ServiceModel dbService, bool forceUpdate = false)
         {
-                await _serviceDAL.UpdateAsync(service, forceUpdate);
+            if (Utility.AreObjectsEqual(service, dbService, "RowVersion", "Id", "BankId"))
+            {
+                return false;
+            }
+
+            await _serviceDAL.UpdateAsync(service, forceUpdate);
+            return true;
+
         }
 
         public async Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false)

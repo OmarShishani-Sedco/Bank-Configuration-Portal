@@ -217,16 +217,13 @@ namespace Bank_Configuration_Portal.Controllers
                     return RedirectToAction("Index", new { branchId = counter.BranchId });
                 }
 
-                if (existingCounter != null && !forceUpdate)
+                var isChanged = await _counterManager.UpdateAsync(counter, existingCounter, forceUpdate);
+                if (!isChanged)
                 {
-                    if (UiUtility.AreObjectsEqual(existingCounter, counter, "RowVersion", "Id", "BranchId"))
-                    {
-                        TempData["Info"] = Language.Counter_NoChangesDetected;
-                        return RedirectToAction("Index", new { branchId = counter.BranchId });
-                    }
+                    TempData["Info"] = Language.Counter_NoChangesDetected;
+                    return RedirectToAction("Index", new { branchId = counter.BranchId });
                 }
 
-                await _counterManager.UpdateAsync(counter, forceUpdate);
                 TempData["Success"] = Language.Counter_Updated_Successfully;
                 return RedirectToAction("Index", new { branchId = counter.BranchId });
             }
@@ -234,13 +231,8 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 if (!forceUpdate)
                 {
-                    var latestCounter = await _counterManager.GetByIdAsync(model.Id);
-                    if (latestCounter != null)
-                    {
-                        model.RowVersion = latestCounter.RowVersion;
-                    }
                     ModelState.AddModelError("", Language.Counter_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
-                    ViewBag.ShowForceUpdate = true;
+                    ViewBag.ConflictMode = true;
                     if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                     model.AllActiveServices = _mapper.Map<List<ServiceViewModel>>(await _serviceManager.GetAllActiveByBankIdAsync(bankId));
                 }

@@ -145,23 +145,19 @@ namespace Bank_Configuration_Portal.Controllers
                 var branchModel = _mapper.Map<BranchModel>(model);
                 if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
                 branchModel.BankId = bankId;
-                var existingBranch = await _branchManager.GetByIdAsync(model.Id, branchModel.BankId);
-                if (existingBranch == null)
+                var dbBranch = await _branchManager.GetByIdAsync(model.Id, branchModel.BankId);
+                if (dbBranch == null)
                 {
                     TempData["Error"] = Language.Branch_Not_Found + " " + Language.Branch_Already_Deleted;
                     return RedirectToAction("Index");
                 }
-
-                if (existingBranch != null && !forceUpdate)
+                
+                var isChanged = await _branchManager.UpdateAsync(branchModel, dbBranch, forceUpdate);
+                if (!isChanged)
                 {
-                    if (UiUtility.AreObjectsEqual(existingBranch, branchModel, "RowVersion", "Id", "BankId"))
-                    {
-                        TempData["Info"] = Language.Branch_NoChangesDetected;
-                        return RedirectToAction("Index");
-                    }
+                    TempData["Info"] = Language.Branch_NoChangesDetected;
+                    return RedirectToAction("Index");
                 }
-
-                await _branchManager.UpdateAsync(branchModel, forceUpdate);
 
                 TempData["Success"] = Language.Branch_Updated_Successfully;
                 return RedirectToAction("Index");
@@ -170,13 +166,8 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 if (!forceUpdate)
                 {
-                    if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
-                    var latestBranch = await _branchManager.GetByIdAsync(model.Id, bankId);
-                    if (latestBranch != null)
-                        model.RowVersion = latestBranch.RowVersion;
-
                     ModelState.AddModelError("", Language.Branch_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
-                    ViewBag.ShowForceUpdate = true;
+                    ViewBag.ConflictMode = true;
                 }
                 else
                 {

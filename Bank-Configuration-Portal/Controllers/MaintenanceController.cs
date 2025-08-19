@@ -49,6 +49,8 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 var (pwd, created) = await _userManager.CreateOrResetUserAsync(model.UserName, model.BankId.Value);
 
+                Startup.RevokeStamp(model.UserName, model.BankId.Value.ToString());
+
                 ViewBag.GeneratedPassword = pwd;
                 ViewBag.Created = created;
                 ViewBag.UserName = model.UserName;

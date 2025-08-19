@@ -151,16 +151,12 @@ namespace Bank_Configuration_Portal.Controllers
                     return RedirectToAction("Index");
                 }
 
-                if (existingService != null && !forceUpdate)
+               var isChanged = await _serviceManager.UpdateAsync(serviceModel, existingService, forceUpdate);
+                if (!isChanged)
                 {
-                    if (UiUtility.AreObjectsEqual(existingService, serviceModel, "RowVersion", "Id", "BankId"))
-                    {
-                        TempData["Info"] = Language.Service_NoChangesDetected;
-                        return RedirectToAction("Index");
-                    }
+                    TempData["Info"] = Language.Service_NoChangesDetected;
+                    return RedirectToAction("Index");
                 }
-
-                await _serviceManager.UpdateAsync(serviceModel, forceUpdate);
 
                 TempData["Success"] = Language.Service_Updated_Successfully;
                 return RedirectToAction("Index");
@@ -169,12 +165,8 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 if (!forceUpdate)
                 {
-                    var latestService = await _serviceManager.GetByIdAsync(model.Id);
-                    if (latestService != null)
-                        model.RowVersion = latestService.RowVersion;
-
                     ModelState.AddModelError("", Language.Service_Concurrency_Error + " " + Language.Concurrency_ForcePrompt);
-                    ViewBag.ShowForceUpdate = true;
+                    ViewBag.ConflictMode = true;
                 }
                 else
                 {

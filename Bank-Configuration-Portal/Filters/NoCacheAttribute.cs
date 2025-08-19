@@ -18,10 +18,6 @@ namespace Bank_Configuration_Portal.Filters
             resp.Cache.SetNoServerCaching();
             resp.Cache.SetNoTransforms();
 
-            resp.Headers["Pragma"] = "no-cache";
-            resp.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0";
-            resp.Headers["Expires"] = "0";
-
             base.OnResultExecuting(ctx);
         }
     }

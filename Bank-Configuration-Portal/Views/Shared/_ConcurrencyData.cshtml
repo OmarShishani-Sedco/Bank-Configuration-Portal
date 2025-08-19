@@ -1,0 +1,11 @@
+@if (TempData["ConcurrencyConflictId"] != null && TempData["OriginalRowVersion"] != null)
+{
+    <div id="concurrency-data"
+         data-id="@(TempData["ConcurrencyConflictId"] as int? ?? 0)"
+         data-rowversion="@(TempData["OriginalRowVersion"] != null
+             ? Convert.ToBase64String((byte[])TempData["OriginalRowVersion"])
+             : "")">
+    </div>
+}
+
+

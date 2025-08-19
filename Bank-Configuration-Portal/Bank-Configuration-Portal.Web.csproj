@@ -300,6 +300,7 @@
     <None Include="Properties\PublishProfiles\Dev.pubxml" />
     <None Include="Properties\PublishProfiles\Main.pubxml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\Concurrency.js" />
     <Content Include="Scripts\FadeOut.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -336,7 +337,7 @@
     <Content Include="Views\Counter\Index.cshtml" />
     <Content Include="Views\Counter\CreateOrEdit.cshtml" />
     <Content Include="Views\Shared\_DeleteModals.cshtml" />
-    <Content Include="Views\Shared\_ConcurrencyScript.cshtml" />
+    <Content Include="Views\Shared\_ConcurrencyData.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\Forbidden.cshtml" />
     <Content Include="Views\Error\Generic.cshtml" />

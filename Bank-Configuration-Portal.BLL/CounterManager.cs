@@ -47,9 +47,14 @@ namespace Bank_Configuration_Portal.BLL
                 return newCounterId;
         }
 
-        public async Task UpdateAsync(CounterModel counter, bool forceUpdate = false)
+        public async Task<bool> UpdateAsync(CounterModel counter, CounterModel dbCounter, bool forceUpdate = false)
         {
-                await _counterDAL.UpdateAsync(counter, forceUpdate);
+            if (Utility.AreObjectsEqual(counter, dbCounter, "RowVersion", "Id", "BankId"))
+            {
+                return false;
+            }
+
+            await _counterDAL.UpdateAsync(counter, forceUpdate);
 
                 if (counter.AllocatedServiceIds != null)
                 {
@@ -59,6 +64,7 @@ namespace Bank_Configuration_Portal.BLL
                 {
                     await _counterDAL.DeleteAllocationsByCounterIdAsync(counter.Id);
                 }
+                return true;
         }
 
         public async Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false)

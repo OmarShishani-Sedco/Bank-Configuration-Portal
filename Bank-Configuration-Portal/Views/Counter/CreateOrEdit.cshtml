@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var formAction = Model.Id == 0 ? "Create" : "Edit";
     var lang = System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    bool conflict = (bool)(ViewBag.ConflictMode ?? false);
 }
 
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
@@ -18,38 +19,11 @@
 
         <div class="card-body p-4">
 
-            @if (ViewBag.ShowForceUpdate != null && (bool)ViewBag.ShowForceUpdate)
+            @if (conflict)
             {
-                <div class="alert alert-warning text-center">
-                    <p>@Language.Counter_Concurrency_Error</p>
-
-                    @using (Html.BeginForm("Edit", "Counter", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(m => m.Id)
-                        @Html.HiddenFor(m => m.RowVersion)
-                        @Html.HiddenFor(m => m.BranchId)
-                        @Html.HiddenFor(m => m.NameEnglish)
-                        @Html.HiddenFor(m => m.NameArabic)
-                        @Html.HiddenFor(m => m.Type)
-                        @Html.HiddenFor(m => m.IsActive)
-
-                        for (int i = 0; i < Model.SelectedServiceIds.Count; i++)
-                        {
-                            @Html.HiddenFor(m => m.SelectedServiceIds[i])
-                        }
-
-                        <input type="hidden" name="forceUpdate" value="true" />
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger">
-                                @Language.Force_Save
-                            </button>
-                            <a href="@Url.Action("Edit", "Counter", new { id = Model.Id })" class="btn btn-outline-secondary">
-                                @Language.Reload_Changes
-                            </a>
-                        </div>
-                    }
+                <div class="alert alert-warning text-center mb-4">
+                    <p class="mb-2">@Language.Counter_Concurrency_Error</p>
+                    <small>@Language.Concurrency_ForcePrompt</small>
                 </div>
             }
 
@@ -58,23 +32,28 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.Id)
                 @Html.HiddenFor(m => m.RowVersion)
-                @Html.HiddenFor(m => m.BranchId) @* Hidden field for the branch association *@
+                @Html.HiddenFor(m => m.BranchId)
 
-                <div id="validationSummary" class="text-danger mb-3">
-                    @Html.ValidationSummary(true)
-                </div>
-
+                
 
                 <div class="mb-3">
                     @Html.LabelFor(m => m.NameEnglish, new { @class = "form-label" })
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-translate"></i></span>
-                        @Html.TextBoxFor(m => m.NameEnglish, new
+                        @if (!conflict)
                         {
-                            @class = "form-control",
-                            placeholder = Language.Counter_NameEnglish_Placeholder,
-                            maxlength = "100"
-                        })
+                            @Html.TextBoxFor(m => m.NameEnglish, new
+                            {
+                                @class = "form-control",
+                                placeholder = Language.Counter_NameEnglish_Placeholder,
+                                maxlength = "100"
+                            })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.NameEnglish, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.HiddenFor(m => m.NameEnglish)
+                        }
                     </div>
                     @Html.ValidationMessageFor(m => m.NameEnglish, "", new { @class = "text-danger" })
                 </div>
@@ -83,25 +62,50 @@
                     @Html.LabelFor(m => m.NameArabic, new { @class = "form-label" })
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-translate"></i></span>
-                        @Html.TextBoxFor(m => m.NameArabic, new
+                        @if (!conflict)
                         {
-                            @class = "form-control",
-                            placeholder = Language.Counter_NameArabic_Placeholder,
-                            maxlength = "100"
-                        })
+                            @Html.TextBoxFor(m => m.NameArabic, new
+                            {
+                                @class = "form-control",
+                                placeholder = Language.Counter_NameArabic_Placeholder,
+                                maxlength = "100"
+                            })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.NameArabic, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.HiddenFor(m => m.NameArabic)
+                        }
                     </div>
                     @Html.ValidationMessageFor(m => m.NameArabic, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="mb-3">
                     @Html.LabelFor(m => m.Type, new { @class = "form-label" })
-                    @Html.DropDownListFor(m => m.Type, Model.LocalizedCounterTypes, Language.Select_Type_Placeholder, new { @class = "form-control form-select" })
+                    @if (!conflict)
+                    {
+                        @Html.DropDownListFor(m => m.Type, Model.LocalizedCounterTypes, Language.Select_Type_Placeholder, new { @class = "form-control form-select" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(m => m.Type, Model.LocalizedCounterTypes, Language.Select_Type_Placeholder, new { @class = "form-control form-select", disabled = "disabled" })
+                        @Html.HiddenFor(m => m.Type)
+                    }
                     @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="mb-3 form-check">
-                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                    @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
+                    @if (!conflict)
+                    {
+                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                        @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="form-check-input" @(Model.IsActive ? "checked" : "") disabled />
+                        @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
+                        @Html.HiddenFor(m => m.IsActive)
+                    }
                 </div>
 
                 <div class="mb-3">
@@ -109,20 +113,33 @@
                         @Language.Active_Service_Index_Title
                         @Html.ValidationMessageFor(m => m.SelectedServiceIds, "", new { @class = "text-danger d-block" })
                     </label>
+
                     <div class="p-3 border rounded" style="max-height: 200px; overflow-y: auto;">
                         @if (Model.AllActiveServices != null && Model.AllActiveServices.Any())
                         {
                             foreach (var service in Model.AllActiveServices)
                             {
+                                var isChecked = Model.SelectedServiceIds != null && Model.SelectedServiceIds.Contains(service.Id);
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"
+                                    <input class="form-check-input"
+                                           type="checkbox"
                                            id="service_@(service.Id)"
                                            name="SelectedServiceIds"
                                            value="@service.Id"
-                                           @(Model.SelectedServiceIds.Contains(service.Id) ? "checked" : "") />                                    <label class="form-check-label" for="service_@(service.Id)">
+                                           @(isChecked ? "checked" : "")
+                                           @(conflict ? "disabled" : "") />
+                                    <label class="form-check-label" for="service_@(service.Id)">
                                         @(lang == "ar" ? service.NameArabic : service.NameEnglish)
                                     </label>
                                 </div>
+                            }
+
+                            if (conflict && Model.SelectedServiceIds != null)
+                            {
+                                foreach (var sid in Model.SelectedServiceIds)
+                                {
+                                    <input type="hidden" name="SelectedServiceIds" value="@sid" />
+                                }
                             }
                         }
                         else
@@ -131,11 +148,30 @@
                         }
                     </div>
                 </div>
+
                 <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        @(Model.Id == 0 ? Language.Counter_Create_Button : Language.Update_Button)
-                    </button>
-                    @Html.ActionLink(Language.Cancel_Button, "Index", "Counter", new { branchId = Model.BranchId }, new { @class = "btn btn-outline-secondary mt-2" })
+                    @if (!conflict)
+                    {
+                        <button type="submit" class="btn btn-primary">
+                            @(Model.Id == 0 ? Language.Counter_Create_Button : Language.Update_Button)
+                        </button>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="forceUpdate" value="true" />
+                        <button type="submit" class="btn btn-danger">
+                            @Language.Force_Save
+                        </button>
+
+                        <a href="@Url.Action("Edit", "Counter", new { id = Model.Id })"
+                           class="btn btn-outline-secondary">
+                            @Language.Reload_Changes
+                        </a>
+                    }
+
+                    @Html.ActionLink(Language.Cancel_Button, "Index", "Counter",
+                             new { branchId = Model.BranchId },
+                             new { @class = "btn btn-outline-secondary mt-2" })
                 </div>
             }
         </div>

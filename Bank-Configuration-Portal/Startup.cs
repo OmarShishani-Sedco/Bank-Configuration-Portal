@@ -3,9 +3,10 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
-using System.Security.Claims;
 using System.Runtime.Caching;
+using System.Security.Claims;
 using System.Web;
+using System.Web.Caching;
 
 [assembly: OwinStartup(typeof(Bank_Configuration_Portal.Startup))]
 namespace Bank_Configuration_Portal
@@ -94,12 +95,26 @@ namespace Bank_Configuration_Portal
             return diff == 0;
         }
 
-        public static string IssueNewStamp(string user, string bankId, TimeSpan ttl)
+     
+        public static string GetOrIssueNewStamp(string user, string bankId)
         {
+            var key = $"stamp::{user.ToLower()}::{bankId}";
+            var existing = StampCache.Get(key) as string;
+            if (!string.IsNullOrEmpty(existing))
+            {
+                return existing;
+            }
+
             var stamp = Guid.NewGuid().ToString("N");
-            var key = $"stamp::{user}::{bankId}";
-            StampCache.Set(key, stamp, new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.Add(ttl) });
+            StampCache.Set(key, stamp, new CacheItemPolicy());
             return stamp;
         }
+
+        public static void RevokeStamp(string user, string bankId)
+        {
+            var key = $"stamp::{user.ToLower()}::{bankId}";
+            StampCache.Remove(key);
+        }
+
     }
 }
