@@ -29,7 +29,7 @@ namespace Bank_Configuration_Portal
                 CookieHttpOnly = true,
                 CookieSecure = CookieSecureOption.SameAsRequest,
                 SlidingExpiration = true,
-                ExpireTimeSpan = TimeSpan.FromMinutes(1),
+                ExpireTimeSpan = TimeSpan.FromMinutes(30),
 
                 Provider = new CookieAuthenticationProvider
                 {
