@@ -15,6 +15,12 @@ namespace Bank_Configuration_Portal.Controllers
     {
         private readonly IBankManager _bankManager;
         private readonly IUserManager _userManager;
+        private static void ReplaceClaim(ClaimsIdentity identity, string type, string value)
+        {
+            var existing = identity.FindFirst(type);
+            if (existing != null) identity.RemoveClaim(existing);
+            identity.AddClaim(new Claim(type, value ?? string.Empty));
+        }
 
         public LoginController(IBankManager bankManager, IUserManager userManager)
         {
@@ -111,8 +117,7 @@ namespace Bank_Configuration_Portal.Controllers
 
             try
             {
-                var cp = CurrentUserClaims;
-                var userName = CurrentBaseModel.UserName;
+                var userName = CurrentBaseModel?.UserName ?? User?.Identity?.Name ?? string.Empty;
 
                 var ok = await _userManager.ChangePasswordAsync(userName, model.OldPassword, model.NewPassword);
                 if (!ok)
@@ -121,22 +126,18 @@ namespace Bank_Configuration_Portal.Controllers
                     return View(model);
                 }
 
-                // Re-issue cookie with MustChangePassword=false
-                var bankId = cp.FindFirst("BankId")?.Value ?? "";
-                var bankName = cp.FindFirst("BankName")?.Value ?? "";
+                var current = User.Identity as ClaimsIdentity;
+                if (current == null || !current.IsAuthenticated)
+                {
+                    return RedirectToAction("Index", "Login");
+                }
 
-                var newIdentity = new ClaimsIdentity("AppCookie");
-                newIdentity.AddClaim(new Claim(ClaimTypes.Name, userName));
-                if (!string.IsNullOrEmpty(bankId))
-                    newIdentity.AddClaim(new Claim("BankId", bankId));
-                if (!string.IsNullOrEmpty(bankName)) 
-                    newIdentity.AddClaim(new Claim("BankName", bankName));
-                newIdentity.AddClaim(new Claim("MustChangePassword", "false"));
-
+                var cloned = new ClaimsIdentity(current); // copies auth type & claims
+                ReplaceClaim(cloned, "MustChangePassword", "false");
 
                 var auth = HttpContext.GetOwinContext().Authentication;
-                auth.SignOut("AppCookie");
-                auth.SignIn(new AuthenticationProperties { IsPersistent = false }, newIdentity);
+                auth.SignOut("AppCookie"); 
+                auth.SignIn(new AuthenticationProperties { IsPersistent = false }, cloned);
 
                 TempData["Success"] = Language.ChangePassword_Success;
                 return RedirectToAction("Index", "Branch");
@@ -148,6 +149,8 @@ namespace Bank_Configuration_Portal.Controllers
                 return View(model);
             }
         }
+
+       
 
         [HttpPost]
         [ValidateAntiForgeryToken]

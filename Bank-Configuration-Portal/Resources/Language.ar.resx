@@ -581,4 +581,10 @@
 	<data name="Seconds">
 		<value>ث</value>
 	</data>
+	<data name="Already_Signed_In">
+		<value>تم تسجيل دخولك من قبل، تم تحديث الصفحة.</value>
+	</data>
+	<data name="Session_Expired">
+		<value>انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى.</value>
+	</data>
 </root>

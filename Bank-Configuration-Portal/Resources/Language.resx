@@ -585,4 +585,10 @@
 	<data name="Seconds">
 		<value>s</value>
 	</data>
+	<data name="Already_Signed_In">
+		<value>You were already signed in. We refreshed your page.</value>
+	</data>
+	<data name="Session_Expired">
+		<value>You're session expired. Please sign in again.</value>
+	</data>
 </root>

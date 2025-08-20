@@ -88,6 +88,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You were already signed in. We refreshed your page..
+        /// </summary>
+        public static string Already_Signed_In {
+            get {
+                return ResourceManager.GetString("Already_Signed_In", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bank Configuration Portal.
         /// </summary>
         public static string Application_Label {
@@ -1434,6 +1443,15 @@ namespace Bank_Configuration_Portal.Resources {
         public static string Service_Updated_Successfully {
             get {
                 return ResourceManager.GetString("Service_Updated_Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re session expired. Please sign in again..
+        /// </summary>
+        public static string Session_Expired {
+            get {
+                return ResourceManager.GetString("Session_Expired", resourceCulture);
             }
         }
         
