@@ -3,6 +3,7 @@ using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Filters;
 using Bank_Configuration_Portal.Models;
 using Bank_Configuration_Portal.Resources;
+using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -22,12 +23,19 @@ namespace Bank_Configuration_Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult CreateOrResetUser()
+        public ActionResult CreateOrResetUser(string secret)
         {
-            var model = new MaintenanceViewModel
+            var model = new MaintenanceViewModel { Secret = secret };
+
+            // Show result if we just redirected from POST
+            if (TempData["Maint_JustDid"] is bool b && b)
             {
-                Secret = Request["secret"]
-            };
+                ViewBag.GeneratedPassword = TempData["Maint_Password"];
+                ViewBag.Created = TempData["Maint_Created"];
+                ViewBag.UserName = TempData["Maint_UserName"];
+                ViewBag.BankId = TempData["Maint_BankId"];
+            }
+
             return View(model);
         }
 
@@ -49,17 +57,19 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 var (pwd, created) = await _userManager.CreateOrResetUserAsync(model.UserName, model.BankId.Value);
 
+                // Invalidate all current sessions for that user/bank
                 Startup.RevokeStamp(model.UserName, model.BankId.Value.ToString());
 
-                ViewBag.GeneratedPassword = pwd;
-                ViewBag.Created = created;
-                ViewBag.UserName = model.UserName;
-                ViewBag.BankId = model.BankId;
+                // Stash result for the GET to display once
+                TempData["Maint_JustDid"] = true;
+                TempData["Maint_Password"] = pwd;
+                TempData["Maint_Created"] = created;
+                TempData["Maint_UserName"] = model.UserName;
+                TempData["Maint_BankId"] = model.BankId;
 
-
-                return View(model);
+                return RedirectToAction("CreateOrResetUser", new { secret = model.Secret });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Logger.LogError(ex, "MaintenanceController.CreateOrResetUser");
                 ModelState.AddModelError("", Language.Generic_Error);

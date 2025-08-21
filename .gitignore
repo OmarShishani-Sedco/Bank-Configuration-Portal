@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Bank-Configuration-Portal/Config/appsettings.json
+/Bank-Configuration-Portal/appsettings.local.config
