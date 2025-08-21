@@ -18,105 +18,51 @@
 
         <div class="card-body p-4">
 
-            @if (conflict)
-            {
-                <div class="alert alert-warning text-center mb-4">
-                    <p class="mb-2">@Language.Branch_Concurrency_Error</p>
-                    <small>@Language.Concurrency_ForcePrompt</small>
-                </div>
-            }
+            @Html.ConflictNotice(
+                   show: conflict,
+                   title: Language.Branch_Concurrency_Error,
+                   prompt: Language.Concurrency_ForcePrompt
+                 )
 
-            @using (Html.BeginForm(formAction, "Branch", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
+            @using (Html.BeginFormAntiForgery(formAction, "Branch", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
             {
-                @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.Id)
                 @Html.HiddenFor(m => m.BankId)
-                @Html.HiddenFor(m => m.RowVersion) 
+                @Html.HiddenFor(m => m.RowVersion)
 
-                
+                if (!conflict)
+                {
+                    @Html.InputGroupTextFor(m => m.NameEnglish,
+                                                                 iconClass: "bi bi-translate",
+                                                                 placeholder: Language.Branch_NameEnglish_Placeholder,
+                                                                 maxlength: 100)
 
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.NameEnglish, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-translate"></i></span>
-
-                        @if (!conflict)
-                        {
-                            @Html.TextBoxFor(m => m.NameEnglish, new
-                            {
-                                @class = "form-control",
-                                placeholder = Language.Branch_NameEnglish_Placeholder,
-                                maxlength = "100"
-                            })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(m => m.NameEnglish, new
-                            {
-                                @class = "form-control",
-                                @readonly = "readonly"
-                            })
-                            @Html.HiddenFor(m => m.NameEnglish) 
-                        }
-                    </div>
-                    @Html.ValidationMessageFor(m => m.NameEnglish, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.NameArabic, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-translate"></i></span>
-
-                        @if (!conflict)
-                        {
-                            @Html.TextBoxFor(m => m.NameArabic, new
-                            {
-                                @class = "form-control",
-                                placeholder = Language.Branch_NameArabic_Placeholder,
-                                maxlength = "100"
-                            })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(m => m.NameArabic, new
-                            {
-                                @class = "form-control",
-                                @readonly = "readonly"
-                            })
-                            @Html.HiddenFor(m => m.NameArabic)
-                        }
-                    </div>
-                    @Html.ValidationMessageFor(m => m.NameArabic, "", new { @class = "text-danger" })
-                </div>
+                    @Html.InputGroupTextFor(m => m.NameArabic,
+                                                                 iconClass: "bi bi-translate",
+                                                                 placeholder: Language.Branch_NameArabic_Placeholder,
+                                                                 maxlength: 100)
+                }
+                else
+                {
+                    @Html.InputGroupTextReadOnlyFor(m => m.NameEnglish, iconClass: "bi bi-translate")
+                    @Html.InputGroupTextReadOnlyFor(m => m.NameArabic, iconClass: "bi bi-translate")
+                }
 
                 <div class="mb-3 form-check">
-                    @if (!conflict)
-                    {
-                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                        @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
-                    }
-                    else
-                    {
-                        <input type="checkbox" class="form-check-input" @(Model.IsActive ? "checked" : "") disabled />
-                        @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
-                        @Html.HiddenFor(m => m.IsActive)
-                    }
+                    @Html.CheckBoxOrReadonlyFor(m => m.IsActive, readOnly: conflict,
+                                            checkboxHtmlAttributes: new { @class = "form-check-input" },
+                                            labelHtmlAttributes: new { @class = "form-check-label" })
                 </div>
 
                 <div class="d-grid gap-2 mt-4">
                     @if (!conflict)
                     {
-                        <button type="submit" class="btn btn-primary">
-                            @(Model.Id == 0 ? Language.Branch_Create_Button : Language.Update_Button)
-                        </button>
+                        @Html.PrimaryButton(Model.Id == 0 ? Language.Branch_Create_Button : Language.Update_Button)
                     }
                     else
                     {
-                        <input type="hidden" name="forceUpdate" value="true" />
-                        <button type="submit" class="btn btn-danger">
-                            @Language.Force_Save
-                        </button>
-
+                        @Html.Hidden("forceUpdate", true)
+                        @Html.DangerButton(Language.Force_Save)
                         <a href="@Url.Action("Edit", "Branch", new { id = Model.Id })"
                            class="btn btn-outline-primary">
                             @Language.Reload_Changes

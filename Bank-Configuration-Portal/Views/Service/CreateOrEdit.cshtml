@@ -18,135 +18,70 @@
 
         <div class="card-body p-4">
 
-            @if (conflict)
-            {
-                <div class="alert alert-warning text-center mb-4">
-                    <p class="mb-2">@Language.Service_Concurrency_Error</p>
-                    <small>@Language.Concurrency_ForcePrompt</small>
-                </div>
-            }
+            @Html.ConflictNotice(
+                     show: conflict,
+                     title: Language.Service_Concurrency_Error,
+                     prompt: Language.Concurrency_ForcePrompt
+                    )
 
-            @using (Html.BeginForm(formAction, "Service", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
+            @using (Html.BeginFormAntiForgery(formAction, "Service", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
             {
-                @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.Id)
                 @Html.HiddenFor(m => m.RowVersion)
 
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.NameEnglish, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-translate"></i></span>
-                        @if (!conflict)
-                        {
-                            @Html.TextBoxFor(m => m.NameEnglish, new
-                            {
-                                @class = "form-control",
-                                placeholder = Language.Service_NameEnglish_Placeholder,
-                                maxlength = "100"
-                            })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(m => m.NameEnglish, new { @class = "form-control", @readonly = "readonly" })
-                            @Html.HiddenFor(m => m.NameEnglish)
-                        }
-                    </div>
-                    @Html.ValidationMessageFor(m => m.NameEnglish, "", new { @class = "text-danger" })
+                <div id="validationSummary" class="mb-3">
+                    @Html.ValidationSummaryBlock()
                 </div>
 
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.NameArabic, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-translate"></i></span>
-                        @if (!conflict)
-                        {
-                            @Html.TextBoxFor(m => m.NameArabic, new
-                            {
-                                @class = "form-control",
-                                placeholder = Language.Service_NameArabic_Placeholder,
-                                maxlength = "100"
-                            })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(m => m.NameArabic, new { @class = "form-control", @readonly = "readonly" })
-                            @Html.HiddenFor(m => m.NameArabic)
-                        }
-                    </div>
-                    @Html.ValidationMessageFor(m => m.NameArabic, "", new { @class = "text-danger" })
-                </div>
+                if (!conflict)
+                {
+                    @Html.InputGroupTextFor(m => m.NameEnglish,
+                                                  iconClass: "bi bi-translate",
+                                                  placeholder: Language.Service_NameEnglish_Placeholder,
+                                                  maxlength: 100)
 
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.MaxTicketsPerDay, new { @class = "form-label" })
-                    @if (!conflict)
-                    {
-                        @Html.TextBoxFor(m => m.MaxTicketsPerDay, new { @class = "form-control", type = "number", min = "1" })
-                    }
-                    else
-                    {
-                        @Html.TextBoxFor(m => m.MaxTicketsPerDay, new { @class = "form-control", type = "number", @readonly = "readonly" })
-                        @Html.HiddenFor(m => m.MaxTicketsPerDay)
-                    }
-                    @Html.ValidationMessageFor(m => m.MaxTicketsPerDay, "", new { @class = "text-danger" })
-                </div>
+                    @Html.InputGroupTextFor(m => m.NameArabic,
+                                                  iconClass: "bi bi-translate",
+                                                  placeholder: Language.Service_NameArabic_Placeholder,
+                                                  maxlength: 100)
+
+                    @Html.InputGroupNumberFor(m => m.MaxTicketsPerDay,
+                                                   iconClass: "bi bi-123",
+                                                   min: 1)
+
+                    @Html.InputGroupNumberFor(m => m.MinServiceTimeSeconds,
+                                                   iconClass: "bi bi-stopwatch",
+                                                   min: 30, max: 999999, step: "1")
+
+                    @Html.InputGroupNumberFor(m => m.MaxServiceTimeSeconds,
+                                                   iconClass: "bi bi-stopwatch",
+                                                   min: 30, max: 999999, step: "1")
+                }
+                else
+                {
+                    @Html.InputGroupTextReadOnlyFor(m => m.NameEnglish, iconClass: "bi bi-translate")
+                    @Html.InputGroupTextReadOnlyFor(m => m.NameArabic, iconClass: "bi bi-translate")
+
+                    @Html.InputGroupTextReadOnlyFor(m => m.MaxTicketsPerDay, iconClass: "bi bi-123")
+                    @Html.InputGroupTextReadOnlyFor(m => m.MinServiceTimeSeconds, iconClass: "bi bi-stopwatch")
+                    @Html.InputGroupTextReadOnlyFor(m => m.MaxServiceTimeSeconds, iconClass: "bi bi-stopwatch")
+                }
 
                 <div class="mb-3 form-check">
-                    @if (!conflict)
-                    {
-                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                        @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
-                    }
-                    else
-                    {
-                        <input type="checkbox" class="form-check-input" @(Model.IsActive ? "checked" : "") disabled />
-                        @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
-                        @Html.HiddenFor(m => m.IsActive)
-                    }
-                </div>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.MinServiceTimeSeconds, new { @class = "form-label" })
-                    @if (!conflict)
-                    {
-                        @Html.TextBoxFor(m => m.MinServiceTimeSeconds, new { @class = "form-control", type = "number", min = "30", max = "999999", step = "1" })
-                    }
-                    else
-                    {
-                        @Html.TextBoxFor(m => m.MinServiceTimeSeconds, new { @class = "form-control", type = "number", @readonly = "readonly" })
-                        @Html.HiddenFor(m => m.MinServiceTimeSeconds)
-                    }
-                    @Html.ValidationMessageFor(m => m.MinServiceTimeSeconds, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.MaxServiceTimeSeconds, new { @class = "form-label" })
-                    @if (!conflict)
-                    {
-                        @Html.TextBoxFor(m => m.MaxServiceTimeSeconds, new { @class = "form-control", type = "number", min = "30", max = "999999", step = "1" })
-                    }
-                    else
-                    {
-                        @Html.TextBoxFor(m => m.MaxServiceTimeSeconds, new { @class = "form-control", type = "number", @readonly = "readonly" })
-                        @Html.HiddenFor(m => m.MaxServiceTimeSeconds)
-                    }
-                    @Html.ValidationMessageFor(m => m.MaxServiceTimeSeconds, "", new { @class = "text-danger" })
+                    @Html.CheckBoxOrReadonlyFor(m => m.IsActive, readOnly: conflict,
+                             checkboxHtmlAttributes: new { @class = "form-check-input" },
+                             labelHtmlAttributes: new { @class = "form-check-label" })
                 </div>
 
                 <div class="d-grid gap-2 mt-4">
                     @if (!conflict)
                     {
-                        <button type="submit" class="btn btn-primary">
-                            @(Model.Id == 0 ? Language.Service_Create_Button : Language.Update_Button)
-                        </button>
+                        @Html.PrimaryButton(Model.Id == 0 ? Language.Service_Create_Button : Language.Update_Button)
                     }
                     else
                     {
-                        <input type="hidden" name="forceUpdate" value="true" />
-                        <button type="submit" class="btn btn-danger">
-                            @Language.Force_Save
-                        </button>
-
+                        @Html.Hidden("forceUpdate", true)
+                        @Html.DangerButton(Language.Force_Save)
                         <a href="@Url.Action("Edit", "Service", new { id = Model.Id })"
                            class="btn btn-outline-primary">
                             @Language.Reload_Changes

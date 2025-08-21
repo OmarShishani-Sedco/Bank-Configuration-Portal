@@ -226,6 +226,16 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
+    <Compile Include="Extensions\HTML\BadgeHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\ButtonHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\CheckboxHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\CommonHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\ConflictHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\FilterHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\FormHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\ImageHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\InputGroupHtmlExtensions.cs" />
+    <Compile Include="Extensions\HTML\SearchHtmlExtensions.cs" />
     <Compile Include="Filters\CultureAttribute.cs" />
     <Compile Include="Filters\CustomHandleErrorAttribute.cs" />
     <Compile Include="Filters\MaintenanceGuardAttribute.cs" />

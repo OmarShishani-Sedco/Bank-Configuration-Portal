@@ -1,5 +1,6 @@
 ﻿@model Bank_Configuration_Portal.Models.LoginViewModel
 @using Bank_Configuration_Portal.Resources
+
 @{
     ViewBag.Title = Language.Login_Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,43 +12,19 @@
             <h3 class="mb-0">@Language.Login_Title</h3>
         </div>
         <div class="card-body p-4">
-            @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+
+            @Html.AlertsFromTempData()
+
+            @using (Html.BeginFormAntiForgery("Index", "Login", FormMethod.Post))
             {
-                @Html.AntiForgeryToken()
+                <div id="validationSummary">@Html.ValidationSummaryBlock()</div>
 
-                <div id="validationSummary" class="text-danger fadeout3s">
-                    @Html.ValidationSummary(true)
-                </div>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.BankName, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-bank"></i></span>
-                        @Html.TextBoxFor(m => m.BankName, new { @class = "form-control", placeholder = Language.Login_BankName_Placeholder, maxlength = "100" })
-                    </div>
-                    @Html.ValidationMessageFor(m => m.BankName, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.UserName, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = Language.Login_UserName_Placeholder, maxlength = "100" })
-                    </div>
-                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = Language.Login_Password_Placeholder, maxlength = "100"})
-                    </div>
-                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                </div>
+                @Html.InputGroupTextFor(m => m.BankName, "bi bi-bank", Language.Login_BankName_Placeholder, 100)
+                @Html.InputGroupTextFor(m => m.UserName, "bi bi-person", Language.Login_UserName_Placeholder, 100)
+                @Html.InputGroupPasswordFor(m => m.Password, "bi bi-lock", Language.Login_Password_Placeholder, 100)
 
                 <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-primary">@Language.Login_Button</button>
+                    @Html.PrimaryButton(Language.Login_Button)
                 </div>
             }
         </div>

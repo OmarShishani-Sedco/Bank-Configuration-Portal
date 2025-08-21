@@ -5,23 +5,12 @@
     ViewBag.Title = Language.Branch_Index_Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var lang = System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
-
 }
 
 <div class="container py-4">
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success fadeout3s">@TempData["Success"]</div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger fadeout3s">@TempData["Error"]</div>
-    }
-    @if (TempData["Info"] != null)
-    {
-        <div class="alert alert-info fadeout3s">@TempData["Info"]</div>
-    }
+    @Html.AlertsFromTempData()
+
     <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center shadow-sm">
         <h2 class="mb-0">@Language.Branch_Index_Title</h2>
         @Html.ActionLink(Language.Branch_Create_Button, "Create", "Branch", null, new { @class = "btn btn-primary" })
@@ -31,29 +20,25 @@
         @using (Html.BeginForm("Index", "Branch", FormMethod.Get, new { @class = "row g-3 align-items-end" }))
         {
             <div class="col-md-5">
-                @Html.Label("searchTerm", Language.Search_Name_Label, new { @class = "form-label" })
-                @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control glass-bg", placeholder = Language.Search_Name_Placeholder })
+                @Html.SearchBoxFor(m => m.SearchTerm, Language.Search_Name_Label, Language.Search_Name_Placeholder)
             </div>
 
             <div class="col-md-3">
-                @Html.Label("isActive", Language.IsActive_Label, new { @class = "form-label" })
-                @Html.DropDownList("isActive",
-                    new SelectList(new[]
-                    {
-                        new { Value = "", Text = Language.Select_Button },
-                        new { Value = "true", Text = Language.Active_Label },
-                        new { Value = "false", Text = Language.Inactive_Label }
-                    }, "Value", "Text", Model.IsActive?.ToString().ToLower()),
-                    new { @class = "form-select glass-bg" })
+                @Html.ActiveFilterDropDownFor(
+                         m => m.IsActive,
+                         labelText: Language.IsActive_Label,
+                         selectText: Language.Select_Button,
+                         activeText: Language.Active_Label,
+                         inactiveText: Language.Inactive_Label
+                     )
             </div>
 
             <div class="col-md-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> @Language.Search_Button</button>
-                <a href="@Url.Action("Index", "Branch")" class="btn btn-secondary"><i class="bi bi-x-circle"></i> @Language.Clear_Button</a>
+                @Html.PrimaryButton(Language.Search_Button, "bi bi-search")
+                @Html.SecondaryLinkButton(Language.Clear_Button, Url.Action("Index", "Service"), "bi bi-x-circle")
             </div>
         }
     </div>
-
 
     @if (!Model.Branches.Any())
     {
@@ -77,16 +62,10 @@
                                 <h5 class="card-title">@branch.NameEnglish</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">@branch.NameArabic</h6>
                             }
+
                             <p class="mt-2">
                                 <strong>@Language.IsActive_Label:</strong>
-                                @if (branch.IsActive)
-                                {
-                                    <span class="badge bg-success">@Language.Active_Label</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">@Language.Inactive_Label</span>
-                                }
+                                @Html.ActiveBadge(branch.IsActive, Language.Active_Label, Language.Inactive_Label)
                             </p>
 
                             <div class="d-flex float-start mt-3">
@@ -106,18 +85,18 @@
             }
         </div>
     }
+
     @if (Model.TotalPages > 1)
     {
         @Html.Partial("_Pagination", new Bank_Configuration_Portal.Models.PaginationViewModel
-   {
-       CurrentPage = Model.CurrentPage,
-       TotalPages = Model.TotalPages,
-       ActionName = "Index",
-       ControllerName = "Branch",
-       SearchTerm = Model.SearchTerm,
-       IsActive = Model.IsActive,
-   })
-
+        {
+            CurrentPage = Model.CurrentPage,
+            TotalPages = Model.TotalPages,
+            ActionName = "Index",
+            ControllerName = "Branch",
+            SearchTerm = Model.SearchTerm,
+            IsActive = Model.IsActive,
+        })
     }
 </div>
 
@@ -128,7 +107,3 @@
 })
 
 @Html.Partial("_ConcurrencyData")
-
-
-
-
