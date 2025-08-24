@@ -1,4 +1,5 @@
 ﻿using Bank_Configuration_Portal.Common;
+using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
 using Microsoft.Data.SqlClient;
@@ -56,6 +57,138 @@ namespace Bank_Configuration_Portal.DAL.DAL
                 }
             return countersDictionary.Values.ToList();
         }
+
+        public async Task<PagedResult<CounterModel>> GetPagedByBranchIdAsync(
+            int branchId, string searchTerm, bool? isActive, int page, int pageSize)
+        {
+            if (page < 1) page = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
+
+            var counters = new List<CounterModel>();
+            int totalCount = 0;
+
+            string sql = @"
+                /* ------- TOTAL COUNT ------- */
+                ;WITH Filtered AS
+                (
+                    SELECT
+                        c.CounterId,
+                        c.BranchId,
+                        c.NameEnglish,
+                        c.NameArabic,
+                        c.CounterType,
+                        c.IsActive,
+                        c.RowVersion
+                    FROM dbo.Counter c
+                    WHERE c.BranchId = @BranchId
+                      AND (@Search   IS NULL OR c.NameEnglish LIKE @Search OR c.NameArabic LIKE @Search)
+                      AND (@IsActive IS NULL OR c.IsActive = @IsActive)
+                )
+                SELECT COUNT(1) FROM Filtered;
+
+                /* ------- PAGE + ALLOCATIONS ------- */
+                ;WITH Filtered AS
+                (
+                    SELECT
+                        c.CounterId,
+                        c.BranchId,
+                        c.NameEnglish,
+                        c.NameArabic,
+                        c.CounterType,
+                        c.IsActive,
+                        c.RowVersion
+                    FROM dbo.Counter c
+                    WHERE c.BranchId = @BranchId
+                      AND (@Search   IS NULL OR c.NameEnglish LIKE @Search OR c.NameArabic LIKE @Search)
+                      AND (@IsActive IS NULL OR c.IsActive = @IsActive)
+                ),
+                Paged AS
+                (
+                    SELECT
+                        f.CounterId,
+                        f.BranchId,
+                        f.NameEnglish,
+                        f.NameArabic,
+                        f.CounterType,
+                        f.IsActive,
+                        f.RowVersion
+                    FROM Filtered f
+                    ORDER BY f.NameEnglish, f.CounterId
+                    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
+                )
+                SELECT
+                    p.CounterId,
+                    p.BranchId,
+                    p.NameEnglish,
+                    p.NameArabic,
+                    p.CounterType,
+                    p.IsActive,
+                    p.RowVersion,
+                    a.ServiceId
+                FROM Paged p
+                LEFT JOIN dbo.CounterServiceAllocation a
+                    ON a.CounterId = p.CounterId
+                ORDER BY p.NameEnglish, p.CounterId;";
+
+            using var cmd = new SqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("@BranchId", branchId);
+
+            var searchValue = string.IsNullOrWhiteSpace(searchTerm)
+                ? (object)DBNull.Value
+                : $"%{EscapeLike(searchTerm)}%";
+            cmd.Parameters.AddWithValue("@Search", searchValue);
+
+            var isActiveValue = (object?)isActive ?? DBNull.Value;
+            cmd.Parameters.AddWithValue("@IsActive", isActiveValue);
+
+            int offset = (page - 1) * pageSize;
+            cmd.Parameters.AddWithValue("@Offset", offset);
+            cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            // result set 1: total count
+            if (await reader.ReadAsync())
+                totalCount = Convert.ToInt32(reader[0]);
+
+            // result set 2: page records (with allocations)
+            var dict = new Dictionary<int, CounterModel>();
+
+            if (await reader.NextResultAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    var counterId = (int)reader["CounterId"];
+                    if (!dict.TryGetValue(counterId, out var counter))
+                    {
+                        counter = new CounterModel
+                        {
+                            Id = counterId,
+                            BranchId = (int)reader["BranchId"],
+                            NameEnglish = reader["NameEnglish"] as string ?? "",
+                            NameArabic = reader["NameArabic"] as string ?? "",
+                            Type = (CounterType)Convert.ToInt32(reader["CounterType"]),
+                            IsActive = (bool)reader["IsActive"],
+                            RowVersion = (byte[])reader["RowVersion"],
+                            AllocatedServiceIds = new List<int>()
+                        };
+                        dict.Add(counterId, counter);
+                    }
+
+                    if (reader["ServiceId"] != DBNull.Value)
+                        counter.AllocatedServiceIds.Add(Convert.ToInt32(reader["ServiceId"]));
+                }
+            }
+
+            return new PagedResult<CounterModel>(new List<CounterModel>(dict.Values), totalCount, page, pageSize);
+        }
+
+        private static string EscapeLike(string input)
+            => input.Replace(@"\", @"\\").Replace("%", @"\%").Replace("_", @"\_");
 
         public async Task<CounterModel?> GetByIdAsync(int id)
         {

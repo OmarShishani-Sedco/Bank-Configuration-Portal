@@ -96,8 +96,15 @@
             }
 
         <li class="page-item ms-3">
-            @using (Html.BeginForm(Model.ActionName, Model.ControllerName, baseRouteValues, FormMethod.Get, new { @class = "d-flex align-items-center" }))
+            @using (Html.BeginForm(Model.ActionName, Model.ControllerName, FormMethod.Get, new { @class = "d-flex align-items-center" }))
             {
+                if (Model.BranchId.HasValue)
+                {@Html.Hidden("branchId", Model.BranchId.Value)}
+                if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {@Html.Hidden("searchTerm", Model.SearchTerm)}
+                if (Model.IsActive.HasValue)
+                {@Html.Hidden("isActive", Model.IsActive.Value)}
+
                 <div class="input-group input-group-md">
                     @Html.TextBox("page", null, new
                     {

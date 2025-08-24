@@ -22,6 +22,7 @@ namespace Bank_Configuration_Portal.Controllers
         private readonly IBranchManager _branchManager;
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
+        private const int pageSize = 6;
 
         public CounterController(ICounterManager counterManager, IBranchManager branchManager, IMapper mapper, IServiceManager serviceManager)
         {
@@ -32,7 +33,7 @@ namespace Bank_Configuration_Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(int branchId, string searchTerm, bool? isActive, int page = 1, int pageSize = 6)
+        public async Task<ActionResult> Index(int branchId, string searchTerm, bool? isActive, int page = 1)
         {
             if (branchId == 0)
             {
@@ -43,66 +44,45 @@ namespace Bank_Configuration_Portal.Controllers
             try
             {
                 if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
-                var allCounters = await _counterManager.GetAllByBranchIdAsync(branchId);
                 var branch = await _branchManager.GetByIdAsync(branchId, bankId);
-
-                var filteredCounters = allCounters.AsQueryable();
-
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    filteredCounters = filteredCounters.Where(b =>
-                        b.NameEnglish.ToLower().Contains(searchTerm.ToLower()) ||
-                        b.NameArabic.ToLower().Contains(searchTerm.ToLower()));
-                }
-
-                if (isActive.HasValue)
-                {
-                    filteredCounters = filteredCounters.Where(b => b.IsActive == isActive.Value);
-                }
-
                 if (branch == null)
                 {
                     TempData["Error"] = Language.Branch_Not_Found;
                     return RedirectToAction("Index", "Branch");
                 }
 
-                if (page < 1)
+                var data = await _counterManager.GetPagedByBranchIdAsync(
+                    branchId, searchTerm, isActive, page, pageSize);
+
+                var selectedIds = data.Items
+                                      .SelectMany(c => c.AllocatedServiceIds ?? new List<int>())
+                                      .Distinct()
+                                      .ToList();
+
+                var allocatedServices = selectedIds.Count == 0
+                    ? new List<ServiceModel>()
+                    : await _serviceManager.GetByIdsAsync(selectedIds);
+
+                var allocatedVM = _mapper.Map<List<ServiceViewModel>>(allocatedServices);
+                var counterVMs = _mapper.Map<List<CounterViewModel>>(data.Items);
+
+                // attach SelectedServices per counter
+                foreach (var vm in counterVMs)
                 {
-                    return RedirectToAction("Index", new { branchId = branchId, page = 1, pageSize = pageSize });
-                }
-
-                int totalCounters = filteredCounters.Count();
-                var pagedCounters = filteredCounters
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                var allSelectedServiceIds = pagedCounters
-                    .SelectMany(c => c.AllocatedServiceIds)
-                    .Distinct()
-                    .ToList();
-
-                var allocatedServices = await _serviceManager.GetByIdsAsync(allSelectedServiceIds);
-                var allocatedServiceModels = _mapper.Map<List<ServiceViewModel>>(allocatedServices);
-
-                var vmList = _mapper.Map<List<CounterViewModel>>(pagedCounters);
-
-                foreach (var counterViewModel in vmList)
-                {
-                    counterViewModel.SelectedServices = allocatedServiceModels
-                        .Where(s => counterViewModel.SelectedServiceIds.Contains(s.Id))
+                    vm.SelectedServices = allocatedVM
+                        .Where(s => vm.SelectedServiceIds.Contains(s.Id))
                         .ToList();
                 }
 
                 var viewModel = new CounterListViewModel
                 {
-                    Counters = vmList,
-                    CurrentPage = page,
-                    PageSize = pageSize,
-                    TotalCount = totalCounters,
+                    Counters = counterVMs,
                     BranchId = branchId,
                     BranchNameEnglish = branch.NameEnglish,
                     BranchNameArabic = branch.NameArabic,
+                    PageSize = pageSize,
+                    CurrentPage = page,
+                    TotalCount = data.TotalCount,
                     SearchTerm = searchTerm,
                     IsActive = isActive
                 };
@@ -113,7 +93,7 @@ namespace Bank_Configuration_Portal.Controllers
             {
                 Logger.LogError(ex, "CounterController.Index");
                 TempData["Error"] = Language.Generic_Error;
-                return View(new CounterListViewModel());
+                return View(new CounterListViewModel { BranchId = branchId });
             }
         }
 

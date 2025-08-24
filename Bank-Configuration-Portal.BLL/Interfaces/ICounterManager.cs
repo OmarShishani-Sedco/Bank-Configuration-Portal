@@ -1,4 +1,5 @@
-﻿using Bank_Configuration_Portal.Models.Models;
+﻿using Bank_Configuration_Portal.Common.Paging;
+using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Bank_Configuration_Portal.BLL.Interfaces
         Task<int> CreateAsync(CounterModel counter);
         Task<bool> UpdateAsync(CounterModel counter, CounterModel dbCounter, bool forceUpdate = false);
         Task DeleteAsync(int id, byte[] rowVersion, bool forceDelete = false);
+        Task<PagedResult<CounterModel>> GetPagedByBranchIdAsync(int branchId, string searchTerm, bool? isActive, int page, int pageSize);
     }
 
 }

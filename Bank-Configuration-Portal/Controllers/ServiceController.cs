@@ -21,6 +21,7 @@ namespace Bank_Configuration_Portal.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
+        private const int pageSize = 6;
 
         public ServiceController(IServiceManager serviceManager, IMapper mapper)
         {
@@ -29,41 +30,22 @@ namespace Bank_Configuration_Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(string searchTerm, bool? isActive, int page = 1, int pageSize = 6)
+        public async Task<ActionResult> Index(string searchTerm, bool? isActive, int page = 1)
         {
             try
             {
                 if (!TryGetBankId(out var bankId)) return BankIdMissingRedirect();
-                var allServices = await _serviceManager.GetAllByBankIdAsync(bankId);
 
-                var filteredServices = allServices.AsQueryable();
+                var data = await _serviceManager.GetPagedByBankIdAsync(bankId, searchTerm, isActive, page, pageSize);
 
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    filteredServices = filteredServices.Where(b =>
-                        b.NameEnglish.ToLower().Contains(searchTerm.ToLower()) ||
-                        b.NameArabic.ToLower().Contains(searchTerm.ToLower()));
-                }
-
-                if (isActive.HasValue)
-                {
-                    filteredServices = filteredServices.Where(b => b.IsActive == isActive.Value);
-                }
-
-                int totalServices = filteredServices.Count();
-                var pagedServices = filteredServices
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                var vmList = _mapper.Map<List<ServiceViewModel>>(pagedServices);
+                var vmList = _mapper.Map<List<ServiceViewModel>>(data.Items);
 
                 var viewModel = new ServiceListViewModel
                 {
                     Services = vmList,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalCount = totalServices,
+                    TotalCount = data.TotalCount,
                     SearchTerm = searchTerm,
                     IsActive = isActive
                 };

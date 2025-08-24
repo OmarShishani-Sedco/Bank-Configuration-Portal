@@ -150,10 +150,6 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/Custom")
-    @if (System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar")
-    {
-        <script src="~/Scripts/messages_ar.js"></script>
-    }
     @RenderSection("scripts", required: false)
 </body>
 </html>

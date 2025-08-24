@@ -197,6 +197,7 @@
     <Compile Include="AppConfig.cs" />
     <Compile Include="CustomExceptions.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Paging.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\PasswordGenerator.cs" />
     <Compile Include="Security\PasswordHasher.cs" />

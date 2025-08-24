@@ -322,7 +322,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\fadeout3s.js" />
-    <Content Include="Scripts\messages_ar.js" />
     <Content Include="Scripts\modal_scripts.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\validation.compare.js" />

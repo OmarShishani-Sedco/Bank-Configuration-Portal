@@ -1,5 +1,6 @@
 ﻿using Bank_Configuration_Portal.BLL.Interfaces;
 using Bank_Configuration_Portal.Common;
+using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
 using System;
@@ -23,6 +24,11 @@ namespace Bank_Configuration_Portal.BLL
         public async Task<List<CounterModel>> GetAllByBranchIdAsync(int branchId)
         {
                 return await _counterDAL.GetAllByBranchIdAsync(branchId);
+        }
+
+        public async Task<PagedResult<CounterModel>> GetPagedByBranchIdAsync(int branchId, string searchTerm, bool? isActive, int page, int pageSize)
+        {
+                return await _counterDAL.GetPagedByBranchIdAsync(branchId, searchTerm, isActive, page, pageSize);
         }
 
         public async Task<CounterModel?> GetByIdAsync(int id)

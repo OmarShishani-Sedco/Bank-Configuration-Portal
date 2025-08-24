@@ -156,8 +156,18 @@ namespace Bank_Configuration_Portal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
-            HttpContext.GetOwinContext().Authentication.SignOut("AppCookie");
-            return RedirectToAction("Index", "Login");
+            try
+            {
+                HttpContext.GetOwinContext().Authentication.SignOut("AppCookie");
+                return RedirectToAction("Index", "Login");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "LoginController.Logout(POST)");
+                ModelState.AddModelError("", Language.Generic_Error);
+                TempData["Error"] = Language.Generic_Error; 
+                return RedirectToAction("Index", "Login");
+            }
         }
     }
 }

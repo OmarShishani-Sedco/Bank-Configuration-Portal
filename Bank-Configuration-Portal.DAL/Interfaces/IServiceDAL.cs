@@ -1,4 +1,5 @@
-﻿using Bank_Configuration_Portal.Models.Models;
+﻿using Bank_Configuration_Portal.Common.Paging;
+using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
         Task UpdateAsync(ServiceModel service, bool forceUpdate = false);
         Task DeleteAsync(int serviceId, byte[] rowVersion, bool forceDelete = false);
         Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds);
+        Task<PagedResult<ServiceModel>> GetPagedByBankIdAsync(int bankId, string searchTerm, bool? isActive, int page, int pageSize);
     }
 }

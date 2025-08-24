@@ -1,4 +1,5 @@
 ﻿using Bank_Configuration_Portal.Common;
+using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
 using Microsoft.Data.SqlClient;
@@ -40,6 +41,77 @@ namespace Bank_Configuration_Portal.DAL.DAL
 
                 return branches;
         }
+
+        public async Task<PagedResult<BranchModel>> GetPagedByBankIdAsync(
+              int bankId, string searchTerm, bool? isActive, int page, int pageSize)
+        {
+            if (page < 1) page = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
+
+            var branches = new List<BranchModel>();
+            int totalCount = 0;
+
+            string query = @"
+                -- 1) total rows
+                SELECT COUNT(1)
+                FROM Branch
+                WHERE BankId = @BankId
+                  AND (@Search   IS NULL OR NameEnglish LIKE @Search OR NameArabic LIKE @Search)
+                  AND (@IsActive IS NULL OR IsActive = @IsActive);
+
+                -- 2) current page
+                SELECT BranchId, BankId, NameEnglish, NameArabic, IsActive, RowVersion
+                FROM Branch
+                WHERE BankId = @BankId
+                  AND (@Search   IS NULL OR NameEnglish LIKE @Search OR NameArabic LIKE @Search)
+                  AND (@IsActive IS NULL OR IsActive = @IsActive)
+                ORDER BY NameEnglish, BranchId
+                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
+
+            using var cmd = new SqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue("@BankId", bankId);
+
+            var searchValue = string.IsNullOrWhiteSpace(searchTerm) ? (object)DBNull.Value : $"%{searchTerm}%";
+            cmd.Parameters.AddWithValue("@Search", searchValue);
+
+            var isActiveValue = (object?)isActive ?? DBNull.Value;
+            cmd.Parameters.AddWithValue("@IsActive", isActiveValue);
+
+            int offset = (page - 1) * pageSize;
+            cmd.Parameters.AddWithValue("@Offset", offset);
+            cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            // result set 1: total count
+            if (await reader.ReadAsync())
+                totalCount = Convert.ToInt32(reader[0]);
+
+            // result set 2: page rows
+            if (await reader.NextResultAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    branches.Add(new BranchModel
+                    {
+                        Id = (int)reader["BranchId"],
+                        BankId = (int)reader["BankId"],
+                        NameEnglish = reader["NameEnglish"] as string,
+                        NameArabic = reader["NameArabic"] as string,
+                        IsActive = (bool)reader["IsActive"],
+                        RowVersion = (byte[])reader["RowVersion"]
+                    });
+                }
+            }
+
+            return new PagedResult<BranchModel>(branches, totalCount, page, pageSize);
+        }
+
 
         public async Task<BranchModel?> GetByIdAsync(int id, int bankId)
         {

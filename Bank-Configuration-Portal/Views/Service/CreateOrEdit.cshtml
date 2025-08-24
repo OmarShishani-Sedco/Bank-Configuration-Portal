@@ -46,16 +46,13 @@
                                                   maxlength: 100)
 
                     @Html.InputGroupNumberFor(m => m.MaxTicketsPerDay,
-                                                   iconClass: "bi bi-123",
-                                                   min: 1)
+                                                   iconClass: "bi bi-123")
 
                     @Html.InputGroupNumberFor(m => m.MinServiceTimeSeconds,
-                                                   iconClass: "bi bi-stopwatch",
-                                                   min: 30, max: 999999, step: "1")
+                                                   iconClass: "bi bi-stopwatch")
 
                     @Html.InputGroupNumberFor(m => m.MaxServiceTimeSeconds,
-                                                   iconClass: "bi bi-stopwatch",
-                                                   min: 30, max: 999999, step: "1")
+                                                   iconClass: "bi bi-stopwatch")
                 }
                 else
                 {

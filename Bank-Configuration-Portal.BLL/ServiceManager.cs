@@ -1,5 +1,6 @@
 ﻿using Bank_Configuration_Portal.BLL.Interfaces;
 using Bank_Configuration_Portal.Common;
+using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.DAL;
 using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
@@ -24,6 +25,12 @@ namespace Bank_Configuration_Portal.BLL
         {
                 return await _serviceDAL.GetAllByBankIdAsync(bankId);
         }
+        public async Task<PagedResult<ServiceModel>> GetPagedByBankIdAsync(
+            int bankId, string searchTerm, bool? isActive, int page, int pageSize)
+        {
+                return await _serviceDAL.GetPagedByBankIdAsync(bankId, searchTerm, isActive, page, pageSize);
+        }
+
         public async Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds)
         {
                 if (serviceIds == null || !serviceIds.Any())

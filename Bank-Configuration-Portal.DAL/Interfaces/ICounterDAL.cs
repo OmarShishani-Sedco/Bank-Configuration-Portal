@@ -1,4 +1,5 @@
-﻿using Bank_Configuration_Portal.Models.Models;
+﻿using Bank_Configuration_Portal.Common.Paging;
+using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
         Task<List<int>> GetAllocatedServiceIdsAsync(int counterId);
         Task SaveAllocationsAsync(int counterId, List<int> serviceIds);
         Task DeleteAllocationsByCounterIdAsync(int counterId);
+        Task<PagedResult<CounterModel>> GetPagedByBranchIdAsync(int branchId, string searchTerm, bool? isActive, int page, int pageSize);
     }
 
 }

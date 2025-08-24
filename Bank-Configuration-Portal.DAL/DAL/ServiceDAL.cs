@@ -1,4 +1,5 @@
 ﻿using Bank_Configuration_Portal.Common;
+using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.Interfaces;
 using Bank_Configuration_Portal.Models.Models;
 using Microsoft.Data.SqlClient;
@@ -31,6 +32,69 @@ namespace Bank_Configuration_Portal.DAL.DAL
                     }
             }
             return services;
+        }
+
+        public async Task<PagedResult<ServiceModel>> GetPagedByBankIdAsync(
+           int bankId, string searchTerm, bool? isActive, int page, int pageSize)
+        {
+            if (page < 1) page = 1;
+            if (pageSize <= 0) pageSize = 6;
+
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
+
+            var items = new List<ServiceModel>();
+            int totalCount = 0;
+
+            string query = @"
+                -- 1) total rows
+                SELECT COUNT(1)
+                FROM Service
+                WHERE BankId = @BankId
+                  AND (@Search   IS NULL OR NameEnglish LIKE @Search OR NameArabic LIKE @Search)
+                  AND (@IsActive IS NULL OR IsActive = @IsActive);
+
+                -- 2) current page
+                SELECT ServiceId, BankId, NameEnglish, NameArabic,
+                       MaxTicketsPerDay, MinServiceTimeSeconds, MaxServiceTimeSeconds,
+                       IsActive, RowVersion
+                FROM Service
+                WHERE BankId = @BankId
+                  AND (@Search   IS NULL OR NameEnglish LIKE @Search OR NameArabic LIKE @Search)
+                  AND (@IsActive IS NULL OR IsActive = @IsActive)
+                ORDER BY NameEnglish, ServiceId
+                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
+            using var cmd = new SqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue("@BankId", bankId);
+
+            var searchValue = string.IsNullOrWhiteSpace(searchTerm) ? (object)DBNull.Value : $"%{searchTerm}%";
+            cmd.Parameters.AddWithValue("@Search", searchValue);
+
+            var isActiveValue = (object?)isActive ?? DBNull.Value;
+            cmd.Parameters.AddWithValue("@IsActive", isActiveValue);
+
+            int offset = (page - 1) * pageSize;
+            cmd.Parameters.AddWithValue("@Offset", offset);
+            cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            // total count
+            if (await reader.ReadAsync())
+                totalCount = Convert.ToInt32(reader[0]);
+
+            // page rows
+            if (await reader.NextResultAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    items.Add(MapReaderToService(reader));
+                }
+            }
+
+            return new PagedResult<ServiceModel>(items, totalCount, page, pageSize);
         }
 
         public async Task<List<ServiceModel>> GetByIdsAsync(IEnumerable<int> serviceIds)
