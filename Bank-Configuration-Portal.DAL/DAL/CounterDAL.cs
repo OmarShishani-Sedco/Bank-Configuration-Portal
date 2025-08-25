@@ -71,54 +71,14 @@ namespace Bank_Configuration_Portal.DAL.DAL
             int totalCount = 0;
 
             string sql = @"
-                /* ------- TOTAL COUNT ------- */
-                ;WITH Filtered AS
-                (
-                    SELECT
-                        c.CounterId,
-                        c.BranchId,
-                        c.NameEnglish,
-                        c.NameArabic,
-                        c.CounterType,
-                        c.IsActive,
-                        c.RowVersion
-                    FROM dbo.Counter c
-                    WHERE c.BranchId = @BranchId
-                      AND (@Search   IS NULL OR c.NameEnglish LIKE @Search OR c.NameArabic LIKE @Search)
-                      AND (@IsActive IS NULL OR c.IsActive = @IsActive)
-                )
-                SELECT COUNT(1) FROM Filtered;
+                -- 1) total rows
+                SELECT COUNT(1)
+                FROM dbo.Counter
+                WHERE BranchId = @BranchId
+                  AND (@Search   IS NULL OR NameEnglish LIKE @Search OR NameArabic LIKE @Search)
+                  AND (@IsActive IS NULL OR IsActive = @IsActive);
 
-                /* ------- PAGE + ALLOCATIONS ------- */
-                ;WITH Filtered AS
-                (
-                    SELECT
-                        c.CounterId,
-                        c.BranchId,
-                        c.NameEnglish,
-                        c.NameArabic,
-                        c.CounterType,
-                        c.IsActive,
-                        c.RowVersion
-                    FROM dbo.Counter c
-                    WHERE c.BranchId = @BranchId
-                      AND (@Search   IS NULL OR c.NameEnglish LIKE @Search OR c.NameArabic LIKE @Search)
-                      AND (@IsActive IS NULL OR c.IsActive = @IsActive)
-                ),
-                Paged AS
-                (
-                    SELECT
-                        f.CounterId,
-                        f.BranchId,
-                        f.NameEnglish,
-                        f.NameArabic,
-                        f.CounterType,
-                        f.IsActive,
-                        f.RowVersion
-                    FROM Filtered f
-                    ORDER BY f.NameEnglish, f.CounterId
-                    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
-                )
+                -- 2) current page + allocations
                 SELECT
                     p.CounterId,
                     p.BranchId,
@@ -128,10 +88,19 @@ namespace Bank_Configuration_Portal.DAL.DAL
                     p.IsActive,
                     p.RowVersion,
                     a.ServiceId
-                FROM Paged p
-                LEFT JOIN dbo.CounterServiceAllocation a
-                    ON a.CounterId = p.CounterId
+                FROM (
+                    SELECT CounterId, BranchId, NameEnglish, NameArabic, CounterType, IsActive, RowVersion
+                    FROM dbo.Counter
+                    WHERE BranchId = @BranchId
+                      AND (@Search   IS NULL OR NameEnglish LIKE @Search OR NameArabic LIKE @Search)
+                      AND (@IsActive IS NULL OR IsActive = @IsActive)
+                    ORDER BY NameEnglish, CounterId
+                    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
+                ) AS p
+                LEFT JOIN dbo.CounterServiceAllocation AS a
+                  ON a.CounterId = p.CounterId
                 ORDER BY p.NameEnglish, p.CounterId;";
+
 
             using var cmd = new SqlCommand(sql, conn);
 
