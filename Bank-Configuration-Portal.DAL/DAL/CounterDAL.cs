@@ -62,7 +62,7 @@ namespace Bank_Configuration_Portal.DAL.DAL
             int branchId, string searchTerm, bool? isActive, int page, int pageSize)
         {
             if (page < 1) page = 1;
-            if (pageSize <= 0) pageSize = 10;
+            if (pageSize <= 0) pageSize = 6;
 
             using var conn = DatabaseHelper.GetConnection();
             await conn.OpenAsync();
