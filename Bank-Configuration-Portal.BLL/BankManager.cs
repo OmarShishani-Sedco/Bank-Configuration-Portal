@@ -18,18 +18,18 @@ namespace Bank_Configuration_Portal.BLL
 
         public async Task<BankModel?> GetByNameAsync(string name)
         {
-                return await _bankDAL.GetByNameAsync(name);
+            return await _bankDAL.GetByNameAsync(name);
         }
 
         public async Task<bool> IsUserMappedToBankAsync(string username, int bankId)
         {
-            {
-                return await _bankDAL.BankUserMappingExistsAsync(username, bankId);
-            }
+
+            return await _bankDAL.BankUserMappingExistsAsync(username, bankId);
+
         }
         public async Task<bool> BankExistsAsync(int bankId)
         {
-                return await _bankDAL.BankExistsAsync(bankId); 
+            return await _bankDAL.BankExistsAsync(bankId);
         }
     }
 }

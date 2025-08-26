@@ -587,4 +587,7 @@
 	<data name="Session_Expired">
 		<value>انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى.</value>
 	</data>
+	<data name="Login_Invalid_Stamp">
+		<value>نواجه مشكلة في تسجيل دخولك. يُرجى المحاولة مرة أخرى.</value>
+	</data>
 </root>

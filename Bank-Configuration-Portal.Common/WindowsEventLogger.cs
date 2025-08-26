@@ -30,10 +30,18 @@ namespace Bank_Configuration_Portal.Common
                 {
                     var scd = new EventSourceCreationData(Source, LogName);
                     EventLog.CreateEventSource(scd);
+                    Logger.LogInfo($"Created Windows Event Log ({LogName}:{Source}) source successfully!", "WindowsEventLog_Source_Creation");
                 }
+                else
+                {
+                    Logger.LogInfo($"Windows Event Log ({LogName}:{Source}) source already exists.", "WindowsEventLog_Source_Creation");
+                }
+
             }
-            catch (SecurityException)
-            {}
+            catch (SecurityException ex)
+            {
+                Logger.LogError(ex,"WindowsEventLog_Source_Creation");
+            }
             catch
             {}
         }

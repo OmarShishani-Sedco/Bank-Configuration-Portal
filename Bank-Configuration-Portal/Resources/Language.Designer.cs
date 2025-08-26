@@ -763,6 +763,15 @@ namespace Bank_Configuration_Portal.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We’re having trouble starting your session. Please try again..
+        /// </summary>
+        public static string Login_Invalid_Stamp {
+            get {
+                return ResourceManager.GetString("Login_Invalid_Stamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Login_Password_Label {

@@ -70,8 +70,12 @@ namespace Bank_Configuration_Portal.Controllers
                     return View(model);
                 }
 
-                var stamp = Startup.GetOrIssueNewStamp(model.UserName.ToLower(), bank.Id.ToString());
-
+                var isStampValid = Startup.TryGetOrIssueNewStamp(model.UserName.ToLower(), bank.Id.ToString(), out string stamp);
+                if (!isStampValid)
+                {
+                    ModelState.AddModelError("", Language.Login_Invalid_Stamp);
+                    return View(model);
+                }
                 // grab current UA/IP
                 var ua = HttpContext.Request.UserAgent ?? "";
                 var ip = HttpContext.Request.UserHostAddress ?? "";

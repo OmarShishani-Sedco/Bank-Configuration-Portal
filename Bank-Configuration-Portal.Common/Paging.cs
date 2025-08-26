@@ -15,8 +15,6 @@ namespace Bank_Configuration_Portal.Common.Paging
         {
             get { return PageSize <= 0 ? 0 : (int)Math.Ceiling((double)TotalCount / PageSize); }
         }
-        public bool HasPrevious { get { return Page > 1; } }
-        public bool HasNext { get { return Page < TotalPages; } }
 
         public PagedResult(IEnumerable<T> items, int totalCount, int page, int pageSize)
         {
@@ -29,23 +27,6 @@ namespace Bank_Configuration_Portal.Common.Paging
             TotalCount = totalCount;
             Page = page < 1 ? 1 : page;
             PageSize = pageSize <= 0 ? 6 : pageSize;
-        }
-
-        public static PagedResult<T> Empty(int page, int pageSize)
-        {
-            return new PagedResult<T>(Enumerable.Empty<T>(), 0, page, pageSize);
-        }
-    }
-
-    public sealed class PagedRequest
-    {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
-
-        public PagedRequest(int page, int pageSize)
-        {
-            Page = page;
-            PageSize = pageSize;
         }
     }
 }

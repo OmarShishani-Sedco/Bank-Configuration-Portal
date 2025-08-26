@@ -591,4 +591,7 @@
 	<data name="Session_Expired">
 		<value>You're session expired. Please sign in again.</value>
 	</data>
+	<data name="Login_Invalid_Stamp">
+		<value>We’re having trouble starting your session. Please try again.</value>
+	</data>
 </root>
