@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ITicketingDesignManager.cs" />
+    <Compile Include="Api\TicketingDesignManager.cs" />
     <Compile Include="BankManager.cs" />
     <Compile Include="BranchManager.cs" />
     <Compile Include="CounterManager.cs" />

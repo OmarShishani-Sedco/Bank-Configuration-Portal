@@ -95,6 +95,15 @@ namespace Bank_Configuration_Portal
                                     Logger.LogError(signoutEx, "CookieAuth.OnValidateIdentity.SignOut");
                                 }
                             }
+                        },
+
+                        OnApplyRedirect = ctx =>
+                        {
+                            var path = ctx.Request.Path; 
+                            if (!path.HasValue || !path.Value.StartsWith("/api", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ctx.Response.Redirect(ctx.RedirectUri); // only redirect for non-API
+                            }
                         }
                     }
                 });

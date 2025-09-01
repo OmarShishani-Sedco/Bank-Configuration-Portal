@@ -1,10 +1,17 @@
 ﻿using Autofac;
-using Autofac.Integration.Mvc; // This is the key namespace from the NuGet package
+using Autofac.Integration.Mvc; 
+using Autofac.Integration.WebApi; 
 using AutoMapper;
+using Bank_Configuration_Portal.Api.Auth;
 using Bank_Configuration_Portal.BLL;
+using Bank_Configuration_Portal.BLL.Api;
 using Bank_Configuration_Portal.BLL.Interfaces;
+using Bank_Configuration_Portal.Common.Auth;
+using Bank_Configuration_Portal.DAL.Api;
 using Bank_Configuration_Portal.DAL.DAL;
 using Bank_Configuration_Portal.DAL.Interfaces;
+using System.Reflection;
+using System.Web.Http;
 using System.Web.Mvc;
 
 namespace Bank_Configuration_Portal.App_Start
@@ -18,6 +25,7 @@ namespace Bank_Configuration_Portal.App_Start
             var builder = new ContainerBuilder();
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterApiControllers(typeof(MvcApplication).Assembly);
             builder.RegisterType<BankDAL>().As<IBankDAL>().InstancePerRequest();
             builder.RegisterType<BankManager>().As<IBankManager>().InstancePerRequest();
             builder.RegisterType<BranchDAL>().As<IBranchDAL>().InstancePerRequest();
@@ -28,6 +36,12 @@ namespace Bank_Configuration_Portal.App_Start
             builder.RegisterType<CounterManager>().As<ICounterManager>().InstancePerRequest();
             builder.RegisterType<UserDAL>().As<IUserDAL>().InstancePerRequest();
             builder.RegisterType<UserManager>().As<IUserManager>().InstancePerRequest();
+            builder.RegisterType<TicketingDesginDAL>().As<ITicketingDesignDAL>().InstancePerRequest();
+            builder.RegisterType<TicketingDesignManager>().As<ITicketingDesignManager>().InstancePerRequest();
+            builder.RegisterType<InMemoryTokenStore>()
+          .As<ITokenStore>()
+          .SingleInstance();
+
 
             builder.Register(context =>
             {
@@ -41,9 +55,13 @@ namespace Bank_Configuration_Portal.App_Start
                 return context.CreateMapper();
             }).As<IMapper>().SingleInstance();
 
-
             Container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(Container));
+            // WEB API resolver 
+            GlobalConfiguration.Configuration.DependencyResolver =
+                new AutofacWebApiDependencyResolver(Container);
+
+            ApiTokenHandler.TokenStore = Container.Resolve<ITokenStore>();
         }
     }
 }

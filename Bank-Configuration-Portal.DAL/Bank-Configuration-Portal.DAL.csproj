@@ -167,6 +167,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ITicketingDesignDAL.cs" />
+    <Compile Include="Api\TicketingDesignDAL.cs" />
     <Compile Include="DAL\BankDAL.cs" />
     <Compile Include="DAL\BranchDAL.cs" />
     <Compile Include="DAL\CounterDAL.cs" />

@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ButtonModel.cs" />
+    <Compile Include="Api\RevokeRequestModel.cs" />
+    <Compile Include="Api\TokenRequestModel.cs" />
+    <Compile Include="Api\RefreshRequestModel.cs" />
+    <Compile Include="Api\TicketingDesignModel.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\BankUserMappingModel.cs" />
