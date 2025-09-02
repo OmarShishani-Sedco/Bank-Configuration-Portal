@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\BranchApiModel.cs" />
     <Compile Include="Api\ButtonModel.cs" />
     <Compile Include="Api\RevokeRequestModel.cs" />
     <Compile Include="Api\TokenRequestModel.cs" />

@@ -2,6 +2,7 @@
 using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.Interfaces;
+using Bank_Configuration_Portal.Models.Api;
 using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,11 @@ namespace Bank_Configuration_Portal.BLL
         {
                 return await _branchDAL.GetAllByBankIdAsync(bankId);
         }
+
+        public async Task<List<BranchApiModel>> GetAllForApiByBankIdAsync(int bankId, bool includeInactive)
+        {
+                return await _branchDAL.GetAllForApiByBankIdAsync(bankId, includeInactive);
+        } 
 
         public async Task<PagedResult<BranchModel>> GetPagedByBankIdAsync(
            int bankId, string searchTerm, bool? isActive, int page, int pageSize)

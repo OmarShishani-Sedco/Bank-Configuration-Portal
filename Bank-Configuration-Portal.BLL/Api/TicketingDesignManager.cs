@@ -18,7 +18,7 @@ namespace Bank_Configuration_Portal.BLL.Api
             _screenDAL = screenDAL;
         }
 
-        public async Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int branchId, bool onlyAllocated = true)
+        public async Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated = false)
         {
             try
             {

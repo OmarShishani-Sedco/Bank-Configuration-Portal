@@ -1,6 +1,7 @@
 ﻿using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Common.Paging;
 using Bank_Configuration_Portal.DAL.Interfaces;
+using Bank_Configuration_Portal.Models.Api;
 using Bank_Configuration_Portal.Models.Models;
 using Microsoft.Data.SqlClient;
 using System;
@@ -15,31 +16,63 @@ namespace Bank_Configuration_Portal.DAL.DAL
     {
         public async Task<List<BranchModel>> GetAllByBankIdAsync(int bankId)
         {
-                using var conn = DatabaseHelper.GetConnection();
-                await conn.OpenAsync();
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
 
-                var branches = new List<BranchModel>();
-                string query = @"SELECT BranchId, BankId, NameEnglish, NameArabic, IsActive, RowVersion 
+            var branches = new List<BranchModel>();
+            string query = @"SELECT BranchId, BankId, NameEnglish, NameArabic, IsActive, RowVersion 
                                  FROM Branch WHERE BankId = @BankId";
 
-                using var cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@BankId", bankId);
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@BankId", bankId);
 
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                branches.Add(new BranchModel
                 {
-                    branches.Add(new BranchModel
-                    {
-                        Id = (int)reader["BranchId"],
-                        BankId = (int)reader["BankId"],
-                        NameEnglish = reader["NameEnglish"] as string,
-                        NameArabic = reader["NameArabic"] as string,
-                        IsActive = (bool)reader["IsActive"],
-                        RowVersion = (byte[])reader["RowVersion"]
-                    });
-                }
+                    Id = (int)reader["BranchId"],
+                    BankId = (int)reader["BankId"],
+                    NameEnglish = reader["NameEnglish"] as string,
+                    NameArabic = reader["NameArabic"] as string,
+                    IsActive = (bool)reader["IsActive"],
+                    RowVersion = (byte[])reader["RowVersion"]
+                });
+            }
 
-                return branches;
+            return branches;
+        }
+
+        public async Task<List<BranchApiModel>> GetAllForApiByBankIdAsync(int bankId, bool includeInactive)
+        {
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
+
+            var items = new List<BranchApiModel>();
+            string query = @"
+            SELECT BranchId, NameEnglish, NameArabic, IsActive
+            FROM Branch
+            WHERE BankId = @BankId
+              AND (@IncludeInactive = 1 OR IsActive = 1)
+            ORDER BY NameEnglish, BranchId;";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@BankId", bankId);
+            cmd.Parameters.AddWithValue("@IncludeInactive", includeInactive ? 1 : 0);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                items.Add(new BranchApiModel
+                {
+                    Id = (int)reader["BranchId"],
+                    NameEnglish = reader["NameEnglish"] as string,
+                    NameArabic = reader["NameArabic"] as string,
+                    IsActive = (bool)reader["IsActive"]
+                });
+            }
+
+            return items;
         }
 
         public async Task<PagedResult<BranchModel>> GetPagedByBankIdAsync(
@@ -115,147 +148,147 @@ namespace Bank_Configuration_Portal.DAL.DAL
 
         public async Task<BranchModel?> GetByIdAsync(int id, int bankId)
         {
-                using var conn = DatabaseHelper.GetConnection();
-                await conn.OpenAsync();
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
 
-                string query = @"SELECT BranchId, BankId, NameEnglish, NameArabic, IsActive, RowVersion 
+            string query = @"SELECT BranchId, BankId, NameEnglish, NameArabic, IsActive, RowVersion 
                                  FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
 
-                using var cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-                cmd.Parameters.AddWithValue("@BankId", bankId);
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@BankId", bankId);
 
-                using var reader = await cmd.ExecuteReaderAsync();
-                if (await reader.ReadAsync())
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new BranchModel
                 {
-                    return new BranchModel
-                    {
-                        Id = (int)reader["BranchId"],
-                        BankId = (int)reader["BankId"],
-                        NameEnglish = reader["NameEnglish"] as string,
-                        NameArabic = reader["NameArabic"] as string,
-                        IsActive = (bool)reader["IsActive"],
-                        RowVersion = (byte[])reader["RowVersion"]
-                    };
-                }
+                    Id = (int)reader["BranchId"],
+                    BankId = (int)reader["BankId"],
+                    NameEnglish = reader["NameEnglish"] as string,
+                    NameArabic = reader["NameArabic"] as string,
+                    IsActive = (bool)reader["IsActive"],
+                    RowVersion = (byte[])reader["RowVersion"]
+                };
+            }
 
-                return null;
+            return null;
         }
 
         public async Task CreateAsync(BranchModel branch)
         {
-                using var conn = DatabaseHelper.GetConnection();
-                await conn.OpenAsync();
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
 
-                string query = @"INSERT INTO Branch (BankId, NameEnglish, NameArabic, IsActive) 
+            string query = @"INSERT INTO Branch (BankId, NameEnglish, NameArabic, IsActive) 
                                  VALUES (@BankId, @NameEnglish, @NameArabic, @IsActive);
                                  SELECT SCOPE_IDENTITY()";
 
-                using var cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@BankId", branch.BankId);
-                cmd.Parameters.AddWithValue("@NameEnglish", branch.NameEnglish);
-                cmd.Parameters.AddWithValue("@NameArabic", branch.NameArabic);
-                cmd.Parameters.AddWithValue("@IsActive", branch.IsActive);
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@BankId", branch.BankId);
+            cmd.Parameters.AddWithValue("@NameEnglish", branch.NameEnglish);
+            cmd.Parameters.AddWithValue("@NameArabic", branch.NameArabic);
+            cmd.Parameters.AddWithValue("@IsActive", branch.IsActive);
 
-                branch.Id = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+            branch.Id = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         }
 
         public async Task UpdateAsync(BranchModel branch, bool forceUpdate = false)
         {
-                using var conn = DatabaseHelper.GetConnection();
-                await conn.OpenAsync();
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
 
-                if (!forceUpdate)
-                {
-                    string selectQuery = "SELECT RowVersion FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
-                    using var versionCmd = new SqlCommand(selectQuery, conn);
-                    versionCmd.Parameters.AddWithValue("@Id", branch.Id);
-                    versionCmd.Parameters.AddWithValue("@BankId", branch.BankId);
+            if (!forceUpdate)
+            {
+                string selectQuery = "SELECT RowVersion FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
+                using var versionCmd = new SqlCommand(selectQuery, conn);
+                versionCmd.Parameters.AddWithValue("@Id", branch.Id);
+                versionCmd.Parameters.AddWithValue("@BankId", branch.BankId);
 
-                    using var reader = await versionCmd.ExecuteReaderAsync();
-                    if (!await reader.ReadAsync())
-                        throw new DBConcurrencyException("The branch was deleted.");
+                using var reader = await versionCmd.ExecuteReaderAsync();
+                if (!await reader.ReadAsync())
+                    throw new DBConcurrencyException("The branch was deleted.");
 
-                    byte[] currentVersion = (byte[])reader["RowVersion"];
-                    if (!currentVersion.SequenceEqual(branch.RowVersion))
-                        throw new DBConcurrencyException("The branch was modified by another user.");
-                }
-                
-                string updateQuery = forceUpdate
-                    ? @"UPDATE Branch 
+                byte[] currentVersion = (byte[])reader["RowVersion"];
+                if (!currentVersion.SequenceEqual(branch.RowVersion))
+                    throw new DBConcurrencyException("The branch was modified by another user.");
+            }
+
+            string updateQuery = forceUpdate
+                ? @"UPDATE Branch 
                        SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive 
                        WHERE BranchId = @Id AND BankId = @BankId"
-                    : @"UPDATE Branch 
+                : @"UPDATE Branch 
                        SET NameEnglish = @NameEnglish, NameArabic = @NameArabic, IsActive = @IsActive 
                        WHERE BranchId = @Id AND BankId = @BankId AND RowVersion = @RowVersion";
 
-                using var cmd = new SqlCommand(updateQuery, conn);
-                cmd.Parameters.AddWithValue("@NameEnglish", branch.NameEnglish);
-                cmd.Parameters.AddWithValue("@NameArabic", branch.NameArabic);
-                cmd.Parameters.AddWithValue("@IsActive", branch.IsActive);
-                cmd.Parameters.AddWithValue("@Id", branch.Id);
-                cmd.Parameters.AddWithValue("@BankId", branch.BankId);
+            using var cmd = new SqlCommand(updateQuery, conn);
+            cmd.Parameters.AddWithValue("@NameEnglish", branch.NameEnglish);
+            cmd.Parameters.AddWithValue("@NameArabic", branch.NameArabic);
+            cmd.Parameters.AddWithValue("@IsActive", branch.IsActive);
+            cmd.Parameters.AddWithValue("@Id", branch.Id);
+            cmd.Parameters.AddWithValue("@BankId", branch.BankId);
 
-                if (!forceUpdate)
-                    cmd.Parameters.Add(new SqlParameter("@RowVersion", SqlDbType.Timestamp) { Value = branch.RowVersion });
+            if (!forceUpdate)
+                cmd.Parameters.Add(new SqlParameter("@RowVersion", SqlDbType.Timestamp) { Value = branch.RowVersion });
 
-                int rowsAffected = await cmd.ExecuteNonQueryAsync();
-                if (rowsAffected == 0 && !forceUpdate)
-                    throw new DBConcurrencyException("The branch was modified by another user.");
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            if (rowsAffected == 0 && !forceUpdate)
+                throw new DBConcurrencyException("The branch was modified by another user.");
 
-                // Refresh RowVersion
-                string versionQuery = "SELECT RowVersion FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
-                using var refreshCmd = new SqlCommand(versionQuery, conn);
-                refreshCmd.Parameters.AddWithValue("@Id", branch.Id);
-                refreshCmd.Parameters.AddWithValue("@BankId", branch.BankId);
+            // Refresh RowVersion
+            string versionQuery = "SELECT RowVersion FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
+            using var refreshCmd = new SqlCommand(versionQuery, conn);
+            refreshCmd.Parameters.AddWithValue("@Id", branch.Id);
+            refreshCmd.Parameters.AddWithValue("@BankId", branch.BankId);
 
-                using var versionReader = await refreshCmd.ExecuteReaderAsync();
-                if (await versionReader.ReadAsync())
-                    branch.RowVersion = (byte[])versionReader["RowVersion"];
+            using var versionReader = await refreshCmd.ExecuteReaderAsync();
+            if (await versionReader.ReadAsync())
+                branch.RowVersion = (byte[])versionReader["RowVersion"];
         }
 
         public async Task DeleteAsync(int id, int bankId, byte[] rowVersion, bool forceDelete = false)
         {
-                using var conn = DatabaseHelper.GetConnection();
-                await conn.OpenAsync();
+            using var conn = DatabaseHelper.GetConnection();
+            await conn.OpenAsync();
 
-                string deleteQuery = forceDelete ?
-                    @"DELETE FROM Branch
+            string deleteQuery = forceDelete ?
+                @"DELETE FROM Branch
               WHERE BranchId = @Id AND BankId = @BankId" :
-                    @"DELETE FROM Branch
+                @"DELETE FROM Branch
               WHERE BranchId = @Id AND BankId = @BankId AND RowVersion = @RowVersion";
 
-                using var cmd = new SqlCommand(deleteQuery, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-                cmd.Parameters.AddWithValue("@BankId", bankId);
+            using var cmd = new SqlCommand(deleteQuery, conn);
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@BankId", bankId);
 
-                if (!forceDelete)
+            if (!forceDelete)
+            {
+                cmd.Parameters.Add(new SqlParameter("@RowVersion", SqlDbType.Timestamp) { Value = rowVersion });
+            }
+
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+            if (rowsAffected == 0)
+            {
+                string checkQuery = "SELECT COUNT(1) FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
+                using var checkCmd = new SqlCommand(checkQuery, conn);
+                checkCmd.Parameters.AddWithValue("@Id", id);
+                checkCmd.Parameters.AddWithValue("@BankId", bankId);
+
+                bool exists = (int)await checkCmd.ExecuteScalarAsync() > 0;
+
+                if (exists)
                 {
-                    cmd.Parameters.Add(new SqlParameter("@RowVersion", SqlDbType.Timestamp) { Value = rowVersion });
+                    // The record exists, but the RowVersion didn't match. It was modified.
+                    throw new CustomConcurrencyModifiedException("The branch was modified by another user.");
                 }
-
-                int rowsAffected = await cmd.ExecuteNonQueryAsync();
-
-                if (rowsAffected == 0)
+                else
                 {
-                    string checkQuery = "SELECT COUNT(1) FROM Branch WHERE BranchId = @Id AND BankId = @BankId";
-                    using var checkCmd = new SqlCommand(checkQuery, conn);
-                    checkCmd.Parameters.AddWithValue("@Id", id);
-                    checkCmd.Parameters.AddWithValue("@BankId", bankId);
-
-                    bool exists = (int)await checkCmd.ExecuteScalarAsync() > 0;
-
-                    if (exists)
-                    {
-                        // The record exists, but the RowVersion didn't match. It was modified.
-                        throw new CustomConcurrencyModifiedException("The branch was modified by another user.");
-                    }
-                    else
-                    {
-                        // The record no longer exists. It was deleted.
-                        throw new CustomConcurrencyDeletedException("The branch was deleted by another user.");
-                    }
+                    // The record no longer exists. It was deleted.
+                    throw new CustomConcurrencyDeletedException("The branch was deleted by another user.");
                 }
+            }
         }
     }
 }

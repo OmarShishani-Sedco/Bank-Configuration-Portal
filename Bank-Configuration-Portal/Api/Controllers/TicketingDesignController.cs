@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace Bank_Configuration_Portal.Api.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/branches")]
+    [RoutePrefix("api")]
     public class TicketingDesignController : ApiController
     {
         private readonly ITicketingDesignManager _screenManager;
@@ -17,16 +17,20 @@ namespace Bank_Configuration_Portal.Api.Controllers
             _screenManager = screenManager;
         }
 
-        // GET /api/branches/{branchId}/screen-design?onlyAllocated=true
-        [HttpGet, Route("{branchId:int}/screen-design")]
-        public async Task<IHttpActionResult> GetActiveDesign(int branchId, bool onlyAllocated = true)
+        // GET /api/screen-design?branchId={ID}&onlyAllocated={true|false}
+        [HttpGet, Route("screen-design")]
+        public async Task<IHttpActionResult> GetActiveDesign(int? branchId = null, bool onlyAllocated = false)
         {
-            if (branchId <= 0) return BadRequest("Invalid branchId.");
-
             try
             {
                 var bankIdStr = (User as ClaimsPrincipal)?.FindFirst("BankId")?.Value;
                 if (!int.TryParse(bankIdStr, out var bankId)) return Unauthorized();
+
+                if (branchId.HasValue && branchId.Value <= 0)
+                    return BadRequest("Invalid branchId. Must be a positive integer.");
+
+                if (onlyAllocated && !branchId.HasValue)
+                    return BadRequest("branchId is required when onlyAllocated=true.");
 
                 var screen = await _screenManager.GetActiveScreenButtonsForBranchAsync(bankId, branchId, onlyAllocated);
                 if (screen == null || screen.Buttons?.Count == 0) return NotFound();

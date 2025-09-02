@@ -12,7 +12,7 @@ namespace Bank_Configuration_Portal.DAL.Api
 {
     public class TicketingDesginDAL : ITicketingDesignDAL
     {
-        public async Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int branchId, bool onlyAllocated)
+        public async Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated)
         {
             using var conn = DatabaseHelper.GetConnection();
             await conn.OpenAsync();
@@ -24,7 +24,7 @@ namespace Bank_Configuration_Portal.DAL.Api
 
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@BankId", bankId);
-            cmd.Parameters.AddWithValue("@BranchId", branchId);
+            cmd.Parameters.AddWithValue("@BranchId", (object)branchId ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@OnlyAllocated", onlyAllocated);
 
             using var reader = await cmd.ExecuteReaderAsync();

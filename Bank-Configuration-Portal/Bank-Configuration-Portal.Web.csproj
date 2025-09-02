@@ -231,6 +231,7 @@
   <ItemGroup>
     <Compile Include="Api\Auth\ApiTokenHandler.cs" />
     <Compile Include="Api\Controllers\AuthController.cs" />
+    <Compile Include="Api\Controllers\BranchesController.cs" />
     <Compile Include="Api\Controllers\TicketingDesignController.cs" />
     <Compile Include="App_Start\AutofacDIConfig.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
@@ -377,6 +378,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Auth\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Branches\" />
     <Folder Include="Views\TicketingDesign\" />
   </ItemGroup>
   <ItemGroup>

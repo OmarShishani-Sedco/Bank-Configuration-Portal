@@ -1,4 +1,5 @@
 ﻿using Bank_Configuration_Portal.Common.Paging;
+using Bank_Configuration_Portal.Models.Api;
 using Bank_Configuration_Portal.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Bank_Configuration_Portal.DAL.Interfaces
     public interface IBranchDAL
     {
         Task<List<BranchModel>> GetAllByBankIdAsync(int bankId);
+        Task<List<BranchApiModel>> GetAllForApiByBankIdAsync(int bankId, bool includeInactive);
         Task<BranchModel?> GetByIdAsync(int id, int bankId);
         Task CreateAsync(BranchModel branch);
         Task UpdateAsync(BranchModel branch, bool forceUpdate = false);

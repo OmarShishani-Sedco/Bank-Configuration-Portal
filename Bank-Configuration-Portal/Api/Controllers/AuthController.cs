@@ -33,25 +33,26 @@ namespace Bank_Configuration_Portal.Api.Controllers
         public async Task<IHttpActionResult> IssueTokens(TokenRequestModel req)
         {
             if (req == null || string.IsNullOrWhiteSpace(req.UserName) ||
-                string.IsNullOrWhiteSpace(req.Password) || req.BankId <= 0)
+                string.IsNullOrWhiteSpace(req.Password) || string.IsNullOrWhiteSpace(req.BankName))
                 return BadRequest("Missing credentials.");
 
             try
             {
-                if (!await _bankManager.BankExistsAsync(req.BankId))
-                    return BadRequest("Invalid bank ID.");
+                var bank = await _bankManager.GetByNameAsync(req.BankName);
+                if (bank == null)
+                    return BadRequest("Invalid bank Name.");
 
                 var (valid, mustChange) = await _userManager.ValidateCredentialsAsync(req.UserName, req.Password);
                 if (!valid || mustChange)
                     return Unauthorized();
 
-                if (!await _bankManager.IsUserMappedToBankAsync(req.UserName, req.BankId))
+                if (!await _bankManager.IsUserMappedToBankAsync(req.UserName, bank.Id))
                     return Unauthorized();
 
-                _tokens.RevokeAllForUser(req.UserName, req.BankId);
+                _tokens.RevokeAllForUser(req.UserName, bank.Id);
 
-                var access = _tokens.IssueAccessToken(req.UserName, req.BankId, AccessTtl);
-                var refresh = _tokens.IssueRefreshToken(req.UserName, req.BankId, RefreshTtl);
+                var access = _tokens.IssueAccessToken(req.UserName, bank.Id, AccessTtl);
+                var refresh = _tokens.IssueRefreshToken(req.UserName, bank.Id, RefreshTtl);
 
                 return Ok(new
                 {

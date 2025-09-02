@@ -9,6 +9,6 @@ namespace Bank_Configuration_Portal.DAL.Api
 {
     public interface ITicketingDesignDAL
     {
-        Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int branchId, bool onlyAllocated);
+        Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated);
     }
 }
