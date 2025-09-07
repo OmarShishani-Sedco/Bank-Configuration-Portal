@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.Caching;
 using System.Security.Cryptography;
-using Bank_Configuration_Portal.Common;
 
 namespace Bank_Configuration_Portal.Common.Auth
 {
@@ -64,16 +63,17 @@ namespace Bank_Configuration_Portal.Common.Auth
             try
             {
                 var token = NewToken();
-                var principal = new TokenPrincipal
+                var rec = new RefreshRecord
                 {
                     UserName = userName,
                     BankId = bankId,
                     ExpiresAt = DateTimeOffset.UtcNow.Add(ttl)
                 };
-
-                Cache.Set(Key("refresh", token), principal,
-                    new CacheItemPolicy { AbsoluteExpiration = principal.ExpiresAt });
-
+                Cache.Set(
+                    Key("refresh",token),
+                    rec,
+                    new CacheItemPolicy { AbsoluteExpiration = rec.ExpiresAt }
+                );
                 return token;
             }
             catch (Exception ex)
@@ -81,6 +81,7 @@ namespace Bank_Configuration_Portal.Common.Auth
                 WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.IssueRefreshToken]");
                 throw;
             }
+
         }
 
         public bool TryValidateAccessToken(string token, out TokenPrincipal principal)
@@ -119,6 +120,46 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
         }
 
+        public bool TryRedeemRefreshToken(string token, out TokenPrincipal principal, out bool reuseDetected)
+        {
+            principal = null;
+            reuseDetected = false;
+            if (string.IsNullOrWhiteSpace(token)) return false;
+
+            try
+            {
+                var key = Key("refresh", token);
+                var rec = Cache.Get(key) as RefreshRecord;
+                if (rec == null || rec.ExpiresAt <= DateTimeOffset.UtcNow)
+                    return false;
+
+                if (rec.UsedAt != null)
+                {
+                    reuseDetected = true;
+                    RevokeAllForUser(rec.UserName, rec.BankId);
+                    return false;
+                }
+
+                rec.UsedAt = DateTimeOffset.UtcNow;
+                Cache.Set(key, rec, new CacheItemPolicy { AbsoluteExpiration = rec.ExpiresAt });
+
+                principal = new TokenPrincipal
+                {
+                    UserName = rec.UserName,
+                    BankId = rec.BankId,
+                    ExpiresAt = rec.ExpiresAt
+                };
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.TryConsumeRefreshToken]");
+                principal = null;
+                reuseDetected = false;
+                return false;
+            }
+        }
+
         public void RevokeAccess(string token)
         {
             if (string.IsNullOrWhiteSpace(token)) return;
@@ -152,17 +193,29 @@ namespace Bank_Configuration_Portal.Common.Auth
             try
             {
                 var toRemove = new List<string>();
-                foreach (var kv in Cache) 
+
+                foreach (var kv in Cache)
                 {
                     var key = kv.Key;
+
                     if (!(key.StartsWith("api::access::") || key.StartsWith("api::refresh::")))
                         continue;
 
-                    if (kv.Value is TokenPrincipal p &&
-                        p.BankId == bankId &&
-                        p.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                    if (kv.Value is TokenPrincipal ap)
                     {
-                        toRemove.Add(key);
+                        if (ap.BankId == bankId &&
+                            ap.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            toRemove.Add(key);
+                        }
+                    }
+                    else if (kv.Value is RefreshRecord rr)
+                    {
+                        if (rr.BankId == bankId &&
+                            rr.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            toRemove.Add(key);
+                        }
                     }
                 }
 

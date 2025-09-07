@@ -13,6 +13,7 @@ namespace Bank_Configuration_Portal.DAL.Api
 {
     public class TicketingDesginDAL : ITicketingDesignDAL
     {
+        private const int TimeoutException = -2;
         public async Task<(TicketingDesignModel screen, int status)> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated)
         {
             using var conn = DatabaseHelper.GetConnection();
@@ -75,7 +76,7 @@ namespace Bank_Configuration_Portal.DAL.Api
 
                 return (screen, (int)status);
             }
-            catch (SqlException ex) when (ex.Number == -2) 
+            catch (SqlException ex) when (ex.Number == TimeoutException) 
             {
                 throw new DatabaseTimeoutException("Database timeout while reading active screen/buttons.", ex);
             }

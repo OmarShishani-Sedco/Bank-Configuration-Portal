@@ -79,14 +79,14 @@ namespace Bank_Configuration_Portal.Api.Controllers
 
             try
             {
-                if (!_tokens.TryValidateRefreshToken(refresh, out var principal))
-                    return Unauthorized();
-
-                // Revokes all access tokens for this (user+bank)
-                _tokens.RevokeAllForUser(principal.UserName, principal.BankId);
-
-                // Rotate refresh token (invalidate the old one)
-                _tokens.RevokeRefresh(refresh);
+                if (!_tokens.TryRedeemRefreshToken(refresh, out var principal, out var reuseDetected))
+                {
+                    if (reuseDetected)
+                    {
+                        return Unauthorized();
+                    }
+                    return Unauthorized(); 
+                }
 
 
                 var newAccess = _tokens.IssueAccessToken(principal.UserName, principal.BankId, AccessTtl);
@@ -106,6 +106,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
                 return InternalServerError();
             }
         }
+
         [HttpPost, Route("revoke")]
         public IHttpActionResult RevokeTokens(RevokeRequestModel rev)
         {

@@ -14,6 +14,7 @@ namespace Bank_Configuration_Portal.Common.Auth
         bool TryValidateRefreshToken(string token, out TokenPrincipal principal);
         void RevokeAccess(string token);
         void RevokeRefresh(string token);
-        void RevokeAllForUser(string userName, int bankId); 
+        void RevokeAllForUser(string userName, int bankId);
+        bool TryRedeemRefreshToken(string token, out TokenPrincipal principal, out bool reuseDetected);
     }
 }

@@ -201,6 +201,7 @@
     <Compile Include="AppConfig.cs" />
     <Compile Include="Auth\InMemoryTokenStore.cs" />
     <Compile Include="Auth\ITokenStore.cs" />
+    <Compile Include="Auth\RefreshRecord.cs" />
     <Compile Include="Auth\TokenPrinciple.cs" />
     <Compile Include="CustomExceptions.cs" />
     <Compile Include="Logger.cs" />
@@ -213,6 +214,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bank-Configuration-Portal.Models\Bank-Configuration-Portal.Models.csproj">
+      <Project>{ee0a3acf-88d2-4a3d-964d-4fd87f0cafcb}</Project>
+      <Name>Bank-Configuration-Portal.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\Bank-Configuration-Portal\packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets" Condition="Exists('..\Bank-Configuration-Portal\packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets')" />
