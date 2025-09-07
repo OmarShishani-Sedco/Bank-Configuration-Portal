@@ -64,7 +64,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[AuthController.IssueTokens] {ex}");
+                WindowsEventLogger.WriteError(ex, "[AuthController.IssueTokens]");
                 return InternalServerError();
             }
         }
@@ -102,7 +102,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[AuthController.RefreshTokens] {ex}");
+                WindowsEventLogger.WriteError(ex, "[AuthController.RefreshTokens]");
                 return InternalServerError();
             }
         }
@@ -144,7 +144,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[AuthController.RevokeTokens] {ex}");
+                WindowsEventLogger.WriteError(ex, "[AuthController.RevokeTokens]");
                 return InternalServerError();
             }
         }

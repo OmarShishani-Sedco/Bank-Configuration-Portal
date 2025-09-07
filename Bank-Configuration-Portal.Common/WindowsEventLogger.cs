@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.Security;
+using System.Text;
 
 namespace Bank_Configuration_Portal.Common
 {
@@ -44,6 +45,37 @@ namespace Bank_Configuration_Portal.Common
             }
             catch
             {}
+        }
+
+        private static string FormatExceptionForEventLog(Exception ex, string context)
+        {
+            var prefix = string.IsNullOrWhiteSpace(context) ? "" :
+                        $"The exception originated from the following (method/operation) : [{context}] ";
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"{prefix}{ex.Message}");
+
+            int depth = 0;
+            for (var e = ex; e != null; e = e.InnerException, depth++)
+            {
+                sb.AppendLine(depth == 0 ? "Exception:" : $"Inner Exception {depth}:");
+                sb.AppendLine($"{e.GetType().FullName}");
+                sb.AppendLine("Stack Trace:");
+                sb.AppendLine(e.StackTrace ?? "No stack trace available");
+                if (e.InnerException != null) sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+        public static void WriteError(Exception ex, string context = null, int eventIdOffset = 1)
+        {
+            if (!Enabled || ex == null) return;
+            try
+            {
+                var payload = FormatExceptionForEventLog(ex, context);
+                Write(payload, EventLogEntryType.Error, BaseEventId + eventIdOffset);
+            }
+            catch { }
         }
 
         public static void WriteError(string message, int eventIdOffset = 1)

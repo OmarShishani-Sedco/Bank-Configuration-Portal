@@ -23,6 +23,8 @@ namespace Bank_Configuration_Portal.Api.Controllers
         [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetBranches(bool includeInactive = false)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid query parameter. 'includeInactive' must be (true|false).");
             try
             {
                 var bankIdStr = (User as ClaimsPrincipal)?.FindFirst("BankId")?.Value;
@@ -36,7 +38,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[BranchesController.GetBranches] {ex}");
+                WindowsEventLogger.WriteError(ex, "[BranchesController.GetBranches]");
                 return InternalServerError();
             }
         }

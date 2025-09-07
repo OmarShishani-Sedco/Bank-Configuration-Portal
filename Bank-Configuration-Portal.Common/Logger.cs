@@ -48,12 +48,7 @@ namespace Bank_Configuration_Portal.Common
             // Mirror to Windows Event Log (Error)
             try
             {
-                var evt =
-                    $"[{log.ErrorTime}] {log.Message}" + Environment.NewLine +
-                    $"Exception: {ex.GetType().FullName}" + Environment.NewLine +
-                    $"Stack Trace:" + Environment.NewLine +
-                    $"{log.StackTrace}";
-                WindowsEventLogger.WriteError(evt);
+                WindowsEventLogger.WriteError(ex, context);
             }
             catch {}
         }

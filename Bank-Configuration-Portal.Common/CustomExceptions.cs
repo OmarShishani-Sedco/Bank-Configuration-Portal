@@ -15,4 +15,10 @@ namespace Bank_Configuration_Portal.Common
     {
         public CustomConcurrencyDeletedException(string message) : base(message) { }
     }
+
+    public sealed class DatabaseTimeoutException : Exception
+    {
+        public DatabaseTimeoutException(string message, Exception inner) : base(message, inner) { }
+    }
+
 }

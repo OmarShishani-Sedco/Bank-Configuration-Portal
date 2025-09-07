@@ -18,7 +18,7 @@ namespace Bank_Configuration_Portal.BLL.Api
             _screenDAL = screenDAL;
         }
 
-        public async Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated = false)
+        public async Task<(TicketingDesignModel screen, int status)> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated = false)
         {
             try
             {
@@ -26,7 +26,7 @@ namespace Bank_Configuration_Portal.BLL.Api
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[ScreenManager.GetActiveScreenButtonsForBranchAsync] {ex}");
+                WindowsEventLogger.WriteError(ex, "[ScreenManager.GetActiveScreenButtonsForBranchAsync]");
                 throw;
             }
         }

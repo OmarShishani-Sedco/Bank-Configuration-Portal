@@ -29,7 +29,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.NewToken] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.NewToken]");
                 throw new InvalidOperationException("Failed to generate secure token.", ex);
             }
         }
@@ -54,7 +54,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.IssueAccessToken] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.IssueAccessToken]");
                 throw;
             }
         }
@@ -78,7 +78,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.IssueRefreshToken] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.IssueRefreshToken]");
                 throw;
             }
         }
@@ -95,7 +95,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.TryValidateAccessToken] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.TryValidateAccessToken]");
                 principal = null;
                 return false;
             }
@@ -113,7 +113,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.TryValidateRefreshToken] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.TryValidateRefreshToken]");
                 principal = null;
                 return false;
             }
@@ -128,7 +128,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.RevokeAccess] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.RevokeAccess]");
             }
         }
 
@@ -141,7 +141,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.RevokeRefresh] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.RevokeRefresh]");
             }
         }
 
@@ -171,7 +171,7 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
             catch (Exception ex)
             {
-                WindowsEventLogger.WriteError($"[InMemoryTokenStore.RevokeAllForUser] {ex}");
+                WindowsEventLogger.WriteError(ex, "[InMemoryTokenStore.RevokeAllForUser]");
             }
         }
     }

@@ -9,6 +9,6 @@ namespace Bank_Configuration_Portal.BLL.Api
 {
     public interface ITicketingDesignManager
     {
-        Task<TicketingDesignModel> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated = false);
+        Task<(TicketingDesignModel screen, int status)> GetActiveScreenButtonsForBranchAsync(int bankId, int? branchId, bool onlyAllocated = false);
     }
 }
