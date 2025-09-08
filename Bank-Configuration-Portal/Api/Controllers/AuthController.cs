@@ -85,7 +85,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
                     {
                         return Unauthorized();
                     }
-                    return Unauthorized(); 
+                    return Unauthorized();
                 }
 
 
@@ -112,34 +112,33 @@ namespace Bank_Configuration_Portal.Api.Controllers
         {
             try
             {
+                var refreshToken = rev?.RefreshToken;
+                if (string.IsNullOrWhiteSpace(refreshToken))
+                    return BadRequest("Missing refresh token.");
+
                 var auth = Request.Headers.Authorization;
-                if (auth == null || !auth.Scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase) ||
+                if (auth == null ||
+                    !auth.Scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrWhiteSpace(auth.Parameter))
                 {
                     return Unauthorized();
                 }
-
                 var accessToken = auth.Parameter;
 
                 if (!_tokens.TryValidateAccessToken(accessToken, out var accessPrincipal))
+                    return Unauthorized();
+
+                if (!_tokens.TryValidateRefreshToken(refreshToken, out var refreshPrincipal))
+                    return Unauthorized();
+
+                if (!string.Equals(refreshPrincipal.UserName, accessPrincipal.UserName, StringComparison.Ordinal) ||
+                    refreshPrincipal.BankId != accessPrincipal.BankId)
                 {
                     return Unauthorized();
                 }
 
                 _tokens.RevokeAccess(accessToken);
-
-                var refreshToken = rev?.RefreshToken;
-                if (!string.IsNullOrWhiteSpace(refreshToken))
-                {
-                    if (_tokens.TryValidateRefreshToken(refreshToken, out var refreshPrincipal))
-                    {
-                        if (string.Equals(refreshPrincipal.UserName, accessPrincipal.UserName, StringComparison.Ordinal) &&
-                            refreshPrincipal.BankId == accessPrincipal.BankId)
-                        {
-                            _tokens.RevokeRefresh(refreshToken);
-                        }
-                    }
-                }
+                _tokens.RevokeRefresh(refreshToken);
 
                 return StatusCode(HttpStatusCode.NoContent);
             }
@@ -149,6 +148,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
                 return InternalServerError();
             }
         }
+
 
     }
 }

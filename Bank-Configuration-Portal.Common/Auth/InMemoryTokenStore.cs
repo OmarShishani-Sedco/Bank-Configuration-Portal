@@ -21,10 +21,7 @@ namespace Bank_Configuration_Portal.Common.Auth
                     rng.GetBytes(bytes);
                 }
 
-                return Convert.ToBase64String(bytes)
-                    .TrimEnd('=')
-                    .Replace('+', '-')
-                    .Replace('/', '_');
+                return Convert.ToBase64String(bytes);
             }
             catch (Exception ex)
             {
@@ -102,14 +99,14 @@ namespace Bank_Configuration_Portal.Common.Auth
             }
         }
 
-        public bool TryValidateRefreshToken(string token, out TokenPrincipal principal)
+        public bool TryValidateRefreshToken(string token, out RefreshRecord principal)
         {
             principal = null;
             if (string.IsNullOrWhiteSpace(token)) return false;
 
             try
             {
-                principal = Cache.Get(Key("refresh", token)) as TokenPrincipal;
+                principal = Cache.Get(Key("refresh", token)) as RefreshRecord;
                 return principal != null && principal.ExpiresAt > DateTimeOffset.UtcNow;
             }
             catch (Exception ex)
