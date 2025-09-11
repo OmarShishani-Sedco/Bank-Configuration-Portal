@@ -14,7 +14,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Language.Cancel_Button</button>
-                @using (Html.BeginForm("Delete", @Model.ControllerName, FormMethod.Post, new { id = "deleteForm", style = "display:inline;" }))
+                @using (Html.BeginForm("Delete", @Model.ControllerName, FormMethod.Post, new { id = "deleteForm", @class = "d-inline" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.Hidden("id", null, new { id = "deleteId" })
@@ -38,7 +38,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Language.Cancel_Button</button>
-                @using (Html.BeginForm("Delete", @Model.ControllerName, FormMethod.Post, new { id = "forceDeleteForm", style = "display:inline;" }))
+                @using (Html.BeginForm("Delete", @Model.ControllerName, FormMethod.Post, new { id = "forceDeleteForm", @class = "d-inline" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.Hidden("id", null, new { id = "forceDeleteId" })

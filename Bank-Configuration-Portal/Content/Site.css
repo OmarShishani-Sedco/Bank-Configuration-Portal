@@ -68,6 +68,52 @@ textarea {
     background-color: #333; 
     color: white;
 }
+/* * This class is for a container that centers its content (like a form or card) both 
+ * vertically on the page. It ensures the content takes up a significant 
+ * portion of the viewport height on any screen size.
+ */
+.form-container {
+    min-height: 80vh;
+}
+
+/* * This class is for a card element that needs to be responsive while staying within a 
+ * maximum width on larger screens. It's useful for forms, modal dialogs, or login screens.
+ */
+.responsive-card {
+    max-width: 450px;
+    width: 100%;
+}
+/*
+* This class is specifically for flexbox child elements.
+* It ensures that an element with 'overflow-auto' (or similar)
+* will not grow past its container, preventing layout issues.
+*/
+.flex-scrollable {
+    min-height: 0;
+}
+/*
+* This class creates a container with a fixed maximum height.
+* If the content inside exceeds this height, it will become
+* scrollable, preventing the layout from breaking.
+*/
+.scrollable-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+.error-container {
+    max-width: 600px;
+}
+.app-title {
+    max-width: 20vw;
+}
+.user-title {
+    max-width: 30vw;
+}
+.pagination-field {
+    width: 80px;
+}
+
+
 
 
 

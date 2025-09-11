@@ -9,8 +9,8 @@
     bool conflict = (bool)(ViewBag.ConflictMode ?? false);
 }
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+<div class="d-flex justify-content-center align-items-center form-container">
+    <div class="card shadow-sm responsive-card">
         <div class="card-header text-center bg-primary text-white">
             <h3 class="mb-0">
                 @(Model.Id == 0 ? Language.Counter_Create_Title : Language.Counter_Edit_Title)
@@ -98,7 +98,7 @@
                              new { @class = "btn btn-outline-secondary mt-2" })
                 </div>
 
-                <div class="flex-grow-1 overflow-auto order-1" style="min-height:0;">
+                <div class="flex-grow-1 overflow-auto order-1 flex-scrollable">
                     <div class="mb-2">
                         <label class="form-label">
                             @Language.Active_Service_Index_Title
@@ -106,7 +106,7 @@
                         </label>
                     </div>
 
-                    <div class="p-2 border rounded" style="max-height: 200px; overflow-y: auto;">
+                    <div class="p-2 border rounded scrollable-list">
                         @if (Model.AllActiveServices != null && Model.AllActiveServices.Any())
                         {
                             foreach (var service in Model.AllActiveServices)

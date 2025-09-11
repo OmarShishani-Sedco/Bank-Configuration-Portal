@@ -2,6 +2,7 @@
 using Bank_Configuration_Portal.BLL.Interfaces; 
 using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Models.Api;
+using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Bank_Configuration_Portal.Api.Controllers
 {
@@ -23,7 +25,30 @@ namespace Bank_Configuration_Portal.Api.Controllers
         }
 
         // GET /api/screen-design?branchId={ID}&onlyAllocated={true|false}
+        /// <summary>Get the active Ticketing Screen Design and its buttons.</summary>
+        /// <param name="branchId">
+        /// If omitted: return only <c>ShowMessage</c> buttons.
+        /// If provided: include <c>IssueTicket</c> buttons; when <c>onlyAllocated=true</c>,
+        /// those must be allocated to ≥1 active counter in that branch.
+        /// </param>
+        /// <param name="onlyAllocated">
+        /// When <c>true</c>, requires <c>branchId</c>. Filters <c>IssueTicket</c> buttons to allocated services.
+        /// Default is <c>false</c>.
+        /// </param>
+        /// <response code="200">Active screen returned.</response>
+        /// <response code="400">Bad query parameters.</response>
+        /// <response code="401">Unauthorized.</response>
+        /// <response code="404">No active screen or no buttons matching filters.</response>
+        /// <response code="504">Database timeout.</response>
         [HttpGet, Route("screen-design")]
+        [SwaggerOperation(OperationId = "ScreenDesign_Get", Tags = new[] { "ScreenDesign" })]
+        [ResponseType(typeof(TicketingDesignModel))]
+        [SwaggerResponse(200, "Active screen", typeof(TicketingDesignModel))]
+        [SwaggerResponse(400, "Bad request")]
+        [SwaggerResponse(401, "Unauthorized")]
+        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(504, "Database timeout")]
+        [SwaggerResponse(500, "Server error")]
         public async Task<IHttpActionResult> GetActiveDesign(int? branchId = null, bool onlyAllocated = false)
         {
             if (!ModelState.IsValid)

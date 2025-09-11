@@ -2,6 +2,7 @@
 using Bank_Configuration_Portal.Common;
 using Bank_Configuration_Portal.Common.Auth;
 using Bank_Configuration_Portal.Models.Api;
+using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Linq;
 using System.Net;
@@ -27,9 +28,18 @@ namespace Bank_Configuration_Portal.Api.Controllers
             _bankManager = bankManager;
         }
 
-
+        /// <summary>Issue access and refresh tokens.</summary>
+        /// <param name="req">User, password, and bank name.</param>
+        /// <response code="200">Tokens issued.</response>
+        /// <response code="400">Missing/invalid credentials or bank.</response>
+        /// <response code="401">Invalid credentials or not mapped to bank.</response>
         [AllowAnonymous]
         [HttpPost, Route("token")]
+        [SwaggerOperation(OperationId = "Auth_IssueTokens", Tags = new[] { "Auth" })]
+        [SwaggerResponse(200, "Tokens issued", typeof(TokenResponseModel))]
+        [SwaggerResponse(400, "Bad input", typeof(ErrorModel))]
+        [SwaggerResponse(401, "Unauthorized")]
+        [SwaggerResponse(500, "Server error")]
         public async Task<IHttpActionResult> IssueTokens(TokenRequestModel req)
         {
             if (req == null || string.IsNullOrWhiteSpace(req.UserName) ||
@@ -69,8 +79,15 @@ namespace Bank_Configuration_Portal.Api.Controllers
             }
         }
 
+        /// <summary>Exchange a refresh token for new tokens.</summary>
+        /// <param name="req">Refresh token payload.</param>
         [AllowAnonymous]
         [HttpPost, Route("refresh")]
+        [SwaggerOperation(OperationId = "Auth_RefreshTokens", Tags = new[] { "Auth" })]
+        [SwaggerResponse(200, "Tokens issued", typeof(TokenResponseModel))]
+        [SwaggerResponse(400, "Missing refresh token", typeof(ErrorModel))]
+        [SwaggerResponse(401, "Invalid/used refresh token")]
+        [SwaggerResponse(500, "Server error")]
         public IHttpActionResult RefreshTokens(RefreshRequestModel req)
         {
             var refresh = req?.RefreshToken;
@@ -107,7 +124,14 @@ namespace Bank_Configuration_Portal.Api.Controllers
             }
         }
 
+        /// <summary>Revoke the current access token (header) and a refresh token (body).</summary>
+        /// <param name="rev">Refresh token to revoke.</param>
         [HttpPost, Route("revoke")]
+        [SwaggerOperation(OperationId = "Auth_RevokeTokens", Tags = new[] { "Auth" })]
+        [SwaggerResponse(204, "Revoked")]
+        [SwaggerResponse(400, "Missing refresh token", typeof(ErrorModel))]
+        [SwaggerResponse(401, "Invalid/unauthorized tokens")]
+        [SwaggerResponse(500, "Server error")]
         public IHttpActionResult RevokeTokens(RevokeRequestModel rev)
         {
             try

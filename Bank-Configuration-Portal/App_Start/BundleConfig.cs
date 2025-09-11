@@ -16,17 +16,14 @@ namespace Bank_Configuration_Portal
                         "~/Scripts/jquery.validate.unobtrusive.js",
                         "~/Scripts/validation.compare.js"));
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
-
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js")); 
+
             bundles.Add(new ScriptBundle("~/bundles/Custom").Include(
                         "~/Scripts/FadeOut.js",
                         "~/Scripts/modal_scripts.js",
-                        "~/Scripts/Concurrency.js"));
+                        "~/Scripts/Concurrency.js",
+                        "~/Scripts/Disable_bfcache.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

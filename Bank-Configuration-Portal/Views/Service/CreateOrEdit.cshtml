@@ -8,8 +8,8 @@
     bool conflict = (bool)(ViewBag.ConflictMode ?? false);
 }
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+<div class="d-flex justify-content-center align-items-center form-container">
+    <div class="card shadow-sm responsive-card">
         <div class="card-header text-center bg-primary text-white">
             <h3 class="mb-0">
                 @(Model.Id == 0 ? Language.Service_Create_Title : Language.Service_Edit_Title)

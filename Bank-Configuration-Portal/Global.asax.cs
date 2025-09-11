@@ -25,6 +25,7 @@ namespace Bank_Configuration_Portal
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimsIdentity.DefaultNameClaimType;
             AutofacConfig.ConfigureContainer();
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            SwaggerConfig.Register();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             WindowsEventLogger.TryEnsureSource();
             if (!DatabaseUtility.TestConnection(out string errorMessage))
