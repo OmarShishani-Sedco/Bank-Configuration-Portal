@@ -85,8 +85,7 @@ namespace Bank_Configuration_Portal.Api.Controllers
         [HttpPost, Route("refresh")]
         [SwaggerOperation(OperationId = "Auth_RefreshTokens", Tags = new[] { "Auth" })]
         [SwaggerResponse(200, "Tokens issued", typeof(TokenResponseModel))]
-        [SwaggerResponse(400, "Missing refresh token", typeof(ErrorModel))]
-        [SwaggerResponse(401, "Invalid/used refresh token")]
+        [SwaggerResponse(400, "Missing or invalid refresh token", typeof(ErrorModel))]
         [SwaggerResponse(500, "Server error")]
         public IHttpActionResult RefreshTokens(RefreshRequestModel req)
         {
@@ -100,9 +99,9 @@ namespace Bank_Configuration_Portal.Api.Controllers
                 {
                     if (reuseDetected)
                     {
-                        return Unauthorized();
+                        return BadRequest("Invalid refresh token.");
                     }
-                    return Unauthorized();
+                    return BadRequest("Invalid refresh token.");
                 }
 
 
