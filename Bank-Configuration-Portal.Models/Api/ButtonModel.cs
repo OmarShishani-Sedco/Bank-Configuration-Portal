@@ -22,6 +22,8 @@ namespace Bank_Configuration_Portal.Models.Api
         public ButtonType ButtonType { get; set; }
         /// <summary>Service id (for IssueTicket); null for ShowMessage.</summary>
         public int? ServiceId { get; set; }
+        /// <summary>Service name (for IssueTicket); null for ShowMessage.</summary>
+        public string ServiceName { get; set; }
         /// <summary>English name.</summary>
         public string NameEnglish { get; set; }
         /// <summary>Arabic name.</summary>

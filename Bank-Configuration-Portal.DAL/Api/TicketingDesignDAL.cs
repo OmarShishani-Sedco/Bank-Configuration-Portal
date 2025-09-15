@@ -58,12 +58,14 @@ namespace Bank_Configuration_Portal.DAL.Api
                         {
                             ButtonId = reader["ButtonId"] != DBNull.Value ? (int)reader["ButtonId"] : 0,
                             ScreenId = reader["ScreenId"] != DBNull.Value ? (int)reader["ScreenId"] : 0,
+                            ScreenName = reader["ScreenName"] as string,
                             NameEnglish = reader["NameEnglish"] as string ?? string.Empty,
                             NameArabic = reader["NameArabic"] as string ?? string.Empty,
                             ButtonType = reader["ButtonType"] != DBNull.Value ? (ButtonType)(int)reader["ButtonType"] : 0,
                             MessageEnglish = reader["MessageEnglish"] as string,
                             MessageArabic = reader["MessageArabic"] as string,
-                            ServiceId = reader["ServiceId"] == DBNull.Value ? (int?)null : (int)reader["ServiceId"]
+                            ServiceId = reader["ServiceId"] == DBNull.Value ? (int?)null : (int)reader["ServiceId"],
+                            ServiceName = reader["ServiceName"] as string
                         });
                     }
                 }
