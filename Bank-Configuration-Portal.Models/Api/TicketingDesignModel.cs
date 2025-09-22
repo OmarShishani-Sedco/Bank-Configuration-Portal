@@ -12,6 +12,10 @@ namespace Bank_Configuration_Portal.Models.Api
         public int ScreenId { get; set; }
         /// <summary>Screen display name.</summary>
         public string ScreenName { get; set; }
+        /// <summary>English Branch name.</summary>
+        public string BranchNameEnglish { get; set; }
+        /// <summary>Arabic Branch name.</summary>
+        public string BranchNameArabic { get; set; }
         /// <summary>Buttons belonging to this screen.</summary>
         public IList<ButtonModel> Buttons { get; set; }
     }

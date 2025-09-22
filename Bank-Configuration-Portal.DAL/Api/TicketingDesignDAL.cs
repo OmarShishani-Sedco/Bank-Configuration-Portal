@@ -5,8 +5,6 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bank_Configuration_Portal.DAL.Api
@@ -42,6 +40,18 @@ namespace Bank_Configuration_Portal.DAL.Api
 
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
+                    // --- First result set: Branch info ---
+                    string branchNameEn = null;
+                    string branchNameAr = null;
+                    if (await reader.ReadAsync())
+                    {
+                        branchNameEn = reader["BranchNameEnglish"] as string;
+                        branchNameAr = reader["BranchNameArabic"] as string;
+                    }
+
+                    // Move to second result set
+                    await reader.NextResultAsync();
+
                     while (await reader.ReadAsync())
                     {
                         if (screen == null)
@@ -50,6 +60,8 @@ namespace Bank_Configuration_Portal.DAL.Api
                             {
                                 ScreenId = reader["ScreenId"] != DBNull.Value ? (int)reader["ScreenId"] : 0,
                                 ScreenName = reader["ScreenName"] as string ?? string.Empty,
+                                BranchNameEnglish = branchNameEn,
+                                BranchNameArabic = branchNameAr,
                                 Buttons = new List<ButtonModel>()
                             };
                         }
@@ -65,20 +77,19 @@ namespace Bank_Configuration_Portal.DAL.Api
                             MessageEnglish = reader["MessageEnglish"] as string,
                             MessageArabic = reader["MessageArabic"] as string,
                             ServiceId = reader["ServiceId"] == DBNull.Value ? (int?)null : (int)reader["ServiceId"],
-                            ServiceName = reader["ServiceName"] as string
+                            ServiceNameEnglish = reader["ServiceNameEnglish"] as string,
+                            ServiceNameArabic = reader["ServiceNameArabic"] as string
                         });
                     }
                 }
+
                 if (screen != null)
-                {
                     screen.Buttons = buttons;
-                }
 
                 var status = (ActiveScreenStatus)((pStatus.Value is int i) ? i : 0);
-
                 return (screen, (int)status);
             }
-            catch (SqlException ex) when (ex.Number == TimeoutException) 
+            catch (SqlException ex) when (ex.Number == TimeoutException)
             {
                 throw new DatabaseTimeoutException("Database timeout while reading active screen/buttons.", ex);
             }
